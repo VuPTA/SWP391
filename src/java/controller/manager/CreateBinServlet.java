@@ -4,6 +4,7 @@
  */
 package controller.manager;
 
+import dal.StorageBinDAO;
 import dal.WareHouseDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +13,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
 import java.util.List;
+import model.StorageBin;
 import model.WareHouse;
 
 /**
@@ -70,7 +73,28 @@ public class CreateBinServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            String warehouseID = request.getParameter("warehouseID");
+            String binName = request.getParameter("binName");
+            String binType = request.getParameter("binType");
+            int capacity = Integer.parseInt(request.getParameter("capacity"));
+            int createdBy = 1; // get id from session after login. Current login not yet -> default 1
+
+            Timestamp timeLocked = request.getParameter("timeLocked").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeLocked").replace("T", " ") + ":00");
+            Timestamp timeUnlock = request.getParameter("timeUnlock").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeUnlock").replace("T", " ") + ":00");
+
+            StorageBinDAO binDAO = new StorageBinDAO();
+            String binId = binDAO.getMaxStorageBinID();
+            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", timeLocked, timeUnlock, createdBy, new Timestamp(System.currentTimeMillis()));
+
+            binDAO.insertBin(bin);
+            request.setAttribute("message", "Create Storage Bin Success!");
+            request.getRequestDispatcher("storage-bin").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Create Storage Bin Fail!: " + e.getMessage());
+            request.getRequestDispatcher("storage-bin").forward(request, response);
+        }
     }
 
     /**

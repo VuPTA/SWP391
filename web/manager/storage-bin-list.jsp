@@ -64,18 +64,18 @@
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
-               
+
                 <section class="section">
                     <div class="row">
                         <div class="col-lg-12">
 
                             <div class="card">
                                 <div class="card-body">
-                                   
+
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
-                                                                  <h5 class="card-title">Storage Bin List</h5>
-                                                                  <a href="create-bin" class="btn btn-primary" style="height: 40px">Create Bin</a>
-                </div>
+                                        <h5 class="card-title">Storage Bin List</h5>
+                                        <a href="create-bin" class="btn btn-primary" style="height: 40px">Create Bin</a>
+                                    </div>
                                     <!-- Table with stripped rows -->
                                     <table class="table datatable">
                                         <thead>
@@ -123,7 +123,6 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
-
     </body>
 
 </html>

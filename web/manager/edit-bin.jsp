@@ -77,6 +77,7 @@
                                     <h5 class="card-title">Edit Bin</h5>
 
                                     <form class="row g-3 needs-validation" novalidate action="edit-bin" method="post">
+                                        <input type="hidden" class="form-control" id="storageBinID" name="storageBinID" value="${sb.storageBinID}">
                                         <!-- Warehouse ID -->
                                         <div class="col-md-6">
                                             <label for="warehouseID" class="form-label">Warehouse</label>
@@ -155,20 +156,7 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                let now = new Date();
-
-                // Chuyển sang múi giờ Việt Nam (GMT+7)
-                let vietnamTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
-
-                // Định dạng thành YYYY-MM-DDTHH:MM để đặt vào min
-                let formattedNow = vietnamTime.toISOString().slice(0, 16);
-
-                document.getElementById("timeLocked").setAttribute("min", formattedNow);
-                document.getElementById("timeUnlock").setAttribute("min", formattedNow);
-            });
-        </script>
+       
     </body>
 
 </html>
