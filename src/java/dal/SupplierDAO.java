@@ -10,34 +10,27 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import model.PurchaseOrder;
-import model.StorageBin;
+import model.Supplier;
 
 /**
  *
  * @author Admin
  */
-public class PurchaseOrderDAO {
+public class SupplierDAO {
 
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    public List<PurchaseOrder> getPurchaseOrders() {
-        List<PurchaseOrder> list = new ArrayList<>();
-        String query = "select * from purchase_orders order by CreatedDate desc";
+    public List<Supplier> getSuppliers() {
+        List<Supplier> list = new ArrayList<>();
+        String query = "select SupplierName from Suppliers";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
             rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
             while (rs.next()) {
-                PurchaseOrder o = new PurchaseOrder(rs.getString(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDate(4),
-                        rs.getInt(5),
-                        rs.getTimestamp(6),
-                        rs.getInt(7),
-                        rs.getTimestamp(8));
+                Supplier o = new Supplier(rs.getString(1));
                 list.add(o);
             }
         } catch (Exception e) {
