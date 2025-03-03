@@ -127,12 +127,6 @@
                                         <input type="datetime-local" class="form-control" id="timeUnlock" name="timeUnlock">
                                     </div>
 
-                                    <!-- Created By (Hidden) -->
-                                    <input type="hidden" name="createdBy" value="${currentUserId}">
-
-                                    <!-- Updated By (Hidden) -->
-                                    <input type="hidden" name="updatedBy" value="${currentUserId}">
-
                                     <!-- Submit Button -->
                                     <div class="col-12">
                                         <button class="btn btn-primary" type="submit">Create Bin</button>

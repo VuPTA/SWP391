@@ -34,6 +34,32 @@ public class StorageBin {
         this.updatedDate = updatedDate;
     }
 
+    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, int createdBy, Timestamp createdDate) {
+        this.storageBinID = storageBinID;
+        this.warehouseID = warehouseID;
+        this.binName = binName;
+        this.binType = binType;
+        this.capacity = capacity;
+        this.status = status;
+        this.timeLocked = timeLocked;
+        this.timeUnlock = timeUnlock;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+    }
+    
+    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, Integer updatedBy, Timestamp updatedDate) {
+        this.storageBinID = storageBinID;
+        this.warehouseID = warehouseID;
+        this.binName = binName;
+        this.binType = binType;
+        this.capacity = capacity;
+        this.status = status;
+        this.timeLocked = timeLocked;
+        this.timeUnlock = timeUnlock;
+        this.updatedBy = updatedBy;
+        this.updatedDate = updatedDate;
+    }
+
     public String getStorageBinID() {
         return storageBinID;
     }
