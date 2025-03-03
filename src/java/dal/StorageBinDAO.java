@@ -24,7 +24,7 @@ public class StorageBinDAO {
 
     public List<StorageBin> getStorageBins() {
         List<StorageBin> list = new ArrayList<>();
-        String query = "select * from StorageBin a";
+        String query = "select * from StorageBin order by CreatedDate desc";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
