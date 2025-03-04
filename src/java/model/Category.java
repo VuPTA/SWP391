@@ -18,6 +18,10 @@ public class Category {
         return status;
     }
 
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }

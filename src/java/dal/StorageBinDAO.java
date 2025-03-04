@@ -79,25 +79,28 @@ public class StorageBinDAO {
     }
 
     public String getMaxStorageBinID() {
-        try {
-            String sql = "SELECT StorageBinID FROM StorageBin";
-            try (PreparedStatement stmt = DBContext.getConnection().prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-                int maxNumber = 0;
-                while (rs.next()) {
-                    String id = rs.getString(1);
-                    if (id != null) {
-                        int number = Helpers.extractNumber(id, "BIN(\\d+)");
-                        if (number > maxNumber) {
-                            maxNumber = number;
-                        }
-                    }
-                }
-                return String.format("BIN%03d", maxNumber + 1);
-            }
-        } catch (Exception e) {
-            System.out.println("Error function getMaxStorageBinID: " + e.getMessage());
-        }
-        return null;
+        String sql = "SELECT StorageBinID FROM StorageBin";
+        String prefixId = "BIN";
+        return Helpers.getMaxID(sql, prefixId);
+//        try {
+//            String sql = "SELECT StorageBinID FROM StorageBin";
+//            try (PreparedStatement stmt = DBContext.getConnection().prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+//                int maxNumber = 0;
+//                while (rs.next()) {
+//                    String id = rs.getString(1);
+//                    if (id != null) {
+//                        int number = Helpers.extractNumber(id, "BIN(\\d+)");
+//                        if (number > maxNumber) {
+//                            maxNumber = number;
+//                        }
+//                    }
+//                }
+//                return String.format("BIN%03d", maxNumber + 1);
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Error function getMaxStorageBinID: " + e.getMessage());
+//        }
+//        return null;
     }
 
     public void insertBin(StorageBin bin) {

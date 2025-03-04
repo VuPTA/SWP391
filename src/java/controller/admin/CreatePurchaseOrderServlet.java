@@ -4,6 +4,8 @@
  */
 package controller.admin;
 
+import dal.ProductDAO;
+import dal.PurchaseOrderDAO;
 import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +14,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
+import model.ProductVariant;
+import model.PurchaseItem;
+import model.PurchaseOrder;
 import model.Supplier;
 
 /**
@@ -36,8 +44,11 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try {
             SupplierDAO dao = new SupplierDAO();
+            ProductDAO pdao = new ProductDAO();
             List<Supplier> suppliers = dao.getSuppliers();
             request.setAttribute("suppliers", suppliers);
+            List<ProductVariant> products = pdao.getProducts();
+            request.setAttribute("products", products);
             request.getRequestDispatcher("admin/create-purchase-order.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +81,36 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            // Lấy dữ liệu từ form
+            String supplierID = request.getParameter("supplierID");
+            String expectedDateStr = request.getParameter("expectedDate");
+
+            Date expectedDate = (expectedDateStr == null || expectedDateStr.isEmpty()) ? null : Date.valueOf(expectedDateStr);  // Chuyển đổi từ chuỗi YYYY-MM-DD
+
+            String[] productIds = request.getParameterValues("productID[]");
+            String[] quantities = request.getParameterValues("quantity[]");
+            String[] prices = request.getParameterValues("price[]");
+
+            int createdBy = 1; // get id from session after login. Current login not yet -> default 1
+            Timestamp createDate = new Timestamp(System.currentTimeMillis());
+            PurchaseOrderDAO podao = new PurchaseOrderDAO();
+            String poId = podao.getMaxPurchaseOrderID();
+
+            List<PurchaseItem> purchaseItems = new ArrayList<>();
+            for (int i = 0; i < productIds.length; i++) {
+                purchaseItems.add(new PurchaseItem(productIds[i], Integer.parseInt(quantities[i]), Double.parseDouble(prices[i]), createdBy, createDate));
+            }
+
+            PurchaseOrder po = new PurchaseOrder(poId, supplierID, "Pending", expectedDate, purchaseItems, createdBy, createDate);
+            podao.createPurchaseOrder(po);
+            request.setAttribute("message", "Create Purchase Order Success!");
+            request.getRequestDispatcher("purchase-orders").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Create Purchase Order Fail!: " + e.getMessage());
+            request.getRequestDispatcher("purchase-orders").forward(request, response);
+        }
     }
 
     /**
