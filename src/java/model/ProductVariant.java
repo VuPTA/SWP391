@@ -50,6 +50,12 @@ public class ProductVariant extends Audit {
         this.category = category;
     }
 
+    public ProductVariant(String pvName, String color, String size) {
+        this.pvName = pvName;
+        this.color = color;
+        this.size = size;
+    }
+
     public String getProductVariantID() {
         return productVariantID;
     }
