@@ -20,6 +20,13 @@ public class PurchaseItem extends Audit{
     public PurchaseItem() {
     }
 
+    public PurchaseItem(String productVariantId, int quantity, double unitPrice, int createdBy, Timestamp createdDate) {
+        super(createdBy, createdDate);
+        this.productVariantId = productVariantId;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+
     public PurchaseItem(int purchaseItemId, String poId, String productVariantId, int quantity, double unitPrice, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
         this.purchaseItemId = purchaseItemId;

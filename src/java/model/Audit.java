@@ -20,6 +20,16 @@ public class Audit {
     public Audit() {
     }
 
+    public Audit(int createdBy, Timestamp createdDate) {
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+    }
+
+    public Audit(Integer updatedBy, Timestamp updatedDate) {
+        this.updatedBy = updatedBy;
+        this.updatedDate = updatedDate;
+    }
+
     public Audit(int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         this.createdBy = createdBy;
         this.createdDate = createdDate;
