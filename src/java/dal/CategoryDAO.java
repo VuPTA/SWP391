@@ -38,7 +38,7 @@ public class CategoryDAO {
 
             while (resultSet.next()) {
                 Category category = new Category();
-                category.setCategoryId(resultSet.getInt("CategoryID"));
+                category.setCategoryId(resultSet.getString("CategoryID"));
                 category.setCategoryName(resultSet.getString("CategoryName"));
                 category.setDescription(resultSet.getString("Description"));
                 category.setCreatedByName(resultSet.getString("CreatedByName"));
@@ -62,7 +62,7 @@ public class CategoryDAO {
             preparedStatement.setString(2, category.getDescription());
             preparedStatement.setInt(3, category.getCreatedBy());
             preparedStatement.setInt(4, category.getUpdatedBy());
-            preparedStatement.setInt(5, category.getCategoryId());
+            preparedStatement.setString(5, category.getCategoryId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -77,7 +77,7 @@ public class CategoryDAO {
             preparedStatement.setString(1, category.getCategoryName());
             preparedStatement.setString(2, category.getDescription());
             preparedStatement.setInt(3, category.getUpdatedBy());
-            preparedStatement.setInt(4, category.getCategoryId());
+            preparedStatement.setString(4, category.getCategoryId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -106,7 +106,7 @@ public class CategoryDAO {
 
             if (resultSet.next()) {
                 category = new Category();
-                category.setCategoryId(resultSet.getInt("CategoryID"));
+                category.setCategoryId(resultSet.getString("CategoryID"));
                 category.setCategoryName(resultSet.getString("CategoryName"));
                 category.setDescription(resultSet.getString("Description"));
             }

@@ -13,8 +13,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.List;
+import model.Account;
 import model.StorageBin;
 import model.WareHouse;
 
@@ -87,7 +89,9 @@ public class EditBinServlet extends HttpServlet {
             String binType = request.getParameter("binType");
             String status = request.getParameter("status");
             int capacity = Integer.parseInt(request.getParameter("capacity"));
-            Integer updateBy = 1; // get id from session after login. Current login not yet -> default 1
+            HttpSession session = request.getSession();
+            Account acc = (Account) session.getAttribute("account");
+            Integer updateBy = acc.getAccountId();
 
             Timestamp timeLocked = request.getParameter("timeLocked").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeLocked").replace("T", " ") + ":00");
             Timestamp timeUnlock = request.getParameter("timeUnlock").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeUnlock").replace("T", " ") + ":00");

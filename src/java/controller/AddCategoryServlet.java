@@ -74,62 +74,62 @@ public class AddCategoryServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    HttpSession session = request.getSession();
-    Account user = (Account) session.getAttribute("account");
-    
-    if (user == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
-
-    String categoryIdStr = request.getParameter("categoryId");
-    int categoryId;
-
-    // Kiểm tra categoryId có hợp lệ không
-    try {
-        categoryId = Integer.parseInt(categoryIdStr);
-        if (categoryId <= 0) {
-            request.setAttribute("msg", "Mã danh mục phải là số nguyên dương!");
-            request.getRequestDispatcher("addCategory.jsp").forward(request, response);
-            return;
-        }
-    } catch (NumberFormatException e) {
-        request.setAttribute("msg", "Mã danh mục phải là số nguyên hợp lệ!");
-        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
-        return;
-    }
-
-    // Kiểm tra xem categoryId đã tồn tại chưa
-    if (categoryDAO.getCategoryById(categoryId) != null) {
-        request.setAttribute("msg", "Mã danh mục đã tồn tại!");
-        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
-        return;
-    }
-
-    String categoryName = request.getParameter("categoryName");
-    
-    if (categoryName == null || categoryName.trim().isEmpty()) {
-        request.setAttribute("msg", "Tên danh mục không được để trống hoặc chỉ chứa khoảng trắng!");
-        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
-        return;
-    }
-    
-    String description = request.getParameter("description");
-
-    Category category = new Category();
-    category.setCategoryName(categoryName);
-    category.setDescription(description);
-    category.setCreatedBy(user.getAccountId());
-    category.setCategoryId(categoryId);
-
-    try {
-        categoryDAO.addCategory(category);
-        response.sendRedirect("CategoryListServlet");
-    } catch (Exception e) {
-        e.printStackTrace();
-        request.setAttribute("msg", "Đã xảy ra lỗi khi thêm danh mục!");
-        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
-    }
+//    HttpSession session = request.getSession();
+//    Account user = (Account) session.getAttribute("account");
+//    
+//    if (user == null) {
+//        response.sendRedirect("login.jsp");
+//        return;
+//    }
+//
+//    String categoryIdStr = request.getParameter("categoryId");
+//    int categoryId;
+//
+//    // Kiểm tra categoryId có hợp lệ không
+//    try {
+//        categoryId = Integer.parseInt(categoryIdStr);
+//        if (categoryId <= 0) {
+//            request.setAttribute("msg", "Mã danh mục phải là số nguyên dương!");
+//            request.getRequestDispatcher("addCategory.jsp").forward(request, response);
+//            return;
+//        }
+//    } catch (NumberFormatException e) {
+//        request.setAttribute("msg", "Mã danh mục phải là số nguyên hợp lệ!");
+//        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
+//        return;
+//    }
+//
+//    // Kiểm tra xem categoryId đã tồn tại chưa
+//    if (categoryDAO.getCategoryById(categoryId) != null) {
+//        request.setAttribute("msg", "Mã danh mục đã tồn tại!");
+//        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
+//        return;
+//    }
+//
+//    String categoryName = request.getParameter("categoryName");
+//    
+//    if (categoryName == null || categoryName.trim().isEmpty()) {
+//        request.setAttribute("msg", "Tên danh mục không được để trống hoặc chỉ chứa khoảng trắng!");
+//        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
+//        return;
+//    }
+//    
+//    String description = request.getParameter("description");
+//
+//    Category category = new Category();
+//    category.setCategoryName(categoryName);
+//    category.setDescription(description);
+//    category.setCreatedBy(user.getAccountId());
+//    category.setCategoryId(categoryId);
+//
+//    try {
+//        categoryDAO.addCategory(category);
+//        response.sendRedirect("CategoryListServlet");
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//        request.setAttribute("msg", "Đã xảy ra lỗi khi thêm danh mục!");
+//        request.getRequestDispatcher("addCategory.jsp").forward(request, response);
+//    }
 }
 
     
