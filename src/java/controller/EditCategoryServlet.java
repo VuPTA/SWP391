@@ -33,24 +33,24 @@ public class EditCategoryServlet extends HttpServlet {
     // Xử lý cập nhật danh mục
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
           HttpSession session = request.getSession();
-        Account user = (Account) session.getAttribute("account");
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-        String name = request.getParameter("name");
-          if (name == null || name.trim().isEmpty()) {
-        request.setAttribute("msg", "Tên danh mục không được để trống hoặc chỉ chứa khoảng trắng!");
-        request.getRequestDispatcher("editCategory.jsp").forward(request, response);
-        return;
-    }
-        String description = request.getParameter("description");
-        int updatedBy = user.getAccountId();
-
-        Category category = new Category(categoryId, name, description, updatedBy);
-        categoryDAO.updateCategory(category);
-
-        response.sendRedirect("CategoryListServlet");
+//        Account user = (Account) session.getAttribute("account");
+//        if (user == null) {
+//            response.sendRedirect("login.jsp");
+//            return;
+//        }
+//        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+//        String name = request.getParameter("name");
+//          if (name == null || name.trim().isEmpty()) {
+//        request.setAttribute("msg", "Tên danh mục không được để trống hoặc chỉ chứa khoảng trắng!");
+//        request.getRequestDispatcher("editCategory.jsp").forward(request, response);
+//        return;
+//    }
+//        String description = request.getParameter("description");
+//        int updatedBy = user.getAccountId();
+//
+//        Category category = new Category(categoryId, name, description, updatedBy);
+//        categoryDAO.updateCategory(category);
+//
+//        response.sendRedirect("CategoryListServlet");
     }
 }

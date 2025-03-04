@@ -56,11 +56,11 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Storage Bin</h1>
+                    <h1>Products</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item active">Storage Bin</li>
+                            <li class="breadcrumb-item active">Products</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -73,36 +73,30 @@
                                 <div class="card-body">
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
-                                        <h5 class="card-title">Storage Bin List</h5>
-                                        <a href="create-bin" class="btn btn-primary" style="height: 40px">Create Bin</a>
+                                        <h5 class="card-title">Product List</h5>
+                                        <a href="create-product" class="btn btn-primary" style="height: 40px">Create Product</a>
                                     </div>
                                     <!-- Table with stripped rows -->
                                     <table class="table datatable">
                                         <thead>
                                             <tr>
-                                                <th>StorageBinID</th>
-                                                <th>WarehouseID</th>
-                                                <th>Bin Name</th>
-                                                <th>Bin Type</th>
-                                                <th>Capacity</th>
+                                                <th>Product ID</th>
+                                                <th>Category</th>
+                                                <th>Product Name</th>
+                                                <th>Description</th>
                                                 <th>Status</th>
-                                                <th>Time Locked</th>
-                                                <th>Time Unlock</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${bins}" var="bin">
+                                        <c:forEach items="${products}" var="po">
                                             <tr>
-                                                <td>${bin.storageBinID}</td>
-                                                <td>${bin.warehouseID}</td>
-                                                <td>${bin.binName}</td>
-                                                <td>${bin.binType}</td>
-                                                <td>${bin.capacity}</td>
-                                                <td>${bin.status}</td>
-                                                <td>${bin.timeLocked}</td>
-                                                <td>${bin.timeUnlock}</td>
-                                                <td style="text-align: right"><a href="edit-bin?id=${bin.storageBinID}" class="edit-btn">
+                                                <td>${po.productID}</td>
+                                                <td>${po.category.categoryName}</td>
+                                                <td>${po.productName}</td>
+                                                <td>${po.description}</td>
+                                                <td>${po.status}</td>
+                                                <td style="text-align: right"><a href="edit-product?id=${po.productID}" class="edit-btn">
                                                         <i class="bx bx-edit"></i>
                                                     </a></td>
                                             </tr>

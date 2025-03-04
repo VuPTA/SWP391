@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.manager;
+package controller.admin;
 
-import dal.StorageBinDAO;
-import dal.WareHouseDAO;
+import dal.PurchaseOrderDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,19 +12,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.sql.Timestamp;
 import java.util.List;
-import model.Account;
-import model.StorageBin;
-import model.WareHouse;
+import model.PurchaseOrder;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "CreateBinServlet", urlPatterns = {"/create-bin"})
-public class CreateBinServlet extends HttpServlet {
+@WebServlet(name = "PurchaseOrdersServlet", urlPatterns = {"/purchase-orders"})
+public class PurchaseOrdersServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +35,10 @@ public class CreateBinServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            WareHouseDAO dao = new WareHouseDAO();
-            List<WareHouse> warehouses = dao.getWareHouses();
-            request.setAttribute("warehouses", warehouses);
-            request.getRequestDispatcher("manager/create-bin.jsp").forward(request, response);
+            PurchaseOrderDAO dao = new PurchaseOrderDAO();
+            List<PurchaseOrder> purchaseOrders = dao.getPurchaseOrders();
+            request.setAttribute("purchaseOrders", purchaseOrders);
+            request.getRequestDispatcher("admin/purchase-order-list.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,30 +70,7 @@ public class CreateBinServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            String warehouseID = request.getParameter("warehouseID");
-            String binName = request.getParameter("binName");
-            String binType = request.getParameter("binType");
-            int capacity = Integer.parseInt(request.getParameter("capacity"));
-            HttpSession session = request.getSession();
-            Account acc = (Account) session.getAttribute("account");
-            int createdBy = acc.getAccountId();
-
-            Timestamp timeLocked = request.getParameter("timeLocked").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeLocked").replace("T", " ") + ":00");
-            Timestamp timeUnlock = request.getParameter("timeUnlock").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeUnlock").replace("T", " ") + ":00");
-
-            StorageBinDAO binDAO = new StorageBinDAO();
-            String binId = binDAO.getMaxStorageBinID();
-            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", timeLocked, timeUnlock, createdBy, new Timestamp(System.currentTimeMillis()));
-
-            binDAO.insertBin(bin);
-            request.setAttribute("message", "Create Storage Bin Success!");
-            request.getRequestDispatcher("storage-bin").forward(request, response);
-        } catch (Exception e) {
-            request.setAttribute("errorMessage", "Create Storage Bin Fail!: " + e.getMessage());
-            request.getRequestDispatcher("storage-bin").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

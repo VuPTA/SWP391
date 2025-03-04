@@ -94,21 +94,21 @@ public class CategoryServlet extends HttpServlet {
 
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) 
             throws IOException {
-        HttpSession session = request.getSession();
-        Account user = (Account) session.getAttribute("user");
-
-        int id = Integer.parseInt(request.getParameter("id"));
-        String categoryName = request.getParameter("categoryName");
-        String description = request.getParameter("description");
-
-        Category category = new Category();
-        category.setCategoryId(id);
-        category.setCategoryName(categoryName);
-        category.setDescription(description);
-        category.setUpdatedBy(user.getAccountId());
-
-        categoryDAO.updateCategory(category);
-        response.sendRedirect("category");
+//        HttpSession session = request.getSession();
+//        Account user = (Account) session.getAttribute("user");
+//
+//        int id = Integer.parseInt(request.getParameter("id"));
+//        String categoryName = request.getParameter("categoryName");
+//        String description = request.getParameter("description");
+//
+//        Category category = new Category();
+//        category.setCategoryId(id);
+//        category.setCategoryName(categoryName);
+//        category.setDescription(description);
+//        category.setUpdatedBy(user.getAccountId());
+//
+//        categoryDAO.updateCategory(category);
+//        response.sendRedirect("category");
     }
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) 

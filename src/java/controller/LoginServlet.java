@@ -38,13 +38,13 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("account", account);
             switch (account.getRole()) {
                 case "Admin":
-                    response.sendRedirect("dashboard-admin.jsp");
+                    response.sendRedirect("products");
                     break;
                 case "Staff":
                     response.sendRedirect("dashboard-staff.jsp");
                     break;
                 case "Manager":
-                    response.sendRedirect("dashboard-manager.jsp");
+                    response.sendRedirect("storage-bin");
 
                     break;
                 default:

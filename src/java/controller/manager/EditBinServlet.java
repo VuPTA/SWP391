@@ -13,7 +13,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
 import java.util.List;
+import model.Account;
 import model.StorageBin;
 import model.WareHouse;
 
@@ -38,11 +41,11 @@ public class EditBinServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try {
             String id = request.getParameter("id");
-            
+
             WareHouseDAO whdao = new WareHouseDAO();
             List<WareHouse> warehouses = whdao.getWareHouses();
             request.setAttribute("warehouses", warehouses);
-            
+
             StorageBinDAO dao = new StorageBinDAO();
             StorageBin sb = dao.getStorageBinById(id);
             request.setAttribute("sb", sb);
@@ -78,7 +81,31 @@ public class EditBinServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            String storageBinID = request.getParameter("storageBinID");
+            String warehouseID = request.getParameter("warehouseID");
+            String binName = request.getParameter("binName");
+            String binType = request.getParameter("binType");
+            String status = request.getParameter("status");
+            int capacity = Integer.parseInt(request.getParameter("capacity"));
+            HttpSession session = request.getSession();
+            Account acc = (Account) session.getAttribute("account");
+            Integer updateBy = acc.getAccountId();
+
+            Timestamp timeLocked = request.getParameter("timeLocked").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeLocked").replace("T", " ") + ":00");
+            Timestamp timeUnlock = request.getParameter("timeUnlock").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeUnlock").replace("T", " ") + ":00");
+
+            StorageBinDAO binDAO = new StorageBinDAO();
+            StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, timeLocked, timeUnlock, updateBy, new Timestamp(System.currentTimeMillis()));
+
+            binDAO.updateBin(bin);
+            request.setAttribute("message", "Update Storage Bin Success!");
+            request.getRequestDispatcher("storage-bin").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Update Storage Bin Fail!: " + e.getMessage());
+            request.getRequestDispatcher("storage-bin").forward(request, response);
+        }
     }
 
     /**

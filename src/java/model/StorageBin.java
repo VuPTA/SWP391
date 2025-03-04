@@ -2,7 +2,8 @@ package model;
 
 import java.sql.Timestamp;
 
-public class StorageBin {
+public class StorageBin extends Audit {
+
     private String storageBinID;
     private String warehouseID;
     private String binName;
@@ -11,13 +12,10 @@ public class StorageBin {
     private String status;
     private Timestamp timeLocked;
     private Timestamp timeUnlock;
-    private int createdBy;
-    private Timestamp createdDate;
-    private Integer updatedBy;
-    private Timestamp updatedDate;
 
     // Constructor
-    public StorageBin() {}
+    public StorageBin() {
+    }
 
     public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         this.storageBinID = storageBinID;
@@ -30,6 +28,32 @@ public class StorageBin {
         this.timeUnlock = timeUnlock;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
+        this.updatedBy = updatedBy;
+        this.updatedDate = updatedDate;
+    }
+
+    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, int createdBy, Timestamp createdDate) {
+        this.storageBinID = storageBinID;
+        this.warehouseID = warehouseID;
+        this.binName = binName;
+        this.binType = binType;
+        this.capacity = capacity;
+        this.status = status;
+        this.timeLocked = timeLocked;
+        this.timeUnlock = timeUnlock;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+    }
+
+    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, Integer updatedBy, Timestamp updatedDate) {
+        this.storageBinID = storageBinID;
+        this.warehouseID = warehouseID;
+        this.binName = binName;
+        this.binType = binType;
+        this.capacity = capacity;
+        this.status = status;
+        this.timeLocked = timeLocked;
+        this.timeUnlock = timeUnlock;
         this.updatedBy = updatedBy;
         this.updatedDate = updatedDate;
     }
@@ -96,38 +120,6 @@ public class StorageBin {
 
     public void setTimeUnlock(Timestamp timeUnlock) {
         this.timeUnlock = timeUnlock;
-    }
-
-    public int getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(int createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Integer getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Integer updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Timestamp getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Timestamp updatedDate) {
-        this.updatedDate = updatedDate;
     }
 
 }

@@ -3,7 +3,7 @@ package model;
 import java.sql.Timestamp;
 
 public class Category {
-    private int categoryId;
+    private String categoryId;
     private String categoryName;
     private String description;
     private int createdBy; // ID người tạo
@@ -18,11 +18,15 @@ public class Category {
         return status;
     }
 
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
     
-    public Category(int categoryId, String categoryName, String description,
+    public Category(String categoryId, String categoryName, String description,
                     int createdBy, String createdByName, Timestamp createdDate,
                     int updatedBy, String updatedByName, Timestamp updatedDate) {
         this.categoryId = categoryId;
@@ -40,7 +44,7 @@ public class Category {
     }
 
     // Constructor cho CREATE / UPDATE (không cần tên người dùng)
-    public Category(int categoryId, String categoryName, String description,
+    public Category(String categoryId, String categoryName, String description,
                     int createdBy, Timestamp createdDate, int updatedBy, Timestamp updatedDate) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
@@ -51,7 +55,7 @@ public class Category {
         this.updatedDate = updatedDate;
     }
 
-    public Category(int categoryId, String categoryName, String description, int updatedBy) {
+    public Category(String categoryId, String categoryName, String description, int updatedBy) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.description = description;
@@ -59,8 +63,8 @@ public class Category {
     }
 
     // Getter & Setter (Giữ nguyên cả ID và Name)
-    public int getCategoryId() { return categoryId; }
-    public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
+    public String getCategoryId() { return categoryId; }
+    public void setCategoryId(String categoryId) { this.categoryId = categoryId; }
 
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
