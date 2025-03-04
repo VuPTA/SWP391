@@ -10,18 +10,28 @@ import java.sql.Timestamp;
  *
  * @author Admin
  */
-public class PurchaseItem extends Audit{
+public class PurchaseItem extends Audit {
+
     private int purchaseItemId;
     private String poId;  // Foreign Key
     private String productVariantId;
     private int quantity;
     private double unitPrice;
 
+    private ProductVariant product;
+
     public PurchaseItem() {
     }
 
     public PurchaseItem(String productVariantId, int quantity, double unitPrice, int createdBy, Timestamp createdDate) {
         super(createdBy, createdDate);
+        this.productVariantId = productVariantId;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+
+    public PurchaseItem(String productVariantId, int quantity, double unitPrice, Integer updatedBy, Timestamp updatedDate) {
+        super(updatedBy, updatedDate);
         this.productVariantId = productVariantId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
@@ -34,6 +44,16 @@ public class PurchaseItem extends Audit{
         this.productVariantId = productVariantId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+    }
+
+    public PurchaseItem(int purchaseItemId, String poId, String productVariantId, int quantity, double unitPrice, ProductVariant product, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+        super(createdBy, createdDate, updatedBy, updatedDate);
+        this.purchaseItemId = purchaseItemId;
+        this.poId = poId;
+        this.productVariantId = productVariantId;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.product = product;
     }
 
     public int getPurchaseItemId() {
@@ -75,5 +95,13 @@ public class PurchaseItem extends Audit{
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
-    
+
+    public ProductVariant getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductVariant product) {
+        this.product = product;
+    }
+
 }

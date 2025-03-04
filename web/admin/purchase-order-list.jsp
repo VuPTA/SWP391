@@ -94,7 +94,7 @@
                                                 <td>${po.supplier}</td>
                                                 <td>${po.expectedDate}</td>
                                                 <td>${po.status}</td>
-                                                <td style="text-align: right"><a href="edit-purchase-order?id=${bin.poId}" class="edit-btn">
+                                                <td style="text-align: right"><a href="edit-purchase-order?id=${po.poId}" class="edit-btn">
                                                         <i class="bx bx-edit"></i>
                                                     </a></td>
                                             </tr>
