@@ -89,6 +89,9 @@
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
+                        <div class="col-12" style="color: blue">
+                            <a href="forgot_password.jsp">Forgot your password?</a>
+                    </div>
                         <div class="col-12" style="color: red" >
                      <%=msg%>
                     </div>
