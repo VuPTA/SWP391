@@ -4,34 +4,36 @@
  */
 package controller.admin;
 
+import dal.CategoryDAO;
 import dal.ProductDAO;
-import dal.PurchaseOrderDAO;
-import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.Date;
+import jakarta.servlet.http.Part;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import model.Account;
+import model.Category;
+import model.Product;
 import model.ProductVariant;
-import model.PurchaseItem;
-import model.PurchaseOrder;
-import model.Supplier;
+import utils.Helpers;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "EditPurchaseOrderServlet", urlPatterns = {"/edit-purchase-order"})
-public class EditPurchaseOrderServlet extends HttpServlet {
+@WebServlet(name = "EditProductServlet", urlPatterns = {"/edit-product"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 5 * 1024 * 1024, maxRequestSize = 10 * 1024 * 1024)
+public class EditProductServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,19 +48,15 @@ public class EditPurchaseOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            SupplierDAO dao = new SupplierDAO();
-            ProductDAO pdao = new ProductDAO();
-            List<Supplier> suppliers = dao.getSuppliers();
-            request.setAttribute("suppliers", suppliers);
-            List<ProductVariant> products = pdao.getProductVariants();
-            request.setAttribute("products", products);
+            CategoryDAO cdao = new CategoryDAO();
+            List<Category> categories = cdao.getAllCategories();
+            request.setAttribute("categories", categories);
 
             String id = request.getParameter("id");
-            PurchaseOrderDAO podao = new PurchaseOrderDAO();
-            PurchaseOrder po = podao.getPurchaseOrderById(id);
-            request.setAttribute("po", po);
-
-            request.getRequestDispatcher("admin/edit-purchase-order.jsp").forward(request, response);
+            ProductDAO pdao = new ProductDAO();
+            Product p = pdao.getProductById(id);
+            request.setAttribute("p", p);
+            request.getRequestDispatcher("admin/edit-product.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,40 +90,69 @@ public class EditPurchaseOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
+            ProductDAO pdao = new ProductDAO();
             // Lấy dữ liệu từ form
-            String poId = request.getParameter("poId");
+            String productId = request.getParameter("productID");
+            String productName = request.getParameter("productName");
+            String categoryID = request.getParameter("categoryID");
+            String description = request.getParameter("description");
             String status = request.getParameter("status");
-            String supplierID = request.getParameter("supplierID");
-            String expectedDateStr = request.getParameter("expectedDate");
             int createBy = Integer.parseInt(request.getParameter("createdBy"));
             String createdDateStr = request.getParameter("createdDate");
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Timestamp createdDate = new Timestamp(dateFormat.parse(createdDateStr).getTime());
 
-            Date expectedDate = (expectedDateStr == null || expectedDateStr.isEmpty()) ? null : Date.valueOf(expectedDateStr);  // Chuyển đổi từ chuỗi YYYY-MM-DD
-
-            String[] productIds = request.getParameterValues("productID[]");
-            String[] quantities = request.getParameterValues("quantity[]");
-            String[] prices = request.getParameterValues("price[]");
-
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute("account");
             Integer updateBy = acc.getAccountId();
             Timestamp updateByDate = new Timestamp(System.currentTimeMillis());
-            PurchaseOrderDAO podao = new PurchaseOrderDAO();
 
-            List<PurchaseItem> purchaseItems = new ArrayList<>();
-            for (int i = 0; i < productIds.length; i++) {
-                purchaseItems.add(new PurchaseItem(productIds[i], Integer.parseInt(quantities[i]), Double.parseDouble(prices[i]), updateBy, updateByDate));
+            // Lấy danh sách biến thể sản phẩm
+            String[] names = request.getParameterValues("name[]");
+            String[] colors = request.getParameterValues("color[]");
+            String[] sizes = request.getParameterValues("size[]");
+            String[] prices = request.getParameterValues("price[]");
+            String[] quantities = request.getParameterValues("quantity[]");
+            List<String> productVariantIds = pdao.generateProductVariantNewID(names.length);
+
+            List<ProductVariant> variants = new ArrayList<>();
+
+            // Lấy danh sách ảnh đúng (chỉ lấy `image[]`)
+            List<Part> imageParts = request.getParts().stream()
+                    .filter(part -> "image[]".equals(part.getName()) && part.getSize() > 0)
+                    .collect(Collectors.toList());
+            int imageIndex = 0;
+
+            for (int i = 0; i < names.length; i++) {
+                Part imagePart = imageParts.get(imageIndex++);
+
+                String imageName = Helpers.saveImage(imagePart, request);
+
+                ProductVariant variant = new ProductVariant(
+                        productVariantIds.get(i),
+                        productId,
+                        names[i],
+                        imageName,
+                        colors[i],
+                        sizes[i],
+                        Integer.parseInt(quantities[i]),
+                        Double.parseDouble(prices[i]),
+                        updateBy,
+                        updateByDate);
+                variants.add(variant);
             }
 
-            PurchaseOrder po = new PurchaseOrder(poId, supplierID, status, expectedDate, purchaseItems, createBy, createdDate, updateBy, updateByDate);
-            podao.updatePurchaseOrder(po);
-            request.setAttribute("message", "Update Purchase Order Success!");
-            request.getRequestDispatcher("purchase-orders").forward(request, response);
+            // Lưu vào DB
+            Product product = new Product(productId, categoryID, productName, description, "Available", variants, createBy, createdDate, updateBy,
+                    updateByDate);
+            pdao.updateProduct(product);
+
+            // Chuyển hướng sau khi tạo sản phẩm thành công
+            request.setAttribute("message", "Edit Product Success!");
+            request.getRequestDispatcher("products").forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Update Purchase Order Fail!: " + e.getMessage());
-            request.getRequestDispatcher("purchase-orders").forward(request, response);
+            request.setAttribute("errorMessage", "Edit Product Fail!: " + e.getMessage());
+            request.getRequestDispatcher("products").forward(request, response);
         }
     }
 

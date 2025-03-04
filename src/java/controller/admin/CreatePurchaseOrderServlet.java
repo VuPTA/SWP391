@@ -14,10 +14,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
+import model.Account;
 import model.ProductVariant;
 import model.PurchaseItem;
 import model.PurchaseOrder;
@@ -47,7 +49,7 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
             ProductDAO pdao = new ProductDAO();
             List<Supplier> suppliers = dao.getSuppliers();
             request.setAttribute("suppliers", suppliers);
-            List<ProductVariant> products = pdao.getProducts();
+            List<ProductVariant> products = pdao.getProductVariants();
             request.setAttribute("products", products);
             request.getRequestDispatcher("admin/create-purchase-order.jsp").forward(request, response);
         } catch (Exception e) {
@@ -93,7 +95,9 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
             String[] quantities = request.getParameterValues("quantity[]");
             String[] prices = request.getParameterValues("price[]");
 
-            int createdBy = 1; // get id from session after login. Current login not yet -> default 1
+            HttpSession session = request.getSession();
+            Account acc = (Account) session.getAttribute("account");
+            int createdBy = acc.getAccountId();
             Timestamp createDate = new Timestamp(System.currentTimeMillis());
             PurchaseOrderDAO podao = new PurchaseOrderDAO();
             String poId = podao.getMaxPurchaseOrderID();

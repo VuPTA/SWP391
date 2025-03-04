@@ -5,19 +5,73 @@
 package model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class Product extends Audit{
+public class Product extends Audit {
+
     private String productID;
     private String categoryID;
     private String productName;
     private String description;
     private String status;
 
+    private Category category;
+    private List<ProductVariant> productVariants;
+
     public Product() {
+    }
+
+    public Product(String productID, String categoryID, String productName, String description, String status, List<ProductVariant> productVariants, int createdBy, Timestamp createdDate) {
+        super(createdBy, createdDate);
+        this.productID = productID;
+        this.categoryID = categoryID;
+        this.productName = productName;
+        this.description = description;
+        this.status = status;
+        this.productVariants = productVariants;
+    }
+
+    public Product(String productID, String categoryID, String productName, String description, String status, int createdBy, Timestamp createdDate, List<ProductVariant> productVariants) {
+        super(createdBy, createdDate);
+        this.productID = productID;
+        this.categoryID = categoryID;
+        this.productName = productName;
+        this.description = description;
+        this.status = status;
+        this.productVariants = productVariants;
+    }
+
+    public Product(String productID, String categoryID, String productName, String description, String status, List<ProductVariant> productVariants, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+        super(createdBy, createdDate, updatedBy, updatedDate);
+        this.productID = productID;
+        this.categoryID = categoryID;
+        this.productName = productName;
+        this.description = description;
+        this.status = status;
+        this.productVariants = productVariants;
+    }
+
+    public Product(String productID, String categoryID, String productName, String description, String status, Category category, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+        super(createdBy, createdDate, updatedBy, updatedDate);
+        this.productID = productID;
+        this.categoryID = categoryID;
+        this.productName = productName;
+        this.description = description;
+        this.status = status;
+        this.category = category;
+    }
+
+    public Product(String productID, String categoryID, String productName, String description, String status, List<ProductVariant> productVariants) {
+        this.productID = productID;
+        this.categoryID = categoryID;
+        this.productName = productName;
+        this.description = description;
+        this.status = status;
+        this.productVariants = productVariants;
     }
 
     public Product(String productID, String categoryID, String productName, String description, String status, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
@@ -73,36 +127,19 @@ public class Product extends Audit{
         this.status = status;
     }
 
-    public int getCreatedBy() {
-        return createdBy;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCreatedBy(int createdBy) {
-        this.createdBy = createdBy;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public Timestamp getCreatedDate() {
-        return createdDate;
+    public List<ProductVariant> getProductVariants() {
+        return productVariants;
     }
 
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
+    public void setProductVariants(List<ProductVariant> productVariants) {
+        this.productVariants = productVariants;
     }
-
-    public Integer getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Integer updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Timestamp getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Timestamp updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-    
 }

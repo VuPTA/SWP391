@@ -38,7 +38,31 @@ public class ProductVariant extends Audit {
         this.quantity = quantity;
     }
 
-    public ProductVariant(String productVariantID, String pvName, String image, String color, String size,double price, int quantity, Product product, Category category) {
+    public ProductVariant(String productVariantID, String productID, String pvName, String image, String color, String size, int quantity,double price, int createdBy, Timestamp createdDate) {
+        super(createdBy, createdDate);
+        this.productVariantID = productVariantID;
+        this.productID = productID;
+        this.pvName = pvName;
+        this.image = image;
+        this.color = color;
+        this.size = size;
+        this.quantity = quantity;
+        this.price = price;
+    }
+    
+    public ProductVariant(String productVariantID, String productID, String pvName, String image, String color, String size, int quantity,double price, Integer updatedBy, Timestamp updatedDate) {
+        super(updatedBy, updatedDate);
+        this.productVariantID = productVariantID;
+        this.productID = productID;
+        this.pvName = pvName;
+        this.image = image;
+        this.color = color;
+        this.size = size;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public ProductVariant(String productVariantID, String pvName, String image, String color, String size, double price, int quantity, Product product, Category category) {
         this.productVariantID = productVariantID;
         this.pvName = pvName;
         this.image = image;
@@ -48,6 +72,16 @@ public class ProductVariant extends Audit {
         this.quantity = quantity;
         this.product = product;
         this.category = category;
+    }
+    
+    public ProductVariant(String productVariantID, String pvName, String image, String color, String size, double price, int quantity) {
+        this.productVariantID = productVariantID;
+        this.pvName = pvName;
+        this.image = image;
+        this.color = color;
+        this.size = size;
+        this.price = price;
+        this.quantity = quantity;
     }
 
     public ProductVariant(String pvName, String color, String size) {
