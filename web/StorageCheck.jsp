@@ -15,7 +15,7 @@
     <body>
         <div class="container">
             <h2 class="mt-4">Danh sách kiểm tra kho</h2>
-            <a href="addStorageCheck.jsp" class="btn btn-primary mb-3">Thêm kiểm tra kho</a>
+            <a href="<%= request.getContextPath() %>/AddSCheckServlet" class="btn btn-primary mb-3">Thêm kiểm tra kho</a>
             <table class="table table-bordered table-hover">
                 <thead class="table-primary">
                     <tr>
@@ -24,6 +24,7 @@
                         <th>Tên Bin</th>
                         <th>Người tạo</th>
                         <th>Ngày tạo</th>
+                        <th>Lần kiểm tra</th>
                         <th>Người cập nhật</th>
                         <th>Ngày cập nhật</th>
                         <th>Trạng thái</th>
@@ -42,11 +43,12 @@
                         <td><%= check.getBinName() %></td>
                         <td><%= check.getCreatedByName() %></td>
                         <td><%= check.getCreatedDate() %></td>
+                        <td><%= check.getCheckCount() %></td>
                         <td><%= check.getUpdatedByName() != null ? check.getUpdatedByName() : "Chưa cập nhật" %></td>
                         <td><%= check.getUpdatedDate() != null ? check.getUpdatedDate() : "Chưa cập nhật" %></td>
                         <td><%= check.getStatus() %></td>
                         <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>
-                        <td> <a href="accountDetails?accountId=<%= check.getStorageCheckID()%>" class="btn btn-info">Xem chi tiết</a></td>
+                        <td> <a href="SCheckDetailServlet?ScheckId=<%= check.getStorageCheckID()%>" class="btn btn-info">Xem chi tiết</a></td>
                     </tr>
                     <% } %>
                 </tbody>

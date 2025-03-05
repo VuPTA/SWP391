@@ -7,20 +7,27 @@ import java.sql.Timestamp;
  * @author ADMIN
  */
 public class StorageCheckInfor {
+
     private int storageCheckID;
+    private String warehouseID;//Dung cho select Bin
     private String storageBinID;
-    private String binName;
+    private String warehouseName;//
+    private String binName;    
     private String createdByName;
     private String createdDate;
-    private String updatedByName; // Tên người cập nhật
+    private String updatedByName;
     private String updatedDate;
+    private String binType;
+    private int capacity;//
+    private int totalQuantity;//
     private String status;
     private String note;
+    private int checkCount;
 
     public StorageCheckInfor() {
     }
 
-    public StorageCheckInfor(int storageCheckID, String storageBinID, String binName, String createdByName, String createdDate, String updatedByName, String updatedDate, String status, String note) {
+    public StorageCheckInfor(int storageCheckID, String storageBinID, String binName, String createdByName, String createdDate, String updatedByName, String updatedDate, String status, String note, int checkCount) {
         this.storageCheckID = storageCheckID;
         this.storageBinID = storageBinID;
         this.binName = binName;
@@ -30,9 +37,67 @@ public class StorageCheckInfor {
         this.updatedDate = updatedDate;
         this.status = status;
         this.note = note;
+        this.checkCount = checkCount;
     }
 
-    
+    public StorageCheckInfor(String warehouseID, String storageBinID, String warehouseName, String binName, String binType, int capacity, int totalQuantity, String status) {
+        this.warehouseID = warehouseID;
+        this.storageBinID = storageBinID;
+        this.warehouseName = warehouseName;
+        this.binName = binName;
+        this.binType = binType;
+        this.capacity = capacity;
+        this.totalQuantity = totalQuantity;
+        this.status = status;
+    }
+
+    public String getWarehouseID() {
+        return warehouseID;
+    }
+
+    public void setWarehouseID(String warehouseID) {
+        this.warehouseID = warehouseID;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public String getBinType() {
+        return binType;
+    }
+
+    public void setBinType(String binType) {
+        this.binType = binType;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public int getCheckCount() {
+        return checkCount;
+    }
+
+    public void setCheckCount(int checkCount) {
+        this.checkCount = checkCount;
+    }
 
     public void setCreatedByName(String createdByName) {
         this.createdByName = createdByName;
@@ -41,8 +106,6 @@ public class StorageCheckInfor {
     public String getCreatedByName() {
         return createdByName;
     }
-    
-    
 
     public int getStorageCheckID() {
         return storageCheckID;
@@ -67,7 +130,6 @@ public class StorageCheckInfor {
     public void setBinName(String binName) {
         this.binName = binName;
     }
-
 
     public String getCreatedDate() {
         return createdDate;
@@ -108,6 +170,5 @@ public class StorageCheckInfor {
     public void setNote(String note) {
         this.note = note;
     }
-    
 
 }
