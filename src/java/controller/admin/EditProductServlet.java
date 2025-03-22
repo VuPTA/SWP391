@@ -143,7 +143,7 @@ public class EditProductServlet extends HttpServlet {
             }
 
             // Lưu vào DB
-            Product product = new Product(productId, categoryID, productName, description, "Available", variants, createBy, createdDate, updateBy,
+            Product product = new Product(productId, categoryID, productName, description, status, variants, createBy, createdDate, updateBy,
                     updateByDate);
             pdao.updateProduct(product);
 
