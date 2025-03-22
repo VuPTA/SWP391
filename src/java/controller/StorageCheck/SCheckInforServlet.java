@@ -63,6 +63,15 @@ public class SCheckInforServlet extends HttpServlet {
         StorageCheckDAO storageCheckDAO = new StorageCheckDAO();
         List<StorageCheckInfor> scheckinfor = storageCheckDAO.getStorageCheckInfor();
         request.setAttribute("scheckinfor", scheckinfor);
+        String DEscheckid = request.getParameter("DEscheckid");
+
+        //deactivate
+        if (DEscheckid != null) {
+            int DEscheckId = Integer.parseInt(DEscheckid);
+            storageCheckDAO.updateStorageCheckStatus(DEscheckId, "Deactivate");
+            response.sendRedirect(request.getContextPath() + "/SCheckInforServlet");
+            return;
+        }
         request.getRequestDispatcher("StorageCheck.jsp").forward(request, response);
     }
 

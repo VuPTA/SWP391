@@ -1,8 +1,9 @@
 <%-- 
-    Document   : StorageCheck
-    Created on : 4 Mar 2025, 19:34:01
+    Document   : DeStorageCheck
+    Created on : 23 Mar 2025, 03:53:03
     Author     : ANNT1
 --%>
+
 <%@ page import="java.util.List, model.StorageCheckInfor" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,7 +17,7 @@
         <div class="container">
             <h2 class="mt-4">Danh sách kiểm tra kho</h2>
             <a href="<%= request.getContextPath() %>/AddSCheckServlet" class="btn btn-primary mb-3">Add StorageCheck</a>
-            <a href="<%= request.getContextPath() %>/DeSCheckInforServlet" class="btn btn-secondary mb-3">Deactivate List</a>
+            <a href="<%= request.getContextPath() %>/AddSCheckServlet" class="btn btn-secondary mb-3">Deactivate List</a>
             <table class="table table-bordered table-hover">
                 <thead class="table-primary">
                     <tr>
@@ -50,11 +51,7 @@
                         <td><%= check.getStatus() %></td>
                         <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>
                         <td> 
-                            <a href="SCheckDetailServlet?ScheckId=<%= check.getStorageCheckID()%>" class="btn btn-info">Detail</a>
-
-                            <% if ("Pending".equals(check.getStatus())) { %>
-                            <a href="SCheckInforServlet?DEscheckid=<%= check.getStorageCheckID() %>" class="btn btn-danger">Deactivate</a>
-                            <% } %>
+                            <a href="DeSCheckInforServlet?ACscheckid=<%= check.getStorageCheckID() %>" class="btn btn-danger">Activate</a>
                         </td>
 
                     </tr>
@@ -62,8 +59,9 @@
                 </tbody>
             </table>
             <div class="text-center mt-3">
-                <a href="dashboard-manager.jsp" class="btn btn-secondary">Quay lại</a>
+                <a href="SCheckInforServlet" class="btn btn-secondary">Quay lại</a>
             </div>
         </div>
     </body>
 </html>
+

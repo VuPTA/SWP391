@@ -23,8 +23,8 @@
                         <th>Vật phẩm</th>
                         <th>Kích cỡ</th>
                         <th>Màu sắc</th>
-                        <th>Số lượng dự kiến</th>
-                        <th>Số lượng thực tế</th>
+                        <th>Số lượng hệ thống</th>
+                        <th>Số lượng kiểm kê</th>
                         <th>Người kiểm</th>
                         <th>Ngày kiểm</th>                        
                         <th>Ghi chú</th>

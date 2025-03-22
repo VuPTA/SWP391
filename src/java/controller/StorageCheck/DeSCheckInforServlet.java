@@ -19,8 +19,8 @@ import dal.StorageCheckDAO;
  *
  * @author ANNT1
  */
-@WebServlet(name = "SCheckDetailServlet", urlPatterns = {"/SCheckDetailServlet"})
-public class SCheckDetailServlet extends HttpServlet {
+@WebServlet(name = "DeSCheckInforServlet", urlPatterns = {"/DeSCheckInforServlet"})
+public class DeSCheckInforServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class SCheckDetailServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SCheckDetailServlet</title>");
+            out.println("<title>Servlet DeSCheckInforServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SCheckDetailServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeSCheckInforServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,20 +60,19 @@ public class SCheckDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String scheckid = request.getParameter("ScheckId");
         StorageCheckDAO storageCheckDAO = new StorageCheckDAO();
-        //detail
-        if (scheckid != null) {
-            int ScheckId = Integer.parseInt(scheckid);            
-            List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckID(ScheckId);
-            if (!scheckdetail.isEmpty()) {
-                request.setAttribute("scheckdetail", scheckdetail);
-            }else{
-                List<StorageCheckDetail> scheckdetailpending = storageCheckDAO.getStorageCheckDetailsPending(ScheckId);
-                request.setAttribute("scheckdetail", scheckdetailpending);
-            }            
-            request.getRequestDispatcher("StorageCheckDetail.jsp").forward(request, response);
-        }        
+        List<StorageCheckInfor> scheckinfor = storageCheckDAO.getDeStorageCheckInfor();
+        request.setAttribute("scheckinfor", scheckinfor);
+        String ACscheckid = request.getParameter("ACscheckid");
+
+        //activate
+        if (ACscheckid != null) {
+            int ACscheckId = Integer.parseInt(ACscheckid);
+            storageCheckDAO.updateStorageCheckStatus(ACscheckId, "Pending");
+            response.sendRedirect(request.getContextPath() + "/DeSCheckInforServlet");
+            return;
+        }
+        request.getRequestDispatcher("DeStorageCheck.jsp").forward(request, response);
     }
 
     /**
