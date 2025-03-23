@@ -16,7 +16,6 @@ public class Supplier extends Audit{
     private String address;
     private String phone;
     private String taxNumber;
-    private int contactPersonID;
     private String status;
 
     public Supplier() {
@@ -26,14 +25,33 @@ public class Supplier extends Audit{
         this.supplierName = supplierName;
     }
 
-    public Supplier(String supplierID, String supplierName, String address, String phone, String taxNumber, int contactPersonID, String status, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public Supplier(String supplierID, String supplierName, String address, String phone, String taxNumber, String status, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
         this.supplierID = supplierID;
         this.supplierName = supplierName;
         this.address = address;
         this.phone = phone;
         this.taxNumber = taxNumber;
-        this.contactPersonID = contactPersonID;
+        this.status = status;
+    }
+
+    public Supplier(String supplierID, String supplierName, String address, String phone, String taxNumber, String status, int createdBy, Timestamp createdDate) {
+        super(createdBy, createdDate);
+        this.supplierID = supplierID;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.phone = phone;
+        this.taxNumber = taxNumber;
+        this.status = status;
+    }
+
+    public Supplier(String supplierID, String supplierName, String address, String phone, String taxNumber, String status, Integer updatedBy, Timestamp updatedDate) {
+        super(updatedBy, updatedDate);
+        this.supplierID = supplierID;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.phone = phone;
+        this.taxNumber = taxNumber;
         this.status = status;
     }
 
@@ -77,52 +95,12 @@ public class Supplier extends Audit{
         this.taxNumber = taxNumber;
     }
 
-    public int getContactPersonID() {
-        return contactPersonID;
-    }
-
-    public void setContactPersonID(int contactPersonID) {
-        this.contactPersonID = contactPersonID;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public int getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(int createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Integer getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Integer updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Timestamp getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Timestamp updatedDate) {
-        this.updatedDate = updatedDate;
     }
     
 }
