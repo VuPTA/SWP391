@@ -56,12 +56,12 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Create Bin</h1>
+                    <h1>Edit Warehouse</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item">Storage Bin</li>
-                            <li class="breadcrumb-item active">Create Bin</li>
+                            <li class="breadcrumb-item">Warehouses</li>
+                            <li class="breadcrumb-item active">Edit Warehouse</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -74,51 +74,32 @@
 
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Create Bin</h5>
+                                    <h5 class="card-title">Edit Warehouse</h5>
 
-                                    <form class="row g-3 needs-validation" novalidate action="create-bin" method="post">
-                                        <!-- Warehouse ID -->
+                                    <form class="row g-3 needs-validation" novalidate action="edit-warehouse" method="post">
+
                                         <div class="col-md-6">
-                                            <label for="warehouseID" class="form-label">Warehouse</label>
-                                            <select class="form-select" id="warehouseID" name="warehouseID" required>
-                                                <option selected disabled value="">Choose a Warehouse...</option>
-                                                <c:forEach items="${warehouses}" var="warehouse">
-                                                <option value="${warehouse.warehouseID}">${warehouse.warehouseName}</option>
-                                            </c:forEach>
-                                        </select>
-                                        <div class="invalid-feedback">Please select a Warehouse.</div>
+                                            <label for="name" class="form-label">Warehouse Name</label>
+                                            <input type="text" class="form-control" id="name" name="name" required value="${w.warehouseName}"> 
+                                        <input type="hidden" class="form-control" id="storageBinID" name="warehouseId" value="${w.warehouseID}">
+                                        <div class="invalid-feedback">Please enter a Warehouse Name.</div>
                                     </div>
 
-                                    <!-- Bin Name -->
                                     <div class="col-md-6">
-                                        <label for="binName" class="form-label">Bin Name</label>
-                                        <input type="text" class="form-control" id="binName" name="binName" required>
-                                        <div class="invalid-feedback">Please enter a Bin Name.</div>
+                                        <label for="location" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="location" name="location" required value="${w.location}">
+                                        <div class="invalid-feedback">Please enter a valid Location.</div>
                                     </div>
-
-                                    <!-- Bin Type -->
-                                    <div class="col-md-6">
-                                        <label for="binType" class="form-label">Bin Type</label>
-                                        <select class="form-select" id="binType" name="binType" required>
-                                            <option selected disabled value="">Choose Bin Type...</option>
-                                            <option value="Small">Small</option>
-                                            <option value="Standard">Standard</option>
-                                            <option value="Large">Large</option>
-                                        </select>
-                                        <div class="invalid-feedback">Please select a Bin Type.</div>
-                                    </div>
-
-                                    <!-- Capacity -->
-                                    <div class="col-md-6">
-                                        <label for="capacity" class="form-label">Capacity</label>
-                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required>
-                                        <div class="invalid-feedback">Please enter a valid Capacity.</div>
+                                    <div class="col-md-12">
+                                        <label for="note" class="form-label">Note</label>
+                                        <textarea class="form-control" id="note" name="note" required>${w.note}</textarea>
+                                        <div class="invalid-feedback">Please enter a valid Note.</div>
                                     </div>
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit">Create Bin</button>
-                                        <a class="btn btn-danger" href="storage-bin">Cancel</a>
+                                        <button class="btn btn-primary" type="submit">Save Warehouse</button>
+                                        <a class="btn btn-danger" href="warehouses">Cancel</a>
                                     </div>
                                 </form>
 
