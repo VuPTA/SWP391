@@ -9,7 +9,7 @@ package model;
  * @author ADMIN
  */
 public class Account {
-        private int accountId;
+    private int accountId;
     private String username;
     private String password;
     private String role;

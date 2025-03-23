@@ -11,11 +11,12 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="index.html">
+            <a class="nav-link collapsed" href="Home.jsp">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
         </li><!-- End Dashboard Nav -->
+        
         <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Manager'}">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="storage-bin">
@@ -31,13 +32,26 @@
                     <span>Purchase Orders</span>
                 </a>
             </li>
+            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="products">
                     <i class="bi bi-grid"></i>
                     <span>Products</span>
                 </a>
             </li>
+            
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="Accounts-list">
+                    <i class="bi bi-grid"></i>
+                    <span>Accounts List</span>
+                </a>
+            </li>
+            
+            
         </c:if>
+            
+            
+            
 <!--        <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
