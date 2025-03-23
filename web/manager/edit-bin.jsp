@@ -118,7 +118,7 @@
                                     <!-- Capacity -->
                                     <div class="col-md-6">
                                         <label for="capacity" class="form-label">Capacity</label>
-                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required value="${sb.capacity}" ${sb.status eq 'Lock' ? 'readonly' : ''}>
+                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required value="${sb.capacity}" readonly>
                                         <div class="invalid-feedback">Please enter a valid Capacity.</div>
                                     </div>
 
@@ -151,7 +151,25 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const binTypeSelect = document.getElementById("binType");
+                const capacityInput = document.getElementById("capacity");
 
+                binTypeSelect.addEventListener("change", function () {
+                    const binType = binTypeSelect.value;
+                    if (binType === "Small") {
+                        capacityInput.value = 100;
+                    } else if (binType === "Standard") {
+                        capacityInput.value = 200;
+                    } else if (binType === "Large") {
+                        capacityInput.value = 300;
+                    } else {
+                        capacityInput.value = "";
+                    }
+                });
+            });
+        </script>
     </body>
 
 </html>

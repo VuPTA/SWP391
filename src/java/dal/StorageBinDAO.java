@@ -136,4 +136,22 @@ public class StorageBinDAO {
             e.printStackTrace();
         }
     }
+
+    public boolean isContainProduct(String binId) {
+        String query = "select distinct * from StorageBin sb\n"
+                + "join BinProduct bp on sb.StorageBinID = bp.StorageBinID\n"
+                + "where sb.StorageBinID = ? and bp.Quantity > 0";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            ps.setString(1, binId);
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
