@@ -25,16 +25,9 @@
             <file>file:/D:/SWP391.1.G3/Shoes_store/src/java/dal/AccountDAO.java</file>
         </group>
         <group name="SWPSupport">
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/controller/admin/CreateProductServlet.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/controller/admin/CreatePurchaseOrderServlet.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/dal/PurchaseOrderDAO.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/controller/admin/PurchaseOrdersServlet.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/dal/DBContext.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/model/PurchaseOrder.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/model/PurchaseItem.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/admin/edit-purchase-order.jsp</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/model/Role.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/admin/create-purchase-order.jsp</file>
+            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/model/DeliveryOrder.java</file>
+            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/manager/view-delivery-order.jsp</file>
+            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/controller/manager/ViewDeliveryOrderServlet.java</file>
         </group>
     </open-files>
 </project-private>
