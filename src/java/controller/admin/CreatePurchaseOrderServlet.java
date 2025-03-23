@@ -102,12 +102,19 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
             PurchaseOrderDAO podao = new PurchaseOrderDAO();
             String poId = podao.getMaxPurchaseOrderID();
 
+            double totalAmount = 0;
             List<PurchaseItem> purchaseItems = new ArrayList<>();
             for (int i = 0; i < productIds.length; i++) {
-                purchaseItems.add(new PurchaseItem(productIds[i], Integer.parseInt(quantities[i]), Double.parseDouble(prices[i]), createdBy, createDate));
+                int quantity = Integer.parseInt(quantities[i]);
+                double price = Double.parseDouble(prices[i]);
+                totalAmount += quantity * price;
+                purchaseItems.add(new PurchaseItem(productIds[i], quantity, price, createdBy, createDate));
             }
+            // Làm tròn tổng tiền đến 2 chữ số thập phân
+            totalAmount = Math.round(totalAmount * 100.0) / 100.0;
 
             PurchaseOrder po = new PurchaseOrder(poId, supplierID, "Pending", expectedDate, purchaseItems, createdBy, createDate);
+            po.setTotalAmount(totalAmount);
             podao.createPurchaseOrder(po);
             request.setAttribute("message", "Create Purchase Order Success!");
             request.getRequestDispatcher("purchase-orders").forward(request, response);

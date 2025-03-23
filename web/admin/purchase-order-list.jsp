@@ -82,6 +82,7 @@
                                             <tr>
                                                 <th>PO ID</th>
                                                 <th>Supplier</th>
+                                                <th>Total Amount</th>
                                                 <th>Expected Date</th>
                                                 <th>Status</th>
                                                 <th></th>
@@ -91,7 +92,8 @@
                                         <c:forEach items="${purchaseOrders}" var="po">
                                             <tr>
                                                 <td>${po.poId}</td>
-                                                <td>${po.supplier}</td>
+                                                <td>${po.supplierObj.supplierName}</td>
+                                                <td>${po.totalAmount}</td>
                                                 <td>${po.expectedDate}</td>
                                                 <td>${po.status}</td>
                                                 <td style="text-align: right"><a href="edit-purchase-order?id=${po.poId}" class="edit-btn">

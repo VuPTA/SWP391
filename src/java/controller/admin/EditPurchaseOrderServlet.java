@@ -94,7 +94,6 @@ public class EditPurchaseOrderServlet extends HttpServlet {
         try {
             // Lấy dữ liệu từ form
             String poId = request.getParameter("poId");
-            String status = request.getParameter("status");
             String supplierID = request.getParameter("supplierID");
             String expectedDateStr = request.getParameter("expectedDate");
             int createBy = Integer.parseInt(request.getParameter("createdBy"));
@@ -114,12 +113,20 @@ public class EditPurchaseOrderServlet extends HttpServlet {
             Timestamp updateByDate = new Timestamp(System.currentTimeMillis());
             PurchaseOrderDAO podao = new PurchaseOrderDAO();
 
+            double totalAmount = 0;
             List<PurchaseItem> purchaseItems = new ArrayList<>();
             for (int i = 0; i < productIds.length; i++) {
-                purchaseItems.add(new PurchaseItem(productIds[i], Integer.parseInt(quantities[i]), Double.parseDouble(prices[i]), updateBy, updateByDate));
-            }
+                int quantity = Integer.parseInt(quantities[i]);
+                double price = Double.parseDouble(prices[i]);
+                totalAmount += quantity * price;
 
-            PurchaseOrder po = new PurchaseOrder(poId, supplierID, status, expectedDate, purchaseItems, createBy, createdDate, updateBy, updateByDate);
+                purchaseItems.add(new PurchaseItem(productIds[i], quantity, price, updateBy, updateByDate));
+            }
+            // Làm tròn tổng tiền đến 2 chữ số thập phân
+            totalAmount = Math.round(totalAmount * 100.0) / 100.0;
+
+            PurchaseOrder po = new PurchaseOrder(poId, supplierID, "", expectedDate, purchaseItems, createBy, createdDate, updateBy, updateByDate);
+            po.setTotalAmount(totalAmount);
             podao.updatePurchaseOrder(po);
             request.setAttribute("message", "Update Purchase Order Success!");
             request.getRequestDispatcher("purchase-orders").forward(request, response);

@@ -83,7 +83,7 @@
                                             <select class="form-select" id="supplierID" name="supplierID" required>
                                                 <option selected disabled value="">Choose a Supplier...</option>
                                             <c:forEach items="${suppliers}" var="s">
-                                                <option value="${s.supplierName}">${s.supplierName}</option>
+                                                <option value="${s.supplierID}">${s.supplierName}</option>
                                             </c:forEach>
                                         </select>
                                         <div class="invalid-feedback">Please select a Supplier.</div>
@@ -118,6 +118,13 @@
                                             </thead>
                                             <tbody>
                                                 <!-- Rows will be added dynamically -->
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                                    <td id="totalAmount">0.00</td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
                                             </tbody>
                                         </table>
                                     </div>
@@ -174,6 +181,7 @@
                             const row = event.target.closest("tr");
                             if (tableBody.children.length > 1) {
                                 row.remove();
+                                updateTotals();
                             } else {
                                 alert("At least one purchase item is required.");
                             }
@@ -261,6 +269,7 @@
 
                     // Cập nhật tổng tiền
                     function updateTotals() {
+                        let totalAmount = 0;
                         document.querySelectorAll("#purchaseItemsTable tbody tr").forEach(row => {
                             const quantity = parseFloat(row.querySelector(".quantity").value) || 0;
                             const unitPrice = parseFloat(row.querySelector(".unitPrice").textContent) || 0;
@@ -268,7 +277,10 @@
 
                             // Gán total vào ô totalPrice (là <td>, không phải input)
                             row.querySelector(".totalPrice").textContent = total;
+                            totalAmount += parseFloat(total);
                         });
+                        // Hiển thị tổng tiền
+                        document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
                     }
 
 
@@ -293,6 +305,7 @@
                         }
                     });
                 });
+
         </script>
     </body>
 

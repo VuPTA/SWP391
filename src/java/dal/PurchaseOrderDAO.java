@@ -14,6 +14,7 @@ import java.util.List;
 import model.PurchaseItem;
 import model.PurchaseOrder;
 import model.StorageBin;
+import model.Supplier;
 import utils.Helpers;
 
 /**
@@ -28,7 +29,7 @@ public class PurchaseOrderDAO {
 
     public List<PurchaseOrder> getPurchaseOrders() {
         List<PurchaseOrder> list = new ArrayList<>();
-        String query = "select * from purchase_orders order by CreatedDate desc";
+        String query = "select po.*, s.SupplierName from purchase_orders po left join Suppliers s on s.SupplierID = po.Supplier order by po.CreatedDate desc";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
@@ -38,10 +39,12 @@ public class PurchaseOrderDAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDate(4),
-                        rs.getInt(5),
-                        rs.getTimestamp(6),
-                        rs.getInt(7),
-                        rs.getTimestamp(8));
+                        rs.getDouble(5),
+                        rs.getInt(6),
+                        rs.getTimestamp(7),
+                        rs.getInt(8),
+                        rs.getTimestamp(9));
+                o.setSupplierObj(new Supplier(rs.getString(2), rs.getString("SupplierName")));
                 list.add(o);
             }
         } catch (Exception e) {
@@ -57,8 +60,8 @@ public class PurchaseOrderDAO {
     }
 
     public void createPurchaseOrder(PurchaseOrder po) {
-        String sql = "INSERT INTO [purchase_orders] ([PO_ID],[Supplier], [Status],[Expected_date],[CreatedBy]\n"
-                + "      ,[CreatedDate]) VALUES (?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO [purchase_orders] ([PO_ID],[Supplier], [Status],[Expected_date],TOTALAMOUNT,[CreatedBy]\n"
+                + "      ,[CreatedDate]) VALUES (?, ?, ?, ?, ?,?,?)";
 
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
@@ -67,8 +70,9 @@ public class PurchaseOrderDAO {
             ps.setString(2, po.getSupplier());
             ps.setString(3, po.getStatus());
             ps.setDate(4, (Date) po.getExpectedDate());
-            ps.setInt(5, po.getCreatedBy());
-            ps.setTimestamp(6, po.getCreatedDate());
+            ps.setDouble(5, po.getTotalAmount());
+            ps.setInt(6, po.getCreatedBy());
+            ps.setTimestamp(7, po.getCreatedDate());
             ps.executeUpdate();
 
             // Chèn các sản phẩm vào purchase_order_items
@@ -106,10 +110,11 @@ public class PurchaseOrderDAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDate(4),
-                        rs.getInt(5),
-                        rs.getTimestamp(6),
-                        rs.getInt(7),
-                        rs.getTimestamp(8));
+                        rs.getDouble(5),
+                        rs.getInt(6),
+                        rs.getTimestamp(7),
+                        rs.getInt(8),
+                        rs.getTimestamp(9));
 
                 PurchaseItemDAO pidao = new PurchaseItemDAO();
                 List<PurchaseItem> pis = pidao.getPurchaseItemsByPO(rs.getString(1));
@@ -123,7 +128,7 @@ public class PurchaseOrderDAO {
     }
 
     public void updatePurchaseOrder(PurchaseOrder po) {
-        String sql = "update [purchase_orders] set [Supplier] = ?, [Status] = ?,[Expected_date] = ?,[UpdatedBy] = ?\n"
+        String sql = "update [purchase_orders] set [Supplier] = ?, [Expected_date] = ?,TOTALAMOUNT=?,[UpdatedBy] = ?\n"
                 + "      ,[UpdatedDate] = ? where [PO_ID] = ?";
 
         try {
@@ -131,8 +136,8 @@ public class PurchaseOrderDAO {
             ps = conn.prepareStatement(sql);
 
             ps.setString(1, po.getSupplier());
-            ps.setString(2, po.getStatus());
-            ps.setDate(3, (Date) po.getExpectedDate());
+            ps.setDate(2, (Date) po.getExpectedDate());
+            ps.setDouble(3, po.getTotalAmount());
             ps.setInt(4, po.getUpdatedBy());
             ps.setTimestamp(5, po.getUpdatedDate());
             ps.setString(6, po.getPoId());
@@ -167,21 +172,21 @@ public class PurchaseOrderDAO {
             itemStmt.executeBatch();
 
             //udpate quantity product variant
-            if (po.getStatus().equals("Completed")) {
-                String productSQL = "update [ProductVariant] set\n"
-                        + "      [Quantity] = Quantity + ?,\n"
-                        + "[UpdatedBy] = ?\n"
-                        + "      ,[UpdatedDate] = ? where [ProductVariantID] = ?";
-                PreparedStatement productStmt = conn.prepareStatement(productSQL);
-                for (PurchaseItem pi : po.getPurchaseItems()) {
-                    productStmt.setInt(1, pi.getQuantity());
-                    productStmt.setInt(2, pi.getUpdatedBy());
-                    productStmt.setTimestamp(3, pi.getUpdatedDate());
-                    productStmt.setString(4, pi.getProductVariantId());
-                    productStmt.addBatch();
-                }
-                productStmt.executeBatch();
-            }
+//            if (po.getStatus().equals("Completed")) {
+//                String productSQL = "update [ProductVariant] set\n"
+//                        + "      [Quantity] = Quantity + ?,\n"
+//                        + "[UpdatedBy] = ?\n"
+//                        + "      ,[UpdatedDate] = ? where [ProductVariantID] = ?";
+//                PreparedStatement productStmt = conn.prepareStatement(productSQL);
+//                for (PurchaseItem pi : po.getPurchaseItems()) {
+//                    productStmt.setInt(1, pi.getQuantity());
+//                    productStmt.setInt(2, pi.getUpdatedBy());
+//                    productStmt.setTimestamp(3, pi.getUpdatedDate());
+//                    productStmt.setString(4, pi.getProductVariantId());
+//                    productStmt.addBatch();
+//                }
+//                productStmt.executeBatch();
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

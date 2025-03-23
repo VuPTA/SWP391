@@ -21,7 +21,8 @@ public class Supplier extends Audit{
     public Supplier() {
     }
 
-    public Supplier(String supplierName) {
+    public Supplier(String supplierID,String supplierName) {
+        this.supplierID = supplierID;
         this.supplierName = supplierName;
     }
 
