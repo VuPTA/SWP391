@@ -91,6 +91,7 @@ public class UpdateSCheckServlet extends HttpServlet {
         if (storageCheckIDs != null) {
             List<StorageCheckDetail> checkList = new ArrayList<>();
             int storageCheckId = Integer.parseInt(storageCheckIDs[0]);
+            String binID = dao.getStorageBinIDByStorageCheckID(storageCheckId);
             for (int i = 0; i < storageCheckIDs.length; i++) {
                 
                 int periodCount = dao.periodCheck(storageCheckId); // Lấy CheckPeriod trước
@@ -128,6 +129,7 @@ public class UpdateSCheckServlet extends HttpServlet {
                 } else if ("save".equals(action)) {
                     dao.updateBinProductQuantity(detail);
                     dao.updateStorageCheckStatus(storageCheckId, "Completed");
+                    dao.updateBinStatus(binID, "Active");
                 }
             }
 

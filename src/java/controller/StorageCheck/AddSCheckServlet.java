@@ -77,13 +77,12 @@ public class AddSCheckServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy BinID từ request
         String binID = request.getParameter("selectedBins");
         String note = request.getParameter("notes_" + binID);
 
         StorageCheckDAO dao = new StorageCheckDAO();
         dao.createStorageCheck(binID, 2, note); // CreateBy = 2 (tạm thời cố định)
-        dao.updateBinStatus(binID, "Lock"); // Cập nhật trạng thái Bin thành Lock
+        dao.updateBinStatus(binID, "Lock"); 
 
         List<StorageCheckInfor> bininfor = dao.getStorageBinInfo();
         request.setAttribute("bininfor", bininfor);

@@ -220,6 +220,25 @@ public class StorageCheckDAO {
         return details;
     }
 
+    public String getStorageBinIDByStorageCheckID(int storageCheckID) {
+        String sql = "SELECT StorageBinID FROM StorageCheck WHERE StorageCheckID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, storageCheckID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("StorageBinID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // Trả về null nếu không tìm thấy
+    }
+
     //Danh sach để pick bin tạo Scheck mới
     public List<StorageCheckInfor> getStorageBinInfo() {
         List<StorageCheckInfor> storageBins = new ArrayList<>();
@@ -228,7 +247,9 @@ public class StorageCheckDAO {
                 + "FROM StorageBin sb "
                 + "JOIN WareHouse w ON sb.WarehouseID = w.WarehouseID "
                 + "LEFT JOIN BinProduct bp ON sb.StorageBinID = bp.StorageBinID "
-                + "GROUP BY w.WarehouseID, sb.StorageBinID, w.WarehouseName, sb.BinName, sb.BinType, sb.Capacity, sb.Status;";
+                + "WHERE sb.Status <> 'Lock' "
+        + "GROUP BY w.WarehouseID, sb.StorageBinID, w.WarehouseName, sb.BinName, sb.BinType, sb.Capacity, sb.Status;";
+
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
