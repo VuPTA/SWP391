@@ -51,6 +51,12 @@ public class PurchaseOrder extends Audit {
         this.purchaseItems = purchaseItems;
     }
 
+    public PurchaseOrder(String poId, Date expectedDate, Supplier supplierObj) {
+        this.poId = poId;
+        this.expectedDate = expectedDate;
+        this.supplierObj = supplierObj;
+    }
+
     public PurchaseOrder() {
     }
 

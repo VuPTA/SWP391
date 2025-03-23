@@ -170,23 +170,75 @@ public class PurchaseOrderDAO {
                 itemStmt.addBatch();
             }
             itemStmt.executeBatch();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            //udpate quantity product variant
-//            if (po.getStatus().equals("Completed")) {
-//                String productSQL = "update [ProductVariant] set\n"
-//                        + "      [Quantity] = Quantity + ?,\n"
-//                        + "[UpdatedBy] = ?\n"
-//                        + "      ,[UpdatedDate] = ? where [ProductVariantID] = ?";
-//                PreparedStatement productStmt = conn.prepareStatement(productSQL);
-//                for (PurchaseItem pi : po.getPurchaseItems()) {
-//                    productStmt.setInt(1, pi.getQuantity());
-//                    productStmt.setInt(2, pi.getUpdatedBy());
-//                    productStmt.setTimestamp(3, pi.getUpdatedDate());
-//                    productStmt.setString(4, pi.getProductVariantId());
-//                    productStmt.addBatch();
-//                }
-//                productStmt.executeBatch();
-//            }
+    public List<PurchaseOrder> getPOsDropdownToCreateDO() {
+        List<PurchaseOrder> list = new ArrayList<>();
+        String query = "select po.*, s.SupplierName from purchase_orders po left join Suppliers s on s.SupplierID = po.Supplier where po.Status != 'Received' order by po.CreatedDate desc";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                PurchaseOrder o = new PurchaseOrder(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDate(4),
+                        rs.getDouble(5),
+                        rs.getInt(6),
+                        rs.getTimestamp(7),
+                        rs.getInt(8),
+                        rs.getTimestamp(9));
+                o.setSupplierObj(new Supplier(rs.getString(2), rs.getString("SupplierName")));
+                list.add(o);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public PurchaseOrder getPurchaseOrderToCreateDO(String id) {
+        String query = "select po.*, s.SupplierName from purchase_orders po left join Suppliers s on s.SupplierID = po.Supplier where po.PO_ID =?";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            ps.setString(1, id);
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                PurchaseOrder o = new PurchaseOrder(rs.getString(1),
+                        rs.getDate(4),
+                        new Supplier(rs.getString(2), 
+                                rs.getString("SupplierName")));
+                o.setStatus(rs.getString("Status"));
+                PurchaseItemDAO pidao = new PurchaseItemDAO();
+                List<PurchaseItem> pis = pidao.getPurchaseItemsByPOToCreateDO(rs.getString(1));
+                double totalAmount = 0;
+                for (PurchaseItem pi : pis) {
+                    totalAmount += pi.getUnitPrice() * pi.getQuantity();
+                }
+                o.setPurchaseItems(pis);
+                o.setTotalAmount(totalAmount);
+                return o;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public void updateStatusPurchaseOrder(PurchaseOrder po) {
+        String sql = "update [purchase_orders] set Status = ? where [PO_ID] = ?";
+
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, po.getStatus());
+            ps.setString(2, po.getPoId());
+            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }

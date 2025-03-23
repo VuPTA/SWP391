@@ -30,6 +30,12 @@
                     <span>Storage Bin</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="delivery-orders">
+                    <i class="bi bi-grid"></i>
+                    <span>Delivery Orders</span>
+                </a>
+            </li>
         </c:if>
         <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Admin'}">
             <li class="nav-item">
