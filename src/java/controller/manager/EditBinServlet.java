@@ -83,22 +83,30 @@ public class EditBinServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            String storageBinID = request.getParameter("storageBinID");
-            String warehouseID = request.getParameter("warehouseID");
-            String binName = request.getParameter("binName");
-            String binType = request.getParameter("binType");
-            String status = request.getParameter("status");
-            int capacity = Integer.parseInt(request.getParameter("capacity"));
-            HttpSession session = request.getSession();
-            Account acc = (Account) session.getAttribute("account");
-            Integer updateBy = acc.getAccountId();
-
             StorageBinDAO binDAO = new StorageBinDAO();
-            StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, updateBy, new Timestamp(System.currentTimeMillis()));
+            String storageBinID = request.getParameter("storageBinID");
+            String status = request.getParameter("status");
+            if (status.equals("Inactive") && binDAO.isContainProduct(storageBinID)) {
+                // bin contain product -> can not set inactive
+                request.setAttribute("errorMessage", "This storage bin contains products so it cannot be set to inactive");
+                request.getRequestDispatcher("storage-bin").forward(request, response);
+            } else {
 
-            binDAO.updateBin(bin);
-            request.setAttribute("message", "Update Storage Bin Success!");
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+                String warehouseID = request.getParameter("warehouseID");
+                String binName = request.getParameter("binName");
+                String binType = request.getParameter("binType");
+
+                int capacity = Integer.parseInt(request.getParameter("capacity"));
+                HttpSession session = request.getSession();
+                Account acc = (Account) session.getAttribute("account");
+                Integer updateBy = acc.getAccountId();
+
+                StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, updateBy, new Timestamp(System.currentTimeMillis()));
+
+                binDAO.updateBin(bin);
+                request.setAttribute("message", "Update Storage Bin Success!");
+                request.getRequestDispatcher("storage-bin").forward(request, response);
+            }
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Update Storage Bin Fail!: " + e.getMessage());
             request.getRequestDispatcher("storage-bin").forward(request, response);

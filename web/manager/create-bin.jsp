@@ -35,7 +35,12 @@
 
         <!-- Template Main CSS File -->
         <link href="assets/css/style.css" rel="stylesheet">
-
+        <style>
+            .readonly-select,input[readonly]{
+                pointer-events: none;
+                background-color: #e9ecef;
+            }
+        </style>
         <!-- =======================================================
         * Template Name: NiceAdmin
         * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -82,7 +87,7 @@
                                             <label for="warehouseID" class="form-label">Warehouse</label>
                                             <select class="form-select" id="warehouseID" name="warehouseID" required>
                                                 <option selected disabled value="">Choose a Warehouse...</option>
-                                                <c:forEach items="${warehouses}" var="warehouse">
+                                            <c:forEach items="${warehouses}" var="warehouse">
                                                 <option value="${warehouse.warehouseID}">${warehouse.warehouseName}</option>
                                             </c:forEach>
                                         </select>
@@ -111,7 +116,7 @@
                                     <!-- Capacity -->
                                     <div class="col-md-6">
                                         <label for="capacity" class="form-label">Capacity</label>
-                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required>
+                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required readonly>
                                         <div class="invalid-feedback">Please enter a valid Capacity.</div>
                                     </div>
 
@@ -134,6 +139,26 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const binTypeSelect = document.getElementById("binType");
+                const capacityInput = document.getElementById("capacity");
+
+                binTypeSelect.addEventListener("change", function () {
+                    const binType = binTypeSelect.value;
+                    if (binType === "Small") {
+                        capacityInput.value = 100;
+                    } else if (binType === "Standard") {
+                        capacityInput.value = 200;
+                    } else if (binType === "Large") {
+                        capacityInput.value = 300;
+                    } else {
+                        capacityInput.value = "";
+                    }
+                });
+            });
+        </script>
+
     </body>
 
 </html>
