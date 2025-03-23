@@ -81,13 +81,17 @@ public class EditWarehouseServlet extends HttpServlet {
 
             String name = request.getParameter("name");
             String location = request.getParameter("location");
+            String provinceName = request.getParameter("provinceName");
+            String districtName = request.getParameter("districtName");
+            String wardName = request.getParameter("wardName");
             String note = request.getParameter("note");
+            String fullAddress = location + ", " + wardName + ", " + districtName + ", " + provinceName;
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute("account");
             Integer updateBy = acc.getAccountId();
 
             WareHouseDAO dao = new WareHouseDAO();
-            WareHouse wareHouse = new WareHouse(warehouseId, name, location, note, updateBy, new Timestamp(System.currentTimeMillis()));
+            WareHouse wareHouse = new WareHouse(warehouseId, name, fullAddress, note, updateBy, new Timestamp(System.currentTimeMillis()));
             dao.updateWareHouse(wareHouse);
 
             request.setAttribute("message", "Update WareHouse Success!");

@@ -70,14 +70,18 @@ public class CreateWarehouseServlet extends HttpServlet {
         try {
             String name = request.getParameter("name");
             String location = request.getParameter("location");
+            String provinceName = request.getParameter("provinceName");
+            String districtName = request.getParameter("districtName");
+            String wardName = request.getParameter("wardName");
             String note = request.getParameter("note");
+            String fullAddress = location + ", " + wardName + ", " + districtName + ", " + provinceName;
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute("account");
             int createdBy = acc.getAccountId();
 
             WareHouseDAO cdao = new WareHouseDAO();
             String id = cdao.getMaxWareHouseID();
-            WareHouse wareHouse = new WareHouse(id, name, location, note, createdBy, new Timestamp(System.currentTimeMillis()));
+            WareHouse wareHouse = new WareHouse(id, name, fullAddress, note, createdBy, new Timestamp(System.currentTimeMillis()));
 
             cdao.insertWareHouse(wareHouse);
             request.setAttribute("message", "Create WareHouse Success!");
