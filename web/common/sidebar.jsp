@@ -19,6 +19,12 @@
 
         <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Manager'}">
             <li class="nav-item">
+                <a class="nav-link collapsed" href="suppliers">
+                    <i class="bi bi-grid"></i>
+                    <span>Suppliers</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="storage-bin">
                     <i class="bi bi-grid"></i>
                     <span>Storage Bin</span>
