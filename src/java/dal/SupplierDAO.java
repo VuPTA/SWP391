@@ -26,13 +26,13 @@ public class SupplierDAO {
 
     public List<Supplier> getSuppliers() {
         List<Supplier> list = new ArrayList<>();
-        String query = "select SupplierName from Suppliers where Status = 'Active'";
+        String query = "select * from Suppliers where Status = 'Active'";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
             rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
             while (rs.next()) {
-                Supplier o = new Supplier(rs.getString(1));
+                Supplier o = new Supplier(rs.getString(1),rs.getString(2));
                 list.add(o);
             }
         } catch (Exception e) {
