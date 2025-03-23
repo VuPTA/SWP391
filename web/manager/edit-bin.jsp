@@ -35,6 +35,12 @@
 
         <!-- Template Main CSS File -->
         <link href="assets/css/style.css" rel="stylesheet">
+        <style>
+            .readonly-select,input[readonly]{
+                pointer-events: none;
+                background-color: #e9ecef; 
+            }
+        </style>
 
         <!-- =======================================================
         * Template Name: NiceAdmin
@@ -78,11 +84,11 @@
 
                                     <form class="row g-3 needs-validation" novalidate action="edit-bin" method="post">
                                         <input type="hidden" class="form-control" id="storageBinID" name="storageBinID" value="${sb.storageBinID}">
-                                        <!-- Warehouse ID -->
-                                        <div class="col-md-6">
-                                            <label for="warehouseID" class="form-label">Warehouse</label>
-                                            <select class="form-select" id="warehouseID" name="warehouseID" required>
-                                                <option selected disabled value="">Choose a Warehouse...</option>
+                                    <!-- Warehouse ID -->
+                                    <div class="col-md-6">
+                                        <label for="warehouseID" class="form-label">Warehouse</label>
+                                        <select class="form-select ${sb.status eq 'Lock' ? 'readonly-select' : ''}" id="warehouseID" name="warehouseID" required>
+                                            <option selected disabled value="">Choose a Warehouse...</option>
                                             <c:forEach items="${warehouses}" var="warehouse">
                                                 <option value="${warehouse.warehouseID}" ${sb.warehouseID eq warehouse.warehouseID ? 'selected' : '' }>${warehouse.warehouseName}</option>
                                             </c:forEach>
@@ -93,14 +99,14 @@
                                     <!-- Bin Name -->
                                     <div class="col-md-6">
                                         <label for="binName" class="form-label">Bin Name</label>
-                                        <input type="text" class="form-control" id="binName" name="binName" required value="${sb.binName}">
+                                        <input type="text" class="form-control" id="binName" name="binName" required value="${sb.binName}" ${sb.status eq 'Lock' ? 'readonly' : ''}>
                                         <div class="invalid-feedback">Please enter a Bin Name.</div>
                                     </div>
 
                                     <!-- Bin Type -->
                                     <div class="col-md-6">
                                         <label for="binType" class="form-label">Bin Type</label>
-                                        <select class="form-select" id="binType" name="binType" required>
+                                        <select class="form-select ${sb.status eq 'Lock' ? 'readonly-select' : ''}" id="binType" name="binType" required>
                                             <option selected disabled value="">Choose Bin Type...</option>
                                             <option value="Small" ${sb.binType eq 'Small' ? 'selected' : '' }>Small</option>
                                             <option value="Standard" ${sb.binType eq 'Standard' ? 'selected' : '' }>Standard</option>
@@ -112,20 +118,8 @@
                                     <!-- Capacity -->
                                     <div class="col-md-6">
                                         <label for="capacity" class="form-label">Capacity</label>
-                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required value="${sb.capacity}">
+                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required value="${sb.capacity}" ${sb.status eq 'Lock' ? 'readonly' : ''}>
                                         <div class="invalid-feedback">Please enter a valid Capacity.</div>
-                                    </div>
-
-                                    <!-- Time Locked (Datetime) -->
-                                    <div class="col-md-6">
-                                        <label for="timeLocked" class="form-label">Time Locked</label>
-                                        <input type="datetime-local" class="form-control" id="timeLocked" name="timeLocked" value="${sb.timeLocked}">
-                                    </div>
-
-                                    <!-- Time Unlock (Datetime) -->
-                                    <div class="col-md-6">
-                                        <label for="timeUnlock" class="form-label">Time Unlock</label>
-                                        <input type="datetime-local" class="form-control" id="timeUnlock" name="timeUnlock" value="${sb.timeUnlock}">
                                     </div>
 
                                     <!-- Status -->
@@ -133,6 +127,7 @@
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" id="status" name="status" required>
                                             <option value="Active" ${sb.status eq 'Active' ? 'selected' : '' }>Active</option>
+                                            <option value="Lock" ${sb.status eq 'Lock' ? 'selected' : '' }>Lock</option>
                                             <option value="Inactive" ${sb.status eq 'Inactive' ? 'selected' : '' }>Inactive</option>
                                         </select>
                                     </div>
@@ -156,7 +151,7 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
-       
+
     </body>
 
 </html>

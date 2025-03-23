@@ -86,8 +86,6 @@
                                                 <th>Bin Type</th>
                                                 <th>Capacity</th>
                                                 <th>Status</th>
-                                                <th>Time Locked</th>
-                                                <th>Time Unlock</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -100,11 +98,11 @@
                                                 <td>${bin.binType}</td>
                                                 <td>${bin.capacity}</td>
                                                 <td>${bin.status}</td>
-                                                <td>${bin.timeLocked}</td>
-                                                <td>${bin.timeUnlock}</td>
-                                                <td style="text-align: right"><a href="edit-bin?id=${bin.storageBinID}" class="edit-btn">
+                                                <td style="text-align: right">
+                                                    <a href="edit-bin?id=${bin.storageBinID}" class="edit-btn">
                                                         <i class="bx bx-edit"></i>
-                                                    </a></td>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
 
