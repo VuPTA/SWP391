@@ -93,11 +93,8 @@ public class EditBinServlet extends HttpServlet {
             Account acc = (Account) session.getAttribute("account");
             Integer updateBy = acc.getAccountId();
 
-            Timestamp timeLocked = request.getParameter("timeLocked").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeLocked").replace("T", " ") + ":00");
-            Timestamp timeUnlock = request.getParameter("timeUnlock").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeUnlock").replace("T", " ") + ":00");
-
             StorageBinDAO binDAO = new StorageBinDAO();
-            StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, timeLocked, timeUnlock, updateBy, new Timestamp(System.currentTimeMillis()));
+            StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, updateBy, new Timestamp(System.currentTimeMillis()));
 
             binDAO.updateBin(bin);
             request.setAttribute("message", "Update Storage Bin Success!");

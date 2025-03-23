@@ -10,50 +10,42 @@ public class StorageBin extends Audit {
     private String binType;
     private int capacity;
     private String status;
-    private Timestamp timeLocked;
-    private Timestamp timeUnlock;
 
     // Constructor
     public StorageBin() {
     }
 
-    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         this.storageBinID = storageBinID;
         this.warehouseID = warehouseID;
         this.binName = binName;
         this.binType = binType;
         this.capacity = capacity;
         this.status = status;
-        this.timeLocked = timeLocked;
-        this.timeUnlock = timeUnlock;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.updatedBy = updatedBy;
         this.updatedDate = updatedDate;
     }
 
-    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, int createdBy, Timestamp createdDate) {
+    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, int createdBy, Timestamp createdDate) {
         this.storageBinID = storageBinID;
         this.warehouseID = warehouseID;
         this.binName = binName;
         this.binType = binType;
         this.capacity = capacity;
         this.status = status;
-        this.timeLocked = timeLocked;
-        this.timeUnlock = timeUnlock;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
     }
 
-    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Timestamp timeLocked, Timestamp timeUnlock, Integer updatedBy, Timestamp updatedDate) {
+    public StorageBin(String storageBinID, String warehouseID, String binName, String binType, int capacity, String status, Integer updatedBy, Timestamp updatedDate) {
         this.storageBinID = storageBinID;
         this.warehouseID = warehouseID;
         this.binName = binName;
         this.binType = binType;
         this.capacity = capacity;
         this.status = status;
-        this.timeLocked = timeLocked;
-        this.timeUnlock = timeUnlock;
         this.updatedBy = updatedBy;
         this.updatedDate = updatedDate;
     }
@@ -104,22 +96,6 @@ public class StorageBin extends Audit {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Timestamp getTimeLocked() {
-        return timeLocked;
-    }
-
-    public void setTimeLocked(Timestamp timeLocked) {
-        this.timeLocked = timeLocked;
-    }
-
-    public Timestamp getTimeUnlock() {
-        return timeUnlock;
-    }
-
-    public void setTimeUnlock(Timestamp timeUnlock) {
-        this.timeUnlock = timeUnlock;
     }
 
 }

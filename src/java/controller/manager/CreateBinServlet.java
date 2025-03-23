@@ -85,12 +85,9 @@ public class CreateBinServlet extends HttpServlet {
             Account acc = (Account) session.getAttribute("account");
             int createdBy = acc.getAccountId();
 
-            Timestamp timeLocked = request.getParameter("timeLocked").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeLocked").replace("T", " ") + ":00");
-            Timestamp timeUnlock = request.getParameter("timeUnlock").isEmpty() ? null : Timestamp.valueOf(request.getParameter("timeUnlock").replace("T", " ") + ":00");
-
             StorageBinDAO binDAO = new StorageBinDAO();
             String binId = binDAO.getMaxStorageBinID();
-            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", timeLocked, timeUnlock, createdBy, new Timestamp(System.currentTimeMillis()));
+            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", createdBy, new Timestamp(System.currentTimeMillis()));
 
             binDAO.insertBin(bin);
             request.setAttribute("message", "Create Storage Bin Success!");

@@ -115,18 +115,6 @@
                                         <div class="invalid-feedback">Please enter a valid Capacity.</div>
                                     </div>
 
-                                    <!-- Time Locked (Datetime) -->
-                                    <div class="col-md-6">
-                                        <label for="timeLocked" class="form-label">Time Locked</label>
-                                        <input type="datetime-local" class="form-control" id="timeLocked" name="timeLocked">
-                                    </div>
-
-                                    <!-- Time Unlock (Datetime) -->
-                                    <div class="col-md-6">
-                                        <label for="timeUnlock" class="form-label">Time Unlock</label>
-                                        <input type="datetime-local" class="form-control" id="timeUnlock" name="timeUnlock">
-                                    </div>
-
                                     <!-- Submit Button -->
                                     <div class="col-12">
                                         <button class="btn btn-primary" type="submit">Create Bin</button>
