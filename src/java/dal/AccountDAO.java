@@ -62,6 +62,28 @@ public class AccountDAO {
                 return 0;
         }
     }
+    
+    public boolean updateAccount(int accountId, String password, String role, String name, String gender, String phone, String email, String status) {
+        String sql = "UPDATE accounts SET password = ?, role = ?, name = ?, gender = ?, phone = ?, email = ?, status = ? WHERE account_id = ?";
+
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, password);
+            stmt.setString(2, role);
+            stmt.setString(3, name);
+            stmt.setString(4, gender);
+            stmt.setString(5, phone);
+            stmt.setString(6, email);
+            stmt.setString(7, status);
+            stmt.setInt(8, accountId);
+
+            return stmt.executeUpdate() > 0; // Trả về true nếu có dòng bị ảnh hưởng (cập nhật thành công)
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public boolean updateProfile(int accountId, String newName, String newPhone, String newEmail, String newGender) {
         String sql = "UPDATE Account SET Name=?, Phone=?, Email=?, Gender=? WHERE AccountID=?";
