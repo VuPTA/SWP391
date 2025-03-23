@@ -24,20 +24,6 @@
             <file>file:/D:/SWP391.1.G3/Shoes_store/src/java/controller/LogoutServlet.java</file>
             <file>file:/D:/SWP391.1.G3/Shoes_store/src/java/dal/AccountDAO.java</file>
         </group>
-        <group name="SWPSupport">
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/dal/DBContext.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/dashboard-manager.jsp</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/model/WareHouse.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/NiceAdmin/charts-echarts.html</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/controller/LoginServlet.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/manager/storage-bin-list.jsp</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/manager/edit-bin.jsp</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/controller/CategoryListServlet.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/dal/StorageBinDAO.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/model/StorageBin.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/dal/AccountDAO.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/src/java/controller/manager/StorageBinServlet.java</file>
-            <file>file:/D:/Work/Java/JSPServlet/SWP_KhoGiay/Shoes_store/web/META-INF/context.xml</file>
-        </group>
+        <group name="SWPSupport"/>
     </open-files>
 </project-private>

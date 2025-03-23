@@ -7,10 +7,12 @@ import java.util.List;
 
 public class AccountDAO {
 
-       public static void main(String[] args) throws ClassNotFoundException {
-      AccountDAO d = new AccountDAO();
-      d.addAccount(new Account(55, "aaa", "ddd", "Manager", "aaa", "Nam", "0987878787", "aaa", "Active"));
+    public static void main(String[] args) throws ClassNotFoundException {
+        AccountDAO d = new AccountDAO();
+        System.out.println(d.isEmailExists("nvdda1@xample.com"));
+        //d.addAccount(new Account(55, "aaa", "ddd", "Manager", "aaa", "Nam", "0987878787", "aaa", "Active"));
     }
+
     public Account login(String username, String password) {
         String sql = "SELECT AccountID, UserName, Password, RoleID, Name, Gender, Phone, Email, Status FROM Account WHERE UserName=? AND Password=?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -47,7 +49,8 @@ public class AccountDAO {
                 return "Unknown";
         }
     }
-     private int mapRole2(String role) {
+
+    private int mapRole2(String role) {
         switch (role) {
             case "Admin":
                 return 1;
@@ -55,11 +58,32 @@ public class AccountDAO {
                 return 2;
             case "Staff":
                 return 3;
-           default:
-               return 0;
+            default:
+                return 0;
         }
     }
     
+    public boolean updateAccount(int accountId, String password, String role, String name, String gender, String phone, String email, String status) {
+        String sql = "UPDATE accounts SET password = ?, role = ?, name = ?, gender = ?, phone = ?, email = ?, status = ? WHERE account_id = ?";
+
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, password);
+            stmt.setString(2, role);
+            stmt.setString(3, name);
+            stmt.setString(4, gender);
+            stmt.setString(5, phone);
+            stmt.setString(6, email);
+            stmt.setString(7, status);
+            stmt.setInt(8, accountId);
+
+            return stmt.executeUpdate() > 0; // Trả về true nếu có dòng bị ảnh hưởng (cập nhật thành công)
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public boolean updateProfile(int accountId, String newName, String newPhone, String newEmail, String newGender) {
         String sql = "UPDATE Account SET Name=?, Phone=?, Email=?, Gender=? WHERE AccountID=?";
@@ -103,36 +127,34 @@ public class AccountDAO {
         }
         return null;
     }
+
     public Account getAccountByUsername(String username) {
-    Account account = null;
-    String sql = "SELECT * FROM Account WHERE UserName = ?";
+        Account account = null;
+        String sql = "SELECT * FROM Account WHERE UserName = ?";
 
-    try (Connection connection = DBContext.getConnection();
-         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-        
-        preparedStatement.setString(1, username);
-        ResultSet rs = preparedStatement.executeQuery();
+        try (Connection connection = DBContext.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-        if (rs.next()) {
-            account = new Account();
-            account.setAccountId(rs.getInt("AccountID"));
-            account.setName(rs.getString("Name"));
-            account.setGender(rs.getString("Gender"));
-            account.setPhone(rs.getString("Phone"));
-            account.setEmail(rs.getString("Email"));
-            account.setUsername(rs.getString("UserName"));
-            account.setPassword(rs.getString("Password")); // Cần hash password khi lưu
-            account.setRole(mapRole(rs.getInt("RoleID")));
-            account.setStatus(rs.getString("status"));
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                account = new Account();
+                account.setAccountId(rs.getInt("AccountID"));
+                account.setName(rs.getString("Name"));
+                account.setGender(rs.getString("Gender"));
+                account.setPhone(rs.getString("Phone"));
+                account.setEmail(rs.getString("Email"));
+                account.setUsername(rs.getString("UserName"));
+                account.setPassword(rs.getString("Password")); // Cần hash password khi lưu
+                account.setRole(mapRole(rs.getInt("RoleID")));
+                account.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return account;
     }
-
-    return account;
-}
-
-    
 
     public List<Account> getAllAccounts() {
         List<Account> accounts = new ArrayList<>();
@@ -184,10 +206,9 @@ public class AccountDAO {
         }
         return false;
     }
-    
-       public boolean addAccount(Account account) {
-        try (Connection connection = DBContext.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Account (UserName, Password, RoleID, Status, Name, Gender, Phone, Email, [AccountID]) VALUES (?, ?, ?, ?,?,?,?,?,?)")) {
+
+    public boolean addAccount(Account account) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Account (UserName, Password, RoleID, Status, Name, Gender, Phone, Email, [AccountID]) VALUES (?, ?, ?, ?,?,?,?,?,?)")) {
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword()); // Cần mã hóa password
             preparedStatement.setInt(3, mapRole2(account.getRole()));
@@ -200,6 +221,32 @@ public class AccountDAO {
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isEmailExists(String email) {
+        try (Connection conn = DBContext.getConnection()) {
+            String sql = "SELECT * FROM Account WHERE Email = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updatePassword(String email, String newPassword) {
+        try (Connection conn =  DBContext.getConnection()) {
+            String sql = "UPDATE Account SET Password = ? WHERE Email = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

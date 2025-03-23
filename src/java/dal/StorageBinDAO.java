@@ -36,12 +36,10 @@ public class StorageBinDAO {
                         rs.getString(4),
                         rs.getInt(5),
                         rs.getString(6),
-                        rs.getTimestamp(7),
+                        rs.getInt(7),
                         rs.getTimestamp(8),
                         rs.getInt(9),
-                        rs.getTimestamp(10),
-                        rs.getInt(11),
-                        rs.getTimestamp(12));
+                        rs.getTimestamp(10));
                 list.add(o);
             }
         } catch (Exception e) {
@@ -64,12 +62,10 @@ public class StorageBinDAO {
                         rs.getString(4),
                         rs.getInt(5),
                         rs.getString(6),
-                        rs.getTimestamp(7),
+                        rs.getInt(7),
                         rs.getTimestamp(8),
                         rs.getInt(9),
-                        rs.getTimestamp(10),
-                        rs.getInt(11),
-                        rs.getTimestamp(12));
+                        rs.getTimestamp(10));
                 return o;
             }
         } catch (Exception e) {
@@ -82,25 +78,6 @@ public class StorageBinDAO {
         String sql = "SELECT StorageBinID FROM StorageBin";
         String prefixId = "BIN";
         return Helpers.getMaxID(sql, prefixId);
-//        try {
-//            String sql = "SELECT StorageBinID FROM StorageBin";
-//            try (PreparedStatement stmt = DBContext.getConnection().prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-//                int maxNumber = 0;
-//                while (rs.next()) {
-//                    String id = rs.getString(1);
-//                    if (id != null) {
-//                        int number = Helpers.extractNumber(id, "BIN(\\d+)");
-//                        if (number > maxNumber) {
-//                            maxNumber = number;
-//                        }
-//                    }
-//                }
-//                return String.format("BIN%03d", maxNumber + 1);
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Error function getMaxStorageBinID: " + e.getMessage());
-//        }
-//        return null;
     }
 
     public void insertBin(StorageBin bin) {
@@ -110,10 +87,8 @@ public class StorageBinDAO {
                 + "      ,[BinType]\n"
                 + "      ,[Capacity]\n"
                 + "      ,[Status]\n"
-                + "      ,[TimeLocked]\n"
-                + "      ,[TimeUnlock]\n"
                 + "      ,[CreatedBy]\n"
-                + "      ,[CreatedDate]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "      ,[CreatedDate]) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
@@ -124,10 +99,8 @@ public class StorageBinDAO {
             ps.setString(4, bin.getBinType());
             ps.setInt(5, bin.getCapacity());
             ps.setString(6, bin.getStatus());
-            ps.setTimestamp(7, bin.getTimeLocked());
-            ps.setTimestamp(8, bin.getTimeUnlock());
-            ps.setInt(9, bin.getCreatedBy());
-            ps.setTimestamp(10, bin.getCreatedDate());
+            ps.setInt(7, bin.getCreatedBy());
+            ps.setTimestamp(8, bin.getCreatedDate());
 
             ps.executeUpdate();
         } catch (Exception e) {
@@ -142,8 +115,6 @@ public class StorageBinDAO {
                 + "      ,[BinType] = ?\n"
                 + "      ,[Capacity] = ?\n"
                 + "      ,[Status] = ?\n"
-                + "      ,[TimeLocked] = ?\n"
-                + "      ,[TimeUnlock] = ?\n"
                 + "      ,[UpdatedBy] = ?\n"
                 + "      ,[UpdatedDate] = ? where [StorageBinID] = ?";
 
@@ -156,11 +127,9 @@ public class StorageBinDAO {
             ps.setString(3, bin.getBinType());
             ps.setInt(4, bin.getCapacity());
             ps.setString(5, bin.getStatus());
-            ps.setTimestamp(6, bin.getTimeLocked());
-            ps.setTimestamp(7, bin.getTimeUnlock());
-            ps.setInt(8, bin.getUpdatedBy());
-            ps.setTimestamp(9, bin.getUpdatedDate());
-            ps.setString(10, bin.getStorageBinID());
+            ps.setInt(6, bin.getUpdatedBy());
+            ps.setTimestamp(7, bin.getUpdatedDate());
+            ps.setString(8, bin.getStorageBinID());
 
             ps.executeUpdate();
         } catch (Exception e) {

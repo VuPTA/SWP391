@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.manager;
+package controller.admin;
 
-import dal.StorageBinDAO;
-import dal.WareHouseDAO;
+import dal.AccountDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,19 +12,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.sql.Timestamp;
 import java.util.List;
 import model.Account;
-import model.StorageBin;
-import model.WareHouse;
 
 /**
  *
- * @author Admin
+ * @author admin
  */
-@WebServlet(name = "EditBinServlet", urlPatterns = {"/edit-bin"})
-public class EditBinServlet extends HttpServlet {
+@WebServlet(name = "EditAccountServlet", urlPatterns = {"/edit-account"})
+public class EditAccountServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,21 +33,14 @@ public class EditBinServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            String id = request.getParameter("id");
 
-            WareHouseDAO whdao = new WareHouseDAO();
-            List<WareHouse> warehouses = whdao.getWareHouses();
-            request.setAttribute("warehouses", warehouses);
+        int id = Integer.parseInt(request.getParameter("id"));
 
-            StorageBinDAO dao = new StorageBinDAO();
-            StorageBin sb = dao.getStorageBinById(id);
-            request.setAttribute("sb", sb);
-            request.getRequestDispatcher("manager/edit-bin.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        AccountDAO adao = new AccountDAO();
+        Account acc = adao.getAccountById(id);
+
+        request.setAttribute("acc", acc);
+        request.getRequestDispatcher("admin/edit-account.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,7 +55,23 @@ public class EditBinServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            String accountIdStr = request.getParameter("accountId");
+            if (accountIdStr != null && !accountIdStr.isEmpty()) {
+                int accountId = Integer.parseInt(accountIdStr);
+                AccountDAO accountDAO = new AccountDAO();
+                Account acc = accountDAO.getAccountById(accountId);
+
+                if (acc != null) {
+                    request.setAttribute("acc", acc); 
+                    request.getRequestDispatcher("admin/edit-account.jsp").forward(request, response);
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.sendRedirect("account-list.jsp?error=not_found");
     }
 
     /**
@@ -81,27 +85,30 @@ public class EditBinServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         try {
-            String storageBinID = request.getParameter("storageBinID");
-            String warehouseID = request.getParameter("warehouseID");
-            String binName = request.getParameter("binName");
-            String binType = request.getParameter("binType");
+            // Lấy dữ liệu từ form
+            int accountId = Integer.parseInt(request.getParameter("accountId"));
+            String password = request.getParameter("password");
+            String role = request.getParameter("role");
+            String name = request.getParameter("name");
+            String gender = request.getParameter("gender");
+            String phone = request.getParameter("phone");
+            String email = request.getParameter("email");
             String status = request.getParameter("status");
-            int capacity = Integer.parseInt(request.getParameter("capacity"));
-            HttpSession session = request.getSession();
-            Account acc = (Account) session.getAttribute("account");
-            Integer updateBy = acc.getAccountId();
 
-            StorageBinDAO binDAO = new StorageBinDAO();
-            StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, updateBy, new Timestamp(System.currentTimeMillis()));
+            // Gọi DAO để cập nhật thông tin
+            AccountDAO dao = new AccountDAO();
+            boolean success = dao.updateAccount(accountId, password, role, name, gender, phone, email, status);
 
-            binDAO.updateBin(bin);
-            request.setAttribute("message", "Update Storage Bin Success!");
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            // Chuyển hướng sau khi cập nhật
+            if (success) {
+                response.sendRedirect("accountList.jsp?success=1");
+            } else {
+                response.sendRedirect("editAccount.jsp?accountId=" + accountId + "&error=1");
+            }
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Update Storage Bin Fail!: " + e.getMessage());
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            e.printStackTrace();
+            response.sendRedirect("editAccount.jsp?error=1");
         }
     }
 
