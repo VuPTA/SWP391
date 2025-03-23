@@ -78,12 +78,35 @@
 
                                     <form class="row g-3 needs-validation" novalidate action="create-warehouse" method="post">
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <label for="name" class="form-label">Warehouse Name</label>
                                             <input type="text" class="form-control" id="name" name="name" required>
                                             <div class="invalid-feedback">Please enter a Warehouse Name.</div>
                                         </div>
-
+                                        <div class="col-md-6">
+                                            <label for="province" class="form-label">Province</label>
+                                            <select class="form-control" id="province" name="province" required>
+                                                <option selected disabled value="">Choose a Province...</option>
+                                            </select>
+                                            <input type="hidden" id="provinceName" name="provinceName">
+                                            <div class="invalid-feedback">Please enter a valid Province.</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="district" class="form-label">District</label>
+                                            <select class="form-control" id="district" name="district" required>
+                                                <option selected disabled value="">Choose a District...</option>
+                                            </select>
+                                            <input type="hidden" id="districtName" name="districtName">
+                                            <div class="invalid-feedback">Please enter a valid District.</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="ward" class="form-label">Ward</label>
+                                            <select class="form-control" id="ward" name="ward" required>
+                                                <option selected disabled value="">Choose a Ward...</option>
+                                            </select>
+                                            <input type="hidden" id="wardName" name="wardName">
+                                            <div class="invalid-feedback">Please enter a valid Ward.</div>
+                                        </div>
                                         <div class="col-md-6">
                                             <label for="location" class="form-label">Location</label>
                                             <input type="text" class="form-control" id="location" name="location" required>
@@ -94,6 +117,9 @@
                                             <textarea class="form-control" id="note" name="note" required></textarea>
                                             <div class="invalid-feedback">Please enter a valid Note.</div>
                                         </div>
+
+
+
 
                                         <!-- Submit Button -->
                                         <div class="col-12">
@@ -114,6 +140,82 @@
 
             <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
+        <script>
+            let addressSelected = {province: "", district: "", ward: ""};
+
+            // Gọi API lấy danh sách tỉnh/thành phố khi trang tải
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: "https://provinces.open-api.vn/api/p/",
+                    success: function (data) {
+                        console.log(data);
+                        let options = '<option selected disabled value="">Choose a Province...</option>';
+                        data.forEach(function (p) {
+                            options += "<option value='" + p.code + "'>" + p.name + "</option>";
+                        });
+                        $("#province").html(options);
+                    }
+                });
+            });
+
+            // Khi chọn tỉnh/thành phố -> Gọi API lấy quận/huyện
+            $("#province").on("change", function () {
+                let provinceId = $(this).val();
+                $("#district").html('<option selected disabled value="">Choose a District...</option>');
+                $("#ward").html('<option selected disabled value="">Choose a Ward...</option>');
+
+                if (provinceId) {
+                    $("#provinceName").val($("#province option:selected").text());
+                    addressSelected.province = $("#province option:selected").text();
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        url: "https://provinces.open-api.vn/api/p/" + provinceId + "?depth=2",
+                        success: function (data) {
+                            let options = '<option selected disabled value="">Choose a District...</option>';
+                            data.districts.forEach(function (d) {
+                                options += "<option value='" + d.code + "'>" + d.name + "</option>";
+                            });
+                            $("#district").html(options);
+                        }
+                    });
+                }
+            });
+
+            // Khi chọn quận/huyện -> Gọi API lấy xã/phường
+            $("#district").on("change", function () {
+                let districtId = $(this).val();
+                $("#ward").html('<option selected disabled value="">Choose a Ward...</option>');
+
+                if (districtId) {
+                    $("#districtName").val($("#district option:selected").text());
+                    addressSelected.district = $("#district option:selected").text();
+
+                    $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        url: "https://provinces.open-api.vn/api/d/" + districtId + "?depth=2",
+                        success: function (data) {
+                            let options = '<option selected disabled value="">Choose a Ward...</option>';
+                            data.wards.forEach(function (w) {
+                                options += "<option value='" + w.code + "'>" + w.name + "</option>";
+                            });
+                            $("#ward").html(options);
+                        }
+                    });
+                }
+            });
+
+            // Khi chọn xã/phường -> Lưu vào biến
+            $("#ward").on("change", function () {
+                $("#wardName").val($("#ward option:selected").text());
+                addressSelected.ward = $("#ward option:selected").text();
+            });
+        </script>
+
     </body>
 
 </html>
