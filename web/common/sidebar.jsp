@@ -27,6 +27,12 @@
         </c:if>
         <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Admin'}">
             <li class="nav-item">
+                <a class="nav-link collapsed" href="warehouses">
+                    <i class="bi bi-grid"></i>
+                    <span>Warehouses</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="categories">
                     <i class="bi bi-grid"></i>
                     <span>Categories</span>

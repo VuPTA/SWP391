@@ -56,12 +56,12 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Create Category</h1>
+                    <h1>Create Warehouse</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item">Categories</li>
-                            <li class="breadcrumb-item active">Create Category</li>
+                            <li class="breadcrumb-item">Warehouses</li>
+                            <li class="breadcrumb-item active">Create Warehouse</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -74,26 +74,31 @@
 
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Create Category</h5>
+                                    <h5 class="card-title">Create Warehouse</h5>
 
-                                    <form class="row g-3 needs-validation" novalidate action="create-category" method="post">
+                                    <form class="row g-3 needs-validation" novalidate action="create-warehouse" method="post">
 
-                                        <div class="col-md-12">
-                                            <label for="name" class="form-label">Category Name</label>
+                                        <div class="col-md-6">
+                                            <label for="name" class="form-label">Warehouse Name</label>
                                             <input type="text" class="form-control" id="name" name="name" required>
-                                            <div class="invalid-feedback">Please enter a Category Name.</div>
+                                            <div class="invalid-feedback">Please enter a Warehouse Name.</div>
                                         </div>
 
+                                        <div class="col-md-6">
+                                            <label for="location" class="form-label">Location</label>
+                                            <input type="text" class="form-control" id="location" name="location" required>
+                                            <div class="invalid-feedback">Please enter a valid Location.</div>
+                                        </div>
                                         <div class="col-md-12">
-                                            <label for="description" class="form-label">Description</label>
-                                            <textarea class="form-control" id="description" name="description" required></textarea>
-                                            <div class="invalid-feedback">Please enter a valid Description.</div>
+                                            <label for="note" class="form-label">Note</label>
+                                            <textarea class="form-control" id="note" name="note" required></textarea>
+                                            <div class="invalid-feedback">Please enter a valid Note.</div>
                                         </div>
 
                                         <!-- Submit Button -->
                                         <div class="col-12">
-                                            <button class="btn btn-primary" type="submit">Create Category</button>
-                                            <a class="btn btn-danger" href="categories">Cancel</a>
+                                            <button class="btn btn-primary" type="submit">Create Warehouse</button>
+                                            <a class="btn btn-danger" href="warehouses">Cancel</a>
                                         </div>
                                     </form>
 

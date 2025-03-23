@@ -87,7 +87,7 @@
 
                                     <div class="col-md-12">
                                         <label for="description" class="form-label">Description</label>
-                                        <textarea class="form-control" id="description" name="description" min="1" required>${c.description}</textarea>
+                                        <textarea class="form-control" id="description" name="description" required>${c.description}</textarea>
                                         <div class="invalid-feedback">Please enter a valid Description.</div>
                                     </div>
                                     <!-- Status -->
