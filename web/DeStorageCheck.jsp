@@ -15,22 +15,23 @@
     </head>
     <body>
         <div class="container">
-            <h2 class="mt-4">Danh sách kiểm tra kho</h2>
-            <a href="<%= request.getContextPath() %>/AddSCheckServlet" class="btn btn-primary mb-3">Add StorageCheck</a>
-            <a href="<%= request.getContextPath() %>/AddSCheckServlet" class="btn btn-secondary mb-3">Deactivate List</a>
+            <h2 class="mt-4">Deactivate storage check list</h2>
+            <div class="d-flex mt-3 mb-2">
+                <a href="SCheckInforServlet" class="btn btn-secondary ms-auto">Return</a>
+            </div>            
             <table class="table table-bordered table-hover">
                 <thead class="table-primary">
                     <tr>
                         <th>ID</th>
-                        <th>Mã Bin</th>
-                        <th>Tên Bin</th>
-                        <th>Người tạo</th>
-                        <th>Ngày tạo</th>
-                        <th>Số lần kiểm tra</th>
-                        <th>Người cập nhật</th>
-                        <th>Ngày cập nhật</th>
-                        <th>Trạng thái</th>
-                        <th>Ghi chú</th>
+                        <th>Bin Code</th>
+                        <th>Bin Name</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Inspection Count</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <th>Status</th>
+                        <th>Notes</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -58,9 +59,6 @@
                     <% } %>
                 </tbody>
             </table>
-            <div class="text-center mt-3">
-                <a href="SCheckInforServlet" class="btn btn-secondary">Quay lại</a>
-            </div>
         </div>
     </body>
 </html>

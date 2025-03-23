@@ -15,21 +15,26 @@
     <body>
         <div class="container">
             <h2 class="mt-4">Danh sách kiểm tra kho</h2>
-            <a href="<%= request.getContextPath() %>/AddSCheckServlet" class="btn btn-primary mb-3">Add StorageCheck</a>
-            <a href="<%= request.getContextPath() %>/DeSCheckInforServlet" class="btn btn-secondary mb-3">Deactivate List</a>
+            <div class="d-flex mt-3 mb-2">
+                <div>
+                    <a href="<%= request.getContextPath() %>/AddSCheckServlet" class="btn btn-success ">Add StorageCheck</a>
+                    <a href="<%= request.getContextPath() %>/DeSCheckInforServlet" class="btn btn-primary ">Deactivate List</a>
+                </div>
+                <a href="dashboard-manager.jsp" class="btn btn-secondary ms-auto">Return</a>
+            </div>
             <table class="table table-bordered table-hover">
                 <thead class="table-primary">
                     <tr>
                         <th>ID</th>
-                        <th>Mã Bin</th>
-                        <th>Tên Bin</th>
-                        <th>Người tạo</th>
-                        <th>Ngày tạo</th>
-                        <th>Số lần kiểm tra</th>
-                        <th>Người cập nhật</th>
-                        <th>Ngày cập nhật</th>
-                        <th>Trạng thái</th>
-                        <th>Ghi chú</th>
+                        <th>Bin Code</th>
+                        <th>Bin Name</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Inspection Count</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
+                        <th>Status</th>
+                        <th>Notes</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -50,10 +55,12 @@
                         <td><%= check.getStatus() %></td>
                         <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>
                         <td> 
-                            <a href="SCheckDetailServlet?ScheckId=<%= check.getStorageCheckID()%>" class="btn btn-info">Detail</a>
+                            <a href="SCheckDetailServlet?ScheckId=<%= check.getStorageCheckID() %>&status=<%= check.getStatus() %>" 
+                               class="btn btn-info">Detail</a>
+
 
                             <% if ("Pending".equals(check.getStatus())) { %>
-                            <a href="SCheckInforServlet?DEscheckid=<%= check.getStorageCheckID() %>" class="btn btn-danger">Deactivate</a>
+                            <a href="SCheckInforServlet?DEscheckid=<%= check.getStorageCheckID() %>" class="btn btn-danger">Lock</a>
                             <% } %>
                         </td>
 
@@ -61,9 +68,6 @@
                     <% } %>
                 </tbody>
             </table>
-            <div class="text-center mt-3">
-                <a href="dashboard-manager.jsp" class="btn btn-secondary">Quay lại</a>
-            </div>
         </div>
     </body>
 </html>

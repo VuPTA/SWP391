@@ -79,23 +79,12 @@ public class AddSCheckServlet extends HttpServlet {
             throws ServletException, IOException {
         // Lấy BinID từ request
         String binID = request.getParameter("selectedBins");
-
-        // Kiểm tra nếu không có Bin nào được chọn
-        if (binID == null || binID.isEmpty()) {
-            request.setAttribute("message", "Vui lòng chọn một Storage Bin để tạo Storage Check!");
-            request.getRequestDispatcher("addStorageCheck.jsp").forward(request, response);
-            return;
-        }
+        String note = request.getParameter("notes_" + binID);
 
         StorageCheckDAO dao = new StorageCheckDAO();
-        boolean isCreated = dao.createStorageCheck(binID, 2); // CreateBy = 2 (tạm thời cố định)
-        boolean isUpdated = dao.updateBinStatus(binID, "Checking"); // Cập nhật trạng thái Bin thành Checking
+        dao.createStorageCheck(binID, 2, note); // CreateBy = 2 (tạm thời cố định)
+        dao.updateBinStatus(binID, "Lock"); // Cập nhật trạng thái Bin thành Lock
 
-        if (isCreated && isUpdated) {
-            request.setAttribute("message", "Tạo Storage Check thành công!");
-        } else {
-            request.setAttribute("message", "Có lỗi xảy ra khi tạo Storage Check.");
-        }
         List<StorageCheckInfor> bininfor = dao.getStorageBinInfo();
         request.setAttribute("bininfor", bininfor);
         request.getRequestDispatcher("addStorageCheck.jsp").forward(request, response);

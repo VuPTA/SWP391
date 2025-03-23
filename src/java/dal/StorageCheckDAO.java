@@ -19,13 +19,15 @@ public class StorageCheckDAO {
     public List<StorageCheckInfor> getStorageCheckInfor() {
         List<StorageCheckInfor> storageChecks = new ArrayList<>();
 
-        String sql = "SELECT sc.StorageCheckID, sb.StorageBinID AS BinID, sb.BinName, "
-                + "a.Name AS CreatedByName, sc.CreatedDate, ua.Name AS UpdatedByName, "
-                + "sc.UpdatedDate, sc.Status, sc.Note, sc.CheckCounter " // Lấy thêm CheckCounter
-                + "FROM StorageCheck sc "
-                + "JOIN StorageBin sb ON sc.StorageBinID = sb.StorageBinID "
-                + "JOIN Account a ON sc.CreatedBy = a.AccountID "
-                + "LEFT JOIN Account ua ON sc.UpdatedBy = ua.AccountID"; // UpdatedBy có thể NULL
+        String sql = "SELECT sc.StorageCheckID, sb.StorageBinID AS BinID, sb.BinName, \n"
+                + "       a.Name AS CreatedByName, sc.CreatedDate, \n"
+                + "       ua.Name AS UpdatedByName, sc.UpdatedDate, \n"
+                + "       sc.Status, sc.Note, sc.CheckCounter \n"
+                + "FROM StorageCheck sc\n"
+                + "JOIN StorageBin sb ON sc.StorageBinID = sb.StorageBinID\n"
+                + "JOIN Account a ON sc.CreatedBy = a.AccountID\n"
+                + "LEFT JOIN Account ua ON sc.UpdatedBy = ua.AccountID\n"
+                + "WHERE sc.Status <> 'Deactivate';";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -93,6 +95,7 @@ public class StorageCheckDAO {
         return storageChecks;
     }
 
+    //for history
     public List<StorageCheckDetail> getStorageCheckDetailsByStorageCheckID(int storageCheckID) {
         List<StorageCheckDetail> details = new ArrayList<>();
         String sql = "SELECT scd.StorageCheckDetailID, scd.StorageCheckID, scd.BinProductID, "
@@ -138,9 +141,59 @@ public class StorageCheckDAO {
         return details;
     }
 
+    //for detail
+    public List<StorageCheckDetail> getStorageCheckDetailsByStorageCheckIDMaxPeriod(int storageCheckID) {
+        List<StorageCheckDetail> details = new ArrayList<>();
+        String sql = "SELECT scd.StorageCheckDetailID, scd.StorageCheckID, scd.BinProductID, "
+                + "scd.ProductVariantID, pv.PVName, pv.Size, pv.Color, "
+                + "scd.ActualQuantity, scd.ExpectedQuantity, scd.CheckPeriod, scd.Note, "
+                + "a.Name AS CreatedByName, scd.CreatedDate, ua.Name AS UpdatedByName, scd.UpdatedDate "
+                + "FROM StorageCheckDetail scd "
+                + "JOIN ProductVariant pv ON scd.ProductVariantID = pv.ProductVariantID "
+                + "LEFT JOIN Account a ON scd.CreatedBy = a.AccountID "
+                + "LEFT JOIN Account ua ON scd.UpdatedBy = ua.AccountID "
+                + "WHERE scd.StorageCheckID = ? "
+                + "AND scd.CheckPeriod = (SELECT MAX(CheckPeriod) FROM StorageCheckDetail WHERE StorageCheckID = ?)";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, storageCheckID);
+            ps.setInt(2, storageCheckID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String createdDate = (rs.getTimestamp("CreatedDate") != null)
+                            ? dateFormat.format(rs.getTimestamp("CreatedDate")) : null;
+                    String updatedDate = (rs.getTimestamp("UpdatedDate") != null)
+                            ? dateFormat.format(rs.getTimestamp("UpdatedDate")) : null;
+                    details.add(new StorageCheckDetail(
+                            rs.getInt("StorageCheckDetailID"),
+                            rs.getInt("StorageCheckID"),
+                            rs.getInt("BinProductID"),
+                            rs.getString("ProductVariantID"),
+                            rs.getString("PVName"),
+                            rs.getInt("Size"), // Thêm Size
+                            rs.getString("Color"), // Thêm Color
+                            rs.getInt("ActualQuantity"),
+                            rs.getInt("ExpectedQuantity"),
+                            rs.getInt("CheckPeriod"),
+                            rs.getString("Note"),
+                            rs.getString("CreatedByName"),
+                            createdDate,
+                            rs.getString("UpdatedByName"),
+                            updatedDate
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return details;
+    }
+
+    //new
     public List<StorageCheckDetail> getStorageCheckDetailsPending(int storageCheckID) {
         List<StorageCheckDetail> details = new ArrayList<>();
-        String sql = "SELECT pv.PVName, pv.Size, pv.Color, bp.Quantity "
+        String sql = "SELECT sc.StorageCheckID, bp.BinProductID, pv.ProductVariantID, "
+                + "pv.PVName, pv.Size, pv.Color, bp.Quantity "
                 + "FROM StorageCheck sc "
                 + "JOIN BinProduct bp ON sc.StorageBinID = bp.StorageBinID "
                 + "JOIN ProductVariant pv ON bp.ProductVariantID = pv.ProductVariantID "
@@ -151,6 +204,9 @@ public class StorageCheckDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     details.add(new StorageCheckDetail(
+                            rs.getInt("StorageCheckID"), // Đổi từ StorageBinID thành StorageCheckID
+                            rs.getInt("BinProductID"),
+                            rs.getString("ProductVariantID"),
                             rs.getString("PVName"),
                             rs.getInt("Size"),
                             rs.getString("Color"),
@@ -195,15 +251,17 @@ public class StorageCheckDAO {
     }
 
     // Hàm tạo Storage Check với BinID, CheckCounter=0, Status='Pending', CreatedBy=2
-    public boolean createStorageCheck(String binID, int createdBy) {
-        String sql = "INSERT INTO StorageCheck (StorageBinID, CheckCounter, Status, CreatedBy, UpdatedDate) VALUES (?, 0, 'Pending', ?, NULL)";
+    public boolean createStorageCheck(String binID, int createdBy, String note) {
+        String sql = "INSERT INTO StorageCheck (StorageBinID, CheckCounter, Status, Note, CreatedBy, UpdatedDate) "
+                + "VALUES (?, 0, 'Pending', ?, ?, NULL)";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, binID);
-            ps.setInt(2, createdBy);
+            ps.setString(2, note);      // Chèn giá trị note vào
+            ps.setInt(3, createdBy);
 
-            return ps.executeUpdate() > 0; // Trả về true nếu thêm thành công
+            return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -228,16 +286,26 @@ public class StorageCheckDAO {
         return false;
     }
 
-    // Hàm cập nhật trạng thái StorageCheck theo Id (để deative-active)
-    public boolean updateStorageCheckStatus(int storageCheckID, String newStatus) {
-        String sql = "UPDATE StorageCheck SET Status = ? WHERE StorageCheckID = ?";
+    //UpdatedBy, CheckCounter, UpdatedBy, UpdatedDate
+    public boolean updateStorageCheck(int storageCheckID, StorageCheckDetail detail) {
+        String sql = "UPDATE StorageCheck SET CheckCounter = ?, UpdatedBy = ?, UpdatedDate = ? WHERE StorageCheckID = ?";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, newStatus);
-            ps.setInt(2, storageCheckID);
+            // Set CheckCounter
+            ps.setInt(1, detail.getCheckPeriod());
 
-            return ps.executeUpdate() > 0; // Trả về true nếu cập nhật thành công
+            // Set UpdatedBy
+            ps.setInt(2, detail.getCreatedByID());
+
+            // Set UpdatedDate (chuyển đổi String -> Timestamp)
+            Timestamp updatedTimestamp = Timestamp.valueOf(detail.getUpdatedDate());
+            ps.setTimestamp(3, updatedTimestamp);
+
+            // Set StorageCheckID
+            ps.setInt(4, storageCheckID);
+
+            return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -245,6 +313,102 @@ public class StorageCheckDAO {
         return false;
     }
 
+    // Hàm cập nhật trạng thái StorageCheck theo Id
+    public boolean updateStorageCheckStatus(int storageCheckID, String newStatus) {
+        String sql = "UPDATE StorageCheck SET Status = ? WHERE StorageCheckID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newStatus);
+            ps.setInt(2, storageCheckID);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void createStorageCheckDetailN(StorageCheckDetail detail) {
+        String insertSQL = "INSERT INTO StorageCheckDetail (StorageCheckID, BinProductID, ProductVariantID, ActualQuantity, ExpectedQuantity, CheckPeriod, Note, CreatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement psInsert = conn.prepareStatement(insertSQL)) {
+
+            psInsert.setInt(1, detail.getStorageCheckID());
+            psInsert.setInt(2, detail.getBinProductID());
+            psInsert.setString(3, detail.getProductVariantID());
+            psInsert.setInt(4, detail.getActualQuantity());
+            psInsert.setInt(5, detail.getExpectedQuantity());
+            psInsert.setInt(6, detail.getCheckPeriod()); // Nhận từ servlet
+            psInsert.setString(7, detail.getNote());
+            psInsert.setInt(8, detail.getCreatedByID());
+
+            psInsert.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //CheckPeriod tính ở hàm luôn(Ko dùng-để tham khảo)
+    public void createStorageCheckDetail(StorageCheckDetail detail) {
+        String getCheckPeriodSQL = "SELECT COALESCE(MAX(CheckPeriod), 0) + 1 FROM StorageCheckDetail WHERE StorageCheckID = ?";
+        String insertSQL = "INSERT INTO StorageCheckDetail (StorageCheckID, BinProductID, ProductVariantID, ActualQuantity, ExpectedQuantity, CheckPeriod, Note, CreatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement psCheck = conn.prepareStatement(getCheckPeriodSQL); PreparedStatement psInsert = conn.prepareStatement(insertSQL)) {
+
+            // Lấy giá trị CheckPeriod mới
+            psCheck.setInt(1, detail.getStorageCheckID());
+            ResultSet rs = psCheck.executeQuery();
+            int nextCheckPeriod = 1;
+            if (rs.next()) {
+                nextCheckPeriod = rs.getInt(1);
+            }
+
+            // Chèn dữ liệu mới với CheckPeriod được tính
+            psInsert.setInt(1, detail.getStorageCheckID());
+            psInsert.setInt(2, detail.getBinProductID());
+            psInsert.setString(3, detail.getProductVariantID());
+            psInsert.setInt(4, detail.getActualQuantity());
+            psInsert.setInt(5, detail.getExpectedQuantity());
+            psInsert.setInt(6, nextCheckPeriod); // Giá trị CheckPeriod mới
+            psInsert.setString(7, detail.getNote());
+            psInsert.setInt(8, detail.getCreatedByID());
+
+            psInsert.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateBinProductQuantity(StorageCheckDetail detail) {
+        String updateSQL = "UPDATE BinProduct SET Quantity = ? WHERE BinProductID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement psUpdate = conn.prepareStatement(updateSQL)) {
+
+            psUpdate.setInt(1, detail.getActualQuantity()); // Cập nhật quantity bằng ActualQuantity
+            psUpdate.setInt(2, detail.getBinProductID()); // Xác định BinProductID để update
+
+            psUpdate.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int periodCheck(int storageCheckID) {
+        String sql = "SELECT COALESCE(MAX(CheckPeriod), 0) + 1 FROM StorageCheckDetail WHERE StorageCheckID = ?";
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, storageCheckID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1; // Nếu có lỗi, trả về 1 (CheckPeriod bắt đầu từ 1)
+    }
+
+    //code sai giữ xem lại
     public void updateStorageCheckDetail(StorageCheckDetail detail) {
         String sql = "UPDATE StorageCheckDetail SET ActualQuantity = ?, ExpectedQuantity = ?, Note = ? WHERE StorageCheckDetailID = ?";
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -262,25 +426,53 @@ public class StorageCheckDAO {
 
     public static void main(String[] args) {
         StorageCheckDAO dao = new StorageCheckDAO();
-        List<StorageCheckInfor> storageChecks = dao.getStorageBinInfo();
-        dao.createStorageCheck("AA", 1);
+        int testStorageCheckID = 10; // Thay số này bằng ID thực tế trong database
 
-        // Kiểm tra nếu danh sách rỗng hoặc có dữ liệu
-        if (storageChecks.isEmpty()) {
-            System.out.println("⚠ Không có dữ liệu nào được truy xuất.");
+        List<StorageCheckDetail> details = dao.getStorageCheckDetailsPending(testStorageCheckID);
+
+        if (details.isEmpty()) {
+            System.out.println("No storage check details found for StorageCheckID: " + testStorageCheckID);
         } else {
-            System.out.println("=== KẾT QUẢ TRUY VẤN ===");
-            for (StorageCheckInfor item : storageChecks) {
-                System.out.println("🔹 ID: " + item.getStorageBinID());
-                System.out.println("🏭 Warehouse Name: " + item.getWarehouseName());
-                System.out.println("📦 Bin Name: " + item.getBinName());
-                System.out.println("🔢 Bin Type: " + item.getBinType());
-                System.out.println("📊 Capacity: " + item.getCapacity());
-                System.out.println("📦 Total Quantity: " + item.getTotalQuantity());
-                System.out.println("⚡ Status: " + item.getStatus());
-                System.out.println("----------------------------");
+            for (StorageCheckDetail detail : details) {
+                System.out.println(detail);
             }
         }
     }
+//    public static void main(String[] args) {
+//        StorageCheckDAO dao = new StorageCheckDAO();
+//
+//        // Test tạo mới StorageCheckDetail
+//        StorageCheckDetail testDetail = new StorageCheckDetail();
+//        testDetail.setStorageCheckID(1);  // Giả sử có StorageCheckID = 1
+//        testDetail.setBinProductID(1);    // Test với BinProductID giả định
+//        testDetail.setProductVariantID("VAR001");
+//        testDetail.setActualQuantity(99);
+//        testDetail.setExpectedQuantity(15);
+//        testDetail.setNote("Test kiểm tra lưu dữ liệu");
+//        testDetail.setCreatedByID(1);  // Giả sử người tạo có ID = 1
+//
+//        dao.createStorageCheckDetail(testDetail);
+//        // Lấy thông tin StorageCheck hiện có
+//        List<StorageCheckDetail> storageChecks = dao.getStorageCheckDetailsByStorageCheckID(1);
+//
+//        System.out.println("✅ Đã thử chèn StorageCheckDetail mới!");
+//
+//        // Kiểm tra nếu danh sách rỗng hoặc có dữ liệu
+//        if (storageChecks.isEmpty()) {
+//            System.out.println("⚠ Không có dữ liệu nào được truy xuất.");
+//        } else {
+//            System.out.println("=== KẾT QUẢ TRUY VẤN ===");
+//            for (StorageCheckDetail item : storageChecks) {
+//                System.out.println("🔹 ID: " + item.getStorageCheckDetailID());
+//                System.out.println("🏭 Warehouse Name: " + item.getCreatedBy());
+//                System.out.println("📦 Bin Name: " + item.getProductVariantID());
+//                System.out.println("🔢 Bin Type: " + item.getActualQuantity());
+//                System.out.println("📊 Check: " + item.getCheckPeriod());
+//                System.out.println("📦 Total Quantity: " + item.getPvName());
+//                System.out.println("⚡ Status: " + item.getSize());
+//                System.out.println("----------------------------");
+//            }
+//        }
+//    }
 
 }

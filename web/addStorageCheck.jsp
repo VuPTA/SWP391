@@ -17,11 +17,12 @@
         <div class="container">
             <h2 class="mt-4">Danh sách Storage Bin</h2>
             <form action="AddSCheckServlet" method="post">
-                <div class="d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn btn-success">Create</button>
-                    <a href="<%= request.getContextPath() %>/SCheckInforServlet" class="btn btn-secondary">Quay lại</a>
+                <div class="d-flex mt-3 mb-2">
+                    <div>
+                        <button type="submit" class="btn btn-success">Create</button>
+                    </div>
+                    <a href="<%= request.getContextPath() %>/SCheckInforServlet" class="btn btn-secondary ms-auto">Quay lại</a>
                 </div>
-                <br>
                 <table class="table table-bordered table-hover">
                     <thead class="table-primary">
                         <tr>
@@ -33,6 +34,7 @@
                             <th>Capacity</th>
                             <th>Total Quantity</th>
                             <th>Status</th>
+                            <th>Notes</th>
                             <th>Chọn</th>
                         </tr>
                     </thead>
@@ -51,6 +53,9 @@
                             <td><%= bin.getCapacity() %></td>
                             <td><%= bin.getTotalQuantity() %></td>
                             <td><%= bin.getStatus() %></td>
+                            <td>
+                                <input type="text" name="notes_<%= bin.getStorageBinID() %>" class="form-control" placeholder="Nhập ghi chú...">
+                            </td>
                             <td class="text-center">
                                 <input type="radio" name="selectedBins" value="<%= bin.getStorageBinID() %>" required="">
                             </td>

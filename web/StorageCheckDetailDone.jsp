@@ -1,6 +1,6 @@
 <%-- 
-    Document   : StorageCheckDetail
-    Created on : 4 Mar 2025, 23:28:04
+    Document   : StorageCheckDetailDone
+    Created on : 24 Mar 2025, 03:00:25
     Author     : ANNT1
 --%>
 
@@ -19,18 +19,9 @@
 
             <!-- Vùng chứa nút, giữ nguyên vị trí -->
             <div class="d-flex mt-3 mb-2">
-                <div>
-                    <!-- Nút Update luôn hiển thị -->
-                    <button type="submit" class="btn btn-success" name="action" value="update" form="storageCheckForm">Update</button>
-
-                    <%-- Chỉ hiển thị nút Save nếu status KHÔNG phải "Pending" --%>
-                    <% if (!"Pending".equals(request.getAttribute("status"))) { %>
-                    <button type="submit" class="btn btn-danger" name="action" value="save" form="storageCheckForm">Save</button>
-                    <% } %>
-
+                <div>                    
                     <a href="SCheckDetailServlet?hisscheckid=<%= request.getAttribute("scheckid") %>" class="btn btn-primary">Checking history</a>                      
                 </div>
-
                 <a href="<%= request.getContextPath() %>/SCheckInforServlet" class="btn btn-secondary ms-auto">Return</a>
             </div>
 
@@ -61,20 +52,13 @@
                             <td><%= check.getColor() %></td>
                             <td><%= check.getExpectedQuantity() %></td>
                             <td>
-                                <input type="number" name="checkedQuantity" 
-                                       value="<%= check.getActualQuantity() %>" class="form-control">
+                                <%= check.getActualQuantity() %>
                             </td>                   
                             <td><%= check.getCreatedBy() != null ? check.getCreatedBy() : "Chưa cập nhật" %></td>
                             <td><%= check.getCheckPeriod() >= 1 ? check.getCheckPeriod() : "Chưa cập nhật" %></td>
                             <td><%= check.getCreatedDate() != null ? check.getCreatedDate() : "Chưa cập nhật" %></td>
-                            <td>
-                                <input type="text" name="notes" 
-                                       value="<%= check.getNote() != null ? check.getNote() : "" %>" class="form-control">
-                            </td>
-                    <input type="hidden" name="expectedQuantity" value="<%= check.getExpectedQuantity() %>">
-                    <input type="hidden" name="storageCheckID" value="<%= check.getStorageCheckID() %>">
-                    <input type="hidden" name="binProductID" value="<%= check.getBinProductID() %>">
-                    <input type="hidden" name="productVariantID" value="<%= check.getProductVariantID() %>">
+                            <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>                            
+                    
                     </tr>
                     <% } %>
                     </tbody>

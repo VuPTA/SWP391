@@ -61,18 +61,41 @@ public class SCheckDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String scheckid = request.getParameter("ScheckId");
+        String hisscheckid = request.getParameter("hisscheckid");
+        String status = request.getParameter("status");
         StorageCheckDAO storageCheckDAO = new StorageCheckDAO();
         //detail
-        if (scheckid != null) {
+        if (scheckid != null)  {
             int ScheckId = Integer.parseInt(scheckid);            
-            List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckID(ScheckId);
+            List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckIDMaxPeriod(ScheckId);
             if (!scheckdetail.isEmpty()) {
                 request.setAttribute("scheckdetail", scheckdetail);
             }else{
                 List<StorageCheckDetail> scheckdetailpending = storageCheckDAO.getStorageCheckDetailsPending(ScheckId);
                 request.setAttribute("scheckdetail", scheckdetailpending);
             }            
-            request.getRequestDispatcher("StorageCheckDetail.jsp").forward(request, response);
+            request.setAttribute("scheckid", scheckid);
+            if(status == null || status.equals("Completed")){
+                request.getRequestDispatcher("StorageCheckDetailDone.jsp").forward(request, response);
+            }else{
+                request.setAttribute("status", status);
+                request.getRequestDispatcher("StorageCheckDetail.jsp").forward(request, response);
+            }            
+            return;
+        }
+        //hisotry detail
+        if (hisscheckid != null) {
+            int ScheckId = Integer.parseInt(hisscheckid);            
+            List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckID(ScheckId);
+            if (!scheckdetail.isEmpty()) {
+                request.setAttribute("scheckdetail", scheckdetail);
+            }else{
+                List<StorageCheckDetail> scheckdetailpending = storageCheckDAO.getStorageCheckDetailsPending(ScheckId);
+                request.setAttribute("scheckdetail", scheckdetailpending);
+            } 
+            request.setAttribute("scheckid", hisscheckid);
+            request.getRequestDispatcher("StorageCheckDetailHistory.jsp").forward(request, response);
+            return;
         }        
     }
 

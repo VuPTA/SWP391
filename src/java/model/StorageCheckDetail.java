@@ -21,9 +21,13 @@ public class StorageCheckDetail {
     private int checkPeriod;
     private String note;
     private String createdBy;
+    private int createdByID;
     private String createdDate;
     private String updatedBy; // Có thể NULL
     private String updatedDate;
+
+    public StorageCheckDetail() {
+    }
 
 
     public StorageCheckDetail(int storageCheckDetailID, int storageCheckID, int binProductID, String productVariantID, String pvName, int size, String color, int actualQuantity, int expectedQuantity, int checkPeriod, String note, String createdBy, String createdDate, String updatedBy, String updatedDate) {
@@ -43,6 +47,18 @@ public class StorageCheckDetail {
         this.updatedBy = updatedBy;
         this.updatedDate = updatedDate;
     }
+    
+    //newpending
+    public StorageCheckDetail(int storageCheckID, int binProductID, String productVariantID, String pvName, int size, String color, int expectedQuantity) {    
+        this.storageCheckID = storageCheckID;
+        this.binProductID = binProductID;
+        this.productVariantID = productVariantID;
+        this.pvName = pvName;
+        this.size = size;
+        this.color = color;
+        this.expectedQuantity = expectedQuantity;
+    }
+
     //Pending
     public StorageCheckDetail(String pvName, int size, String color, int expectedQuantity) {
         this.pvName = pvName;
@@ -51,6 +67,15 @@ public class StorageCheckDetail {
         this.expectedQuantity = expectedQuantity;
     }
 
+    public int getCreatedByID() {
+        return createdByID;
+    }
+
+    public void setCreatedByID(int createdByID) {
+        this.createdByID = createdByID;
+    }
+    
+    
     public int getSize() {
         return size;
     }
