@@ -56,11 +56,11 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Purchase Orders</h1>
+                    <h1>Categories</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item active">Purchase Orders</li>
+                            <li class="breadcrumb-item active">Categories</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -73,32 +73,32 @@
                                 <div class="card-body">
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
-                                        <h5 class="card-title">Purchase Order List</h5>
-                                        <a href="create-purchase-order" class="btn btn-primary" style="height: 40px">Create Purchase Order</a>
+                                        <h5 class="card-title">Category List</h5>
+                                        <a href="create-category" class="btn btn-primary" style="height: 40px">Create Category</a>
                                     </div>
                                     <!-- Table with stripped rows -->
                                     <table class="table datatable">
                                         <thead>
                                             <tr>
-                                                <th>PO ID</th>
-                                                <th>Supplier</th>
-                                                <th>Total Amount</th>
-                                                <th>Expected Date</th>
+                                                <th>Category ID</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
                                                 <th>Status</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${purchaseOrders}" var="po">
+                                        <c:forEach items="${categories}" var="c">
                                             <tr>
-                                                <td>${po.poId}</td>
-                                                <td>${po.supplierObj.supplierName}</td>
-                                                <td>${po.totalAmount}</td>
-                                                <td>${po.expectedDate}</td>
-                                                <td>${po.status}</td>
-                                                <td style="text-align: right"><a href="edit-purchase-order?id=${po.poId}" class="edit-btn">
+                                                <td>${c.categoryId}</td>
+                                                <td>${c.categoryName}</td>
+                                                <td>${c.description}</td>
+                                                <td>${c.status}</td>
+                                                <td style="text-align: right">
+                                                    <a href="edit-category?id=${c.categoryId}" class="edit-btn">
                                                         <i class="bx bx-edit"></i>
-                                                    </a></td>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
 

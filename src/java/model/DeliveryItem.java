@@ -10,75 +10,75 @@ import java.sql.Timestamp;
  *
  * @author Admin
  */
-public class PurchaseItem extends Audit {
+public class DeliveryItem extends Audit {
 
-    private int purchaseItemId;
-    private String poId;  // Foreign Key
+    private int deliveryItemId;
+    private String doId;  // Foreign Key
     private String productVariantId;
     private int quantity;
     private double unitPrice;
 
     private ProductVariant product;
 
-    public PurchaseItem() {
+    public DeliveryItem() {
     }
 
-    public PurchaseItem(String productVariantId, int quantity, double unitPrice, int createdBy, Timestamp createdDate) {
+    public DeliveryItem(String productVariantId, int quantity, double unitPrice, int createdBy, Timestamp createdDate) {
         super(createdBy, createdDate);
         this.productVariantId = productVariantId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
 
-    public PurchaseItem(String productVariantId, int quantity, double unitPrice, Integer updatedBy, Timestamp updatedDate) {
+    public DeliveryItem(String productVariantId, int quantity, double unitPrice, Integer updatedBy, Timestamp updatedDate) {
         super(updatedBy, updatedDate);
         this.productVariantId = productVariantId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
 
-    public PurchaseItem(int purchaseItemId, String poId, String productVariantId, int quantity, double unitPrice, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public DeliveryItem(int deliveryItemId, String doId, String productVariantId, int quantity, double unitPrice, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
-        this.purchaseItemId = purchaseItemId;
-        this.poId = poId;
+        this.deliveryItemId = deliveryItemId;
+        this.doId = doId;
         this.productVariantId = productVariantId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
 
-    public PurchaseItem(int purchaseItemId, String poId, String productVariantId, int quantity, double unitPrice, ProductVariant product, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public DeliveryItem(int deliveryItemId, String doId, String productVariantId, int quantity, double unitPrice, ProductVariant product, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
-        this.purchaseItemId = purchaseItemId;
-        this.poId = poId;
+        this.deliveryItemId = deliveryItemId;
+        this.doId = doId;
         this.productVariantId = productVariantId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.product = product;
     }
 
-    public PurchaseItem(int purchaseItemId, String poId, String productVariantId, int quantity, double unitPrice, ProductVariant product) {
-        this.purchaseItemId = purchaseItemId;
-        this.poId = poId;
-        this.productVariantId = productVariantId;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.product = product;
+    public int getDeliveryItemId() {
+        return deliveryItemId;
     }
 
-    public int getPurchaseItemId() {
-        return purchaseItemId;
+    public void setDeliveryItemId(int deliveryItemId) {
+        this.deliveryItemId = deliveryItemId;
     }
 
-    public void setPurchaseItemId(int purchaseItemId) {
-        this.purchaseItemId = purchaseItemId;
+    public String getDoId() {
+        return doId;
     }
+
+    public void setDoId(String doId) {
+        this.doId = doId;
+    }
+
 
     public String getPoId() {
-        return poId;
+        return doId;
     }
 
-    public void setPoId(String poId) {
-        this.poId = poId;
+    public void setPoId(String doId) {
+        this.doId = doId;
     }
 
     public String getProductVariantId() {

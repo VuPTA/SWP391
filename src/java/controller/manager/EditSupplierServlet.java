@@ -5,6 +5,7 @@
 package controller.manager;
 
 import dal.StorageBinDAO;
+import dal.SupplierDAO;
 import dal.WareHouseDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,14 +19,15 @@ import java.sql.Timestamp;
 import java.util.List;
 import model.Account;
 import model.StorageBin;
+import model.Supplier;
 import model.WareHouse;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "CreateBinServlet", urlPatterns = {"/create-bin"})
-public class CreateBinServlet extends HttpServlet {
+@WebServlet(name = "EditSupplierServlet", urlPatterns = {"/edit-supplier"})
+public class EditSupplierServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +42,11 @@ public class CreateBinServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            WareHouseDAO dao = new WareHouseDAO();
-            List<WareHouse> warehouses = dao.getWareHouses();
-            request.setAttribute("warehouses", warehouses);
-            request.getRequestDispatcher("manager/create-bin.jsp").forward(request, response);
+            String id = request.getParameter("id");
+            SupplierDAO dao = new SupplierDAO();
+            Supplier sb = dao.getSupplierById(id);
+            request.setAttribute("s", sb);
+            request.getRequestDispatcher("manager/edit-supplier.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,24 +80,25 @@ public class CreateBinServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            String warehouseID = request.getParameter("warehouseID");
-            String binName = request.getParameter("binName");
-            String binType = request.getParameter("binType");
-            int capacity = Integer.parseInt(request.getParameter("capacity"));
+            String supplierId = request.getParameter("supplierId");
+            String name = request.getParameter("name");
+            String address = request.getParameter("address");
+            String phone = request.getParameter("phone");
+            String tax = request.getParameter("tax");
+            String status = request.getParameter("status");
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute("account");
-            int createdBy = acc.getAccountId();
+            Integer updateBy = acc.getAccountId();
 
-            StorageBinDAO binDAO = new StorageBinDAO();
-            String binId = binDAO.getMaxStorageBinID();
-            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", createdBy, new Timestamp(System.currentTimeMillis()));
+            SupplierDAO dao = new SupplierDAO();
+            Supplier supplier = new Supplier(supplierId, name, address, phone, tax, status, updateBy, new Timestamp(System.currentTimeMillis()));
 
-            binDAO.insertBin(bin);
-            request.setAttribute("message", "Create Storage Bin Success!");
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            dao.updateSupplier(supplier);
+            request.setAttribute("message", "Update Supplier Success!");
+            request.getRequestDispatcher("suppliers").forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Create Storage Bin Fail!: " + e.getMessage());
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            request.setAttribute("errorMessage", "Update Supplier Fail!: " + e.getMessage());
+            request.getRequestDispatcher("suppliers").forward(request, response);
         }
     }
 

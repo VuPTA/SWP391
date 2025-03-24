@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.manager;
+package controller.admin;
 
-import dal.StorageBinDAO;
+import dal.CategoryDAO;
 import dal.WareHouseDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,17 +15,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
-import java.util.List;
 import model.Account;
-import model.StorageBin;
+import model.Category;
 import model.WareHouse;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "CreateBinServlet", urlPatterns = {"/create-bin"})
-public class CreateBinServlet extends HttpServlet {
+@WebServlet(name = "CreateWarehouseServlet", urlPatterns = {"/create-warehouse"})
+public class CreateWarehouseServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,14 +38,7 @@ public class CreateBinServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try {
-            WareHouseDAO dao = new WareHouseDAO();
-            List<WareHouse> warehouses = dao.getWareHouses();
-            request.setAttribute("warehouses", warehouses);
-            request.getRequestDispatcher("manager/create-bin.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        request.getRequestDispatcher("admin/create-warehouse.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -75,26 +67,28 @@ public class CreateBinServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         try {
-            String warehouseID = request.getParameter("warehouseID");
-            String binName = request.getParameter("binName");
-            String binType = request.getParameter("binType");
-            int capacity = Integer.parseInt(request.getParameter("capacity"));
+            String name = request.getParameter("name");
+            String location = request.getParameter("location");
+            String provinceName = request.getParameter("provinceName");
+            String districtName = request.getParameter("districtName");
+            String wardName = request.getParameter("wardName");
+            String note = request.getParameter("note");
+            String fullAddress = location + ", " + wardName + ", " + districtName + ", " + provinceName;
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute("account");
             int createdBy = acc.getAccountId();
 
-            StorageBinDAO binDAO = new StorageBinDAO();
-            String binId = binDAO.getMaxStorageBinID();
-            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", createdBy, new Timestamp(System.currentTimeMillis()));
+            WareHouseDAO cdao = new WareHouseDAO();
+            String id = cdao.getMaxWareHouseID();
+            WareHouse wareHouse = new WareHouse(id, name, fullAddress, note, createdBy, new Timestamp(System.currentTimeMillis()));
 
-            binDAO.insertBin(bin);
-            request.setAttribute("message", "Create Storage Bin Success!");
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            cdao.insertWareHouse(wareHouse);
+            request.setAttribute("message", "Create WareHouse Success!");
+            request.getRequestDispatcher("warehouses").forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Create Storage Bin Fail!: " + e.getMessage());
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            request.setAttribute("errorMessage", "Create WareHouse Fail!: " + e.getMessage());
+            request.getRequestDispatcher("warehouses").forward(request, response);
         }
     }
 

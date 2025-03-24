@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.admin;
+package controller.manager;
 
+import dal.DeliveryOrderDAO;
 import dal.ProductDAO;
 import dal.PurchaseOrderDAO;
 import dal.SupplierDAO;
@@ -15,11 +16,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 import model.Account;
+import model.DeliveryItem;
+import model.DeliveryOrder;
 import model.ProductVariant;
 import model.PurchaseItem;
 import model.PurchaseOrder;
@@ -29,8 +32,8 @@ import model.Supplier;
  *
  * @author Admin
  */
-@WebServlet(name = "CreatePurchaseOrderServlet", urlPatterns = {"/create-purchase-order"})
-public class CreatePurchaseOrderServlet extends HttpServlet {
+@WebServlet(name = "CreateDeliveryOrderServlet", urlPatterns = {"/create-delivery-order"})
+public class CreateDeliveryOrderServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,13 +48,13 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
+            PurchaseOrderDAO dodao = new PurchaseOrderDAO();
+            List<PurchaseOrder> POsToCreateDO = dodao.getPOsDropdownToCreateDO();
+            request.setAttribute("purchaseOrders", POsToCreateDO);
             SupplierDAO dao = new SupplierDAO();
-            ProductDAO pdao = new ProductDAO();
             List<Supplier> suppliers = dao.getSuppliers();
             request.setAttribute("suppliers", suppliers);
-            List<ProductVariant> products = pdao.getProductVariants();
-            request.setAttribute("products", products);
-            request.getRequestDispatcher("admin/create-purchase-order.jsp").forward(request, response);
+            request.getRequestDispatcher("manager/create-delivery-order.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +89,7 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try {
             // Lấy dữ liệu từ form
+            String poId = request.getParameter("poId");
             String supplierID = request.getParameter("supplierID");
             String expectedDateStr = request.getParameter("expectedDate");
 
@@ -99,28 +103,42 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
             Account acc = (Account) session.getAttribute("account");
             int createdBy = acc.getAccountId();
             Timestamp createDate = new Timestamp(System.currentTimeMillis());
-            PurchaseOrderDAO podao = new PurchaseOrderDAO();
-            String poId = podao.getMaxPurchaseOrderID();
+            DeliveryOrderDAO dodao = new DeliveryOrderDAO();
+            String doId = dodao.getMaxDeliveryOrderID();
 
             double totalAmount = 0;
-            List<PurchaseItem> purchaseItems = new ArrayList<>();
+            List<DeliveryItem> deliveryItems = new ArrayList<>();
             for (int i = 0; i < productIds.length; i++) {
                 int quantity = Integer.parseInt(quantities[i]);
                 double price = Double.parseDouble(prices[i]);
                 totalAmount += quantity * price;
-                purchaseItems.add(new PurchaseItem(productIds[i], quantity, price, createdBy, createDate));
+                deliveryItems.add(new DeliveryItem(productIds[i], quantity, price, createdBy, createDate));
             }
             // Làm tròn tổng tiền đến 2 chữ số thập phân
             totalAmount = Math.round(totalAmount * 100.0) / 100.0;
 
-            PurchaseOrder po = new PurchaseOrder(poId, supplierID, "Pending", expectedDate, purchaseItems, createdBy, createDate);
-            po.setTotalAmount(totalAmount);
-            podao.createPurchaseOrder(po);
-            request.setAttribute("message", "Create Purchase Order Success!");
-            request.getRequestDispatcher("purchase-orders").forward(request, response);
+            DeliveryOrder deliveryOrder = new DeliveryOrder(doId, poId, supplierID, "Pending", expectedDate, deliveryItems, createdBy, createDate);
+            deliveryOrder.setTotalAmount(totalAmount);
+            dodao.createDeliveryOrder(deliveryOrder);
+
+            //check status and set status for PO
+            PurchaseOrderDAO podao = new PurchaseOrderDAO();
+            PurchaseOrder purchaseOrder = podao.getPurchaseOrderToCreateDO(poId);
+            PurchaseOrder poUpdate = new PurchaseOrder();
+            poUpdate.setPoId(poId);
+            if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getPurchaseItems().size() > 0) {
+                poUpdate.setStatus("Delivering");
+                podao.updateStatusPurchaseOrder(poUpdate);
+            } else if (purchaseOrder.getPurchaseItems().size() == 0) {
+                poUpdate.setStatus("Received");
+                podao.updateStatusPurchaseOrder(poUpdate);
+            }
+
+            request.setAttribute("message", "Create Delivery Order Success!");
+            request.getRequestDispatcher("delivery-orders").forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Create Purchase Order Fail!: " + e.getMessage());
-            request.getRequestDispatcher("purchase-orders").forward(request, response);
+            request.setAttribute("errorMessage", "Create Delivery Order Fail!: " + e.getMessage());
+            request.getRequestDispatcher("delivery-orders").forward(request, response);
         }
     }
 

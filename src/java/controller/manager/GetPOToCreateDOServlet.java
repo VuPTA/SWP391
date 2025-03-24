@@ -4,8 +4,8 @@
  */
 package controller.manager;
 
-import dal.StorageBinDAO;
-import dal.WareHouseDAO;
+import dal.PurchaseOrderDAO;
+import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,19 +13,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.sql.Timestamp;
 import java.util.List;
-import model.Account;
-import model.StorageBin;
-import model.WareHouse;
+import model.PurchaseOrder;
+import model.Supplier;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name = "CreateBinServlet", urlPatterns = {"/create-bin"})
-public class CreateBinServlet extends HttpServlet {
+@WebServlet(name = "GetPOToCreateDOServlet", urlPatterns = {"/po-to-create-do"})
+public class GetPOToCreateDOServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +37,18 @@ public class CreateBinServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            WareHouseDAO dao = new WareHouseDAO();
-            List<WareHouse> warehouses = dao.getWareHouses();
-            request.setAttribute("warehouses", warehouses);
-            request.getRequestDispatcher("manager/create-bin.jsp").forward(request, response);
+            String poId = request.getParameter("poId");
+            PurchaseOrderDAO podao = new PurchaseOrderDAO();
+            PurchaseOrder purchaseOrder = podao.getPurchaseOrderToCreateDO(poId);
+            request.setAttribute("po", purchaseOrder);
+            
+            List<PurchaseOrder> POsToCreateDO = podao.getPOsDropdownToCreateDO();
+            request.setAttribute("purchaseOrders", POsToCreateDO);
+            SupplierDAO dao = new SupplierDAO();
+            List<Supplier> suppliers = dao.getSuppliers();
+            request.setAttribute("suppliers", suppliers);
+            
+            request.getRequestDispatcher("manager/create-do-form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,27 +80,7 @@ public class CreateBinServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-            String warehouseID = request.getParameter("warehouseID");
-            String binName = request.getParameter("binName");
-            String binType = request.getParameter("binType");
-            int capacity = Integer.parseInt(request.getParameter("capacity"));
-            HttpSession session = request.getSession();
-            Account acc = (Account) session.getAttribute("account");
-            int createdBy = acc.getAccountId();
-
-            StorageBinDAO binDAO = new StorageBinDAO();
-            String binId = binDAO.getMaxStorageBinID();
-            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", createdBy, new Timestamp(System.currentTimeMillis()));
-
-            binDAO.insertBin(bin);
-            request.setAttribute("message", "Create Storage Bin Success!");
-            request.getRequestDispatcher("storage-bin").forward(request, response);
-        } catch (Exception e) {
-            request.setAttribute("errorMessage", "Create Storage Bin Fail!: " + e.getMessage());
-            request.getRequestDispatcher("storage-bin").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

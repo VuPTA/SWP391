@@ -56,11 +56,11 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Purchase Orders</h1>
+                    <h1>Delivery Orders</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item active">Purchase Orders</li>
+                            <li class="breadcrumb-item active">Delivery Orders</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -73,13 +73,14 @@
                                 <div class="card-body">
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
-                                        <h5 class="card-title">Purchase Order List</h5>
-                                        <a href="create-purchase-order" class="btn btn-primary" style="height: 40px">Create Purchase Order</a>
+                                        <h5 class="card-title">Delivery Order List</h5>
+                                        <a href="create-delivery-order" class="btn btn-primary" style="height: 40px">Create Delivery Order</a>
                                     </div>
                                     <!-- Table with stripped rows -->
                                     <table class="table datatable">
                                         <thead>
                                             <tr>
+                                                <th>DO ID</th>
                                                 <th>PO ID</th>
                                                 <th>Supplier</th>
                                                 <th>Total Amount</th>
@@ -89,15 +90,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${purchaseOrders}" var="po">
+                                        <c:forEach items="${deliveryOrders}" var="po">
                                             <tr>
+                                                <td>${po.doId}</td>
                                                 <td>${po.poId}</td>
-                                                <td>${po.supplierObj.supplierName}</td>
+                                                <td>${po.supplier.supplierName}</td>
                                                 <td>${po.totalAmount}</td>
                                                 <td>${po.expectedDate}</td>
                                                 <td>${po.status}</td>
-                                                <td style="text-align: right"><a href="edit-purchase-order?id=${po.poId}" class="edit-btn">
-                                                        <i class="bx bx-edit"></i>
+                                                <td style="text-align: right"><a href="view-delivery-order?id=${po.doId}" class="edit-btn">
+                                                        <i class="bx bx-show"></i>
                                                     </a></td>
                                             </tr>
                                         </c:forEach>

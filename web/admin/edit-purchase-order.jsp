@@ -83,10 +83,10 @@
                                         <input type="hidden" class="form-control" id="createdBy" name="createdBy" value="${po.createdBy}">
                                         <input type="hidden" class="form-control" id="createdDate" name="createdDate" value="${po.createdDate}">
                                         <label for="supplierID" class="form-label">Supplier</label>
-                                        <select class="form-select" id="supplierID" name="supplierID" required ${po.status eq 'Completed' ? 'disabled' : ''}>
+                                        <select class="form-select" id="supplierID" name="supplierID" required ${po.status ne 'Pending' ? 'disabled' : ''}>
                                             <option selected disabled value="">Choose a Supplier...</option>
                                             <c:forEach items="${suppliers}" var="s">
-                                                <option value="${s.supplierName}" ${po.supplier eq s.supplierName ? 'selected' : ''}>${s.supplierName}</option>
+                                                <option value="${s.supplierID}" ${po.supplier eq s.supplierID ? 'selected' : ''}>${s.supplierName}</option>
                                             </c:forEach>
                                         </select>
                                         <div class="invalid-feedback">Please select a Supplier.</div>
@@ -95,22 +95,23 @@
                                     <!-- Expected Date -->
                                     <div class="col-md-6">
                                         <label for="expectedDate" class="form-label">Expected Date</label>
-                                        <input type="date" class="form-control" id="expectedDate" name="expectedDate" required value="${po.expectedDate}" ${po.status eq 'Completed' ? 'disabled' : ''}>
+                                        <input type="date" class="form-control" id="expectedDate" name="expectedDate" required value="${po.expectedDate}" ${po.status ne 'Pending' ? 'disabled' : ''}>
                                         <div class="invalid-feedback">Please select a valid date.</div>
                                     </div>
                                     <!-- Status -->
                                     <div class="col-md-12">
                                         <label for="status" class="form-label">Status</label>
-                                        <select class="form-select" id="status" name="status" required ${po.status eq 'Completed' ? 'disabled' : ''}>
+                                        <select class="form-select" id="status" name="status" required disabled>
                                             <option value="Pending" ${po.status eq 'Pending' ? 'selected' : '' }>Pending</option>
-                                            <option value="Completed" ${po.status eq 'Completed' ? 'selected' : '' }>Completed</option>
+                                            <option value="Delivering" ${po.status eq 'Delivering' ? 'selected' : '' }>Delivering</option>
+                                            <option value="Received" ${po.status eq 'Received' ? 'selected' : '' }>Received</option>
                                         </select>
                                     </div>
 
                                     <!-- Search Products -->
                                     <div class="col-md-6">
                                         <label class="form-label">Search Product</label>
-                                        <input type="text" class="form-control" id="searchProduct" placeholder="Type to search..." ${po.status eq 'Completed' ? 'disabled' : ''}>
+                                        <input type="text" class="form-control" id="searchProduct" placeholder="Type to search..." ${po.status ne 'Pending' ? 'disabled' : ''}>
                                         <ul class="list-group mt-2" id="productList" style="display: none; position: absolute; z-index: 1000;"></ul>
                                     </div>
 
@@ -135,19 +136,26 @@
                                                             <input type="hidden" name="productID[]" value="${pi.productVariantId}">
                                                             <input type="hidden" name="price[]" value="${pi.unitPrice}">
                                                         </td>
-                                                        <td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="${pi.quantity}" required ${po.status eq 'Completed' ? 'disabled' : ''}></td>
+                                                        <td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="${pi.quantity}" required ${po.status ne 'Pending' ? 'disabled' : ''}></td>
                                                         <td class="unitPrice">${pi.unitPrice}</td>
                                                         <td class="totalPrice">${pi.unitPrice * pi.quantity}</td>
-                                                        <td><button type="button" class="btn btn-danger btn-sm removeRow" ${po.status eq 'Completed' ? 'disabled' : ''}>Remove</button></td>
+                                                        <td><button type="button" class="btn btn-danger btn-sm removeRow" ${po.status ne 'Pending' ? 'disabled' : ''}>Remove</button></td>
                                                     </tr>
                                                 </c:forEach>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                                    <td id="totalAmount">${po.totalAmount}</td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
                                             </tbody>
                                         </table>
                                     </div>
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit" ${po.status eq 'Completed' ? 'disabled' : ''}>Save Purchase Order</button>
+                                        <button class="btn btn-primary" type="submit" ${po.status ne 'Pending' ? 'disabled' : ''}>Save Purchase Order</button>
                                         <a class="btn btn-danger" href="purchase-orders">Cancel</a>
                                     </div>
                                 </form>
@@ -190,12 +198,12 @@
                             event.preventDefault(); // Ngăn không cho gửi form
                         }
                         const statusValue = document.getElementById("status").value;
-                        if(statusValue == "Completed"){
-                            if(!confirm("Are you sure you want to change? If the status is Completed, you cannot change it later.")){
-                                event.preventDefault(); 
+                        if (statusValue == "Completed") {
+                            if (!confirm("Are you sure you want to change? If the status is Completed, you cannot change it later.")) {
+                                event.preventDefault();
                             }
                         }
-                        
+
                     });
                     // Xử lý nút xóa, đảm bảo luôn còn ít nhất một dòng
                     // Xử lý xóa dòng
@@ -204,6 +212,7 @@
                             const row = event.target.closest("tr");
                             if (tableBody.children.length > 1) {
                                 row.remove();
+                                updateTotals();
                             } else {
                                 alert("At least one purchase item is required.");
                             }
@@ -290,6 +299,7 @@
 
                     // Cập nhật tổng tiền
                     function updateTotals() {
+                        let totalAmount = 0;
                         document.querySelectorAll("#purchaseItemsTable tbody tr").forEach(row => {
                             const quantity = parseFloat(row.querySelector(".quantity").value) || 0;
                             const unitPrice = parseFloat(row.querySelector(".unitPrice").textContent) || 0;
@@ -297,7 +307,10 @@
 
                             // Gán total vào ô totalPrice (là <td>, không phải input)
                             row.querySelector(".totalPrice").textContent = total;
+                            totalAmount += parseFloat(total);
                         });
+                        // Hiển thị tổng tiền
+                        document.getElementById("totalAmount").textContent = totalAmount.toFixed(2);
                     }
 
                     tableBody.addEventListener("input", function (e) {

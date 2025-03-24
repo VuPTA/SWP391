@@ -61,12 +61,12 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Create Bin</h1>
+                    <h1>View Delivery Order</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item">Storage Bin</li>
-                            <li class="breadcrumb-item active">Create Bin</li>
+                            <li class="breadcrumb-item">Delivery Orders</li>
+                            <li class="breadcrumb-item active">View Delivery Order</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -79,56 +79,62 @@
 
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Create Bin</h5>
+                                    <h5 class="card-title">Delivery Order Detail</h5>
 
-                                    <form class="row g-3 needs-validation" novalidate action="create-bin" method="post">
-                                        <!-- Warehouse ID -->
+                                    <form class="row g-3 needs-validation formpo" novalidate>
                                         <div class="col-md-6">
-                                            <label for="warehouseID" class="form-label">Warehouse</label>
-                                            <select class="form-select" id="warehouseID" name="warehouseID" required>
-                                                <option selected disabled value="">Choose a Warehouse...</option>
-                                            <c:forEach items="${warehouses}" var="warehouse">
-                                                <option value="${warehouse.warehouseID}">${warehouse.warehouseName}</option>
-                                            </c:forEach>
-                                        </select>
-                                        <div class="invalid-feedback">Please select a Warehouse.</div>
+                                            <label for="poId" class="form-label">Purchase Order</label>
+                                            <input type="text" class="form-control" id="poId" name="poId" required disabled value="${delivery.poId}">
+                                    </div>
+                                    <!-- Expected Date -->
+                                    <div class="col-md-6">
+                                        <label for="expectedDate" class="form-label">Expected Date</label>
+                                        <input type="date" class="form-control" id="expectedDate" name="expectedDate" required disabled value="${delivery.expectedDate}">
                                     </div>
 
-                                    <!-- Bin Name -->
-                                    <div class="col-md-6">
-                                        <label for="binName" class="form-label">Bin Name</label>
-                                        <input type="text" class="form-control" id="binName" name="binName" required>
-                                        <div class="invalid-feedback">Please enter a Bin Name.</div>
+                                    <!-- Supplier -->
+                                    <div class="col-md-12">
+                                        <label for="supplierID" class="form-label">Supplier</label>
+                                        <input type="text" class="form-control" id="supplierID" name="supplierID" required disabled value="${delivery.supplier.supplierName}">
                                     </div>
 
-                                    <!-- Bin Type -->
-                                    <div class="col-md-6">
-                                        <label for="binType" class="form-label">Bin Type</label>
-                                        <select class="form-select" id="binType" name="binType" required>
-                                            <option selected disabled value="">Choose Bin Type...</option>
-                                            <option value="Small">Small</option>
-                                            <option value="Standard">Standard</option>
-                                            <option value="Large">Large</option>
-                                        </select>
-                                        <div class="invalid-feedback">Please select a Bin Type.</div>
-                                    </div>
-
-                                    <!-- Capacity -->
-                                    <div class="col-md-6">
-                                        <label for="capacity" class="form-label">Capacity</label>
-                                        <input type="number" class="form-control" id="capacity" name="capacity" min="1" required readonly>
-                                        <div class="invalid-feedback">Please enter a valid Capacity.</div>
+                                    <!-- Purchase Items Table -->
+                                    <div class="col-12">
+                                        <label class="form-label">Delivery Items</label>
+                                        <table class="table table-bordered" id="purchaseItemsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Quantity</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Rows will be added dynamically -->
+                                                <c:forEach items="${delivery.deliveryItems}" var="pi">
+                                                    <tr>
+                                                        <td>${pi.product.pvName} - ${pi.product.color} - ${pi.product.size}</td>
+                                                        <td>${pi.quantity}</td>
+                                                        <td class="unitPrice">${pi.unitPrice}</td>
+                                                        <td class="totalPrice">${pi.unitPrice * pi.quantity}</td>
+                                                    </tr>
+                                                </c:forEach>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                                    <td id="totalAmount">${delivery.totalAmount}</td>
+                                                </tr>
+                                            </tfoot>
+                                            </tbody>
+                                        </table>
                                     </div>
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit">Create Bin</button>
-                                        <a class="btn btn-danger" href="storage-bin">Cancel</a>
+                                        <a class="btn btn-primary" href="delivery-orders">Back</a>
                                     </div>
                                 </form>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -139,25 +145,6 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const binTypeSelect = document.getElementById("binType");
-                const capacityInput = document.getElementById("capacity");
-
-                binTypeSelect.addEventListener("change", function () {
-                    const binType = binTypeSelect.value;
-                    if (binType === "Small") {
-                        capacityInput.value = 100;
-                    } else if (binType === "Standard") {
-                        capacityInput.value = 200;
-                    } else if (binType === "Large") {
-                        capacityInput.value = 300;
-                    } else {
-                        capacityInput.value = "";
-                    }
-                });
-            });
-        </script>
 
     </body>
 

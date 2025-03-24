@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.manager;
+package controller.admin;
 
+import dal.CategoryDAO;
 import dal.StorageBinDAO;
 import dal.WareHouseDAO;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.List;
 import model.Account;
+import model.Category;
 import model.StorageBin;
 import model.WareHouse;
 
@@ -24,8 +26,8 @@ import model.WareHouse;
  *
  * @author Admin
  */
-@WebServlet(name = "CreateBinServlet", urlPatterns = {"/create-bin"})
-public class CreateBinServlet extends HttpServlet {
+@WebServlet(name = "EditCategoryServlet", urlPatterns = {"/edit-category"})
+public class EditCategoryServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +42,11 @@ public class CreateBinServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            WareHouseDAO dao = new WareHouseDAO();
-            List<WareHouse> warehouses = dao.getWareHouses();
-            request.setAttribute("warehouses", warehouses);
-            request.getRequestDispatcher("manager/create-bin.jsp").forward(request, response);
+            String id = request.getParameter("id");
+            CategoryDAO dao = new CategoryDAO();
+            Category category = dao.getCategoryById(id);
+            request.setAttribute("c", category);
+            request.getRequestDispatcher("admin/edit-category.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,24 +80,23 @@ public class CreateBinServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            String warehouseID = request.getParameter("warehouseID");
-            String binName = request.getParameter("binName");
-            String binType = request.getParameter("binType");
-            int capacity = Integer.parseInt(request.getParameter("capacity"));
+            String categoryId = request.getParameter("categoryId");
+            String name = request.getParameter("name");
+            String description = request.getParameter("description");
+            String status = request.getParameter("status");
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute("account");
-            int createdBy = acc.getAccountId();
+            Integer updateBy = acc.getAccountId();
 
-            StorageBinDAO binDAO = new StorageBinDAO();
-            String binId = binDAO.getMaxStorageBinID();
-            StorageBin bin = new StorageBin(binId, warehouseID, binName, binType, capacity, "Active", createdBy, new Timestamp(System.currentTimeMillis()));
-
-            binDAO.insertBin(bin);
-            request.setAttribute("message", "Create Storage Bin Success!");
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            CategoryDAO dao = new CategoryDAO();
+            Category category = new Category(categoryId, name, description, status, updateBy, new Timestamp(System.currentTimeMillis()));
+            dao.updateCategory(category);
+            
+            request.setAttribute("message", "Update Category Success!");
+            request.getRequestDispatcher("categories").forward(request, response);
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Create Storage Bin Fail!: " + e.getMessage());
-            request.getRequestDispatcher("storage-bin").forward(request, response);
+            request.setAttribute("errorMessage", "Update Category Fail!: " + e.getMessage());
+            request.getRequestDispatcher("categories").forward(request, response);
         }
     }
 

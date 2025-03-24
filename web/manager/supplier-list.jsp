@@ -56,11 +56,11 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Purchase Orders</h1>
+                    <h1>Suppliers</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item active">Purchase Orders</li>
+                            <li class="breadcrumb-item active">Suppliers</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -73,32 +73,36 @@
                                 <div class="card-body">
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
-                                        <h5 class="card-title">Purchase Order List</h5>
-                                        <a href="create-purchase-order" class="btn btn-primary" style="height: 40px">Create Purchase Order</a>
+                                        <h5 class="card-title">Supplier List</h5>
+                                        <a href="create-supplier" class="btn btn-primary" style="height: 40px">Create Supplier</a>
                                     </div>
                                     <!-- Table with stripped rows -->
                                     <table class="table datatable">
                                         <thead>
                                             <tr>
-                                                <th>PO ID</th>
-                                                <th>Supplier</th>
-                                                <th>Total Amount</th>
-                                                <th>Expected Date</th>
+                                                <th>Supplier ID</th>
+                                                <th>Name</th>
+                                                <th>Address</th>
+                                                <th>Phone</th>
+                                                <th>Tax Number</th>
                                                 <th>Status</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${purchaseOrders}" var="po">
+                                        <c:forEach items="${suppliers}" var="s">
                                             <tr>
-                                                <td>${po.poId}</td>
-                                                <td>${po.supplierObj.supplierName}</td>
-                                                <td>${po.totalAmount}</td>
-                                                <td>${po.expectedDate}</td>
-                                                <td>${po.status}</td>
-                                                <td style="text-align: right"><a href="edit-purchase-order?id=${po.poId}" class="edit-btn">
+                                                <td>${s.supplierID}</td>
+                                                <td>${s.supplierName}</td>
+                                                <td>${s.address}</td>
+                                                <td>${s.phone}</td>
+                                                <td>${s.taxNumber}</td>
+                                                <td>${s.status}</td>
+                                                <td style="text-align: right">
+                                                    <a href="edit-supplier?id=${s.supplierID}" class="edit-btn">
                                                         <i class="bx bx-edit"></i>
-                                                    </a></td>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
 

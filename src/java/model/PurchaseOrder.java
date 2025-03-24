@@ -1,5 +1,6 @@
 package model;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -10,14 +11,17 @@ public class PurchaseOrder extends Audit {
     private String supplier;
     private String status;
     private Date expectedDate;
+    private double totalAmount;
     private List<PurchaseItem> purchaseItems; // Danh sách các PurchaseItem thuộc đơn hàng này
+    private Supplier supplierObj;
 
-    public PurchaseOrder(String poId, String supplier, String status, Date expectedDate, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public PurchaseOrder(String poId, String supplier, String status, Date expectedDate,double totalAmount, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
         this.poId = poId;
         this.supplier = supplier;
         this.status = status;
         this.expectedDate = expectedDate;
+        this.totalAmount = totalAmount;
     }
 
     public PurchaseOrder(String poId, String supplier, String status, Date expectedDate, List<PurchaseItem> purchaseItems, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
@@ -45,6 +49,12 @@ public class PurchaseOrder extends Audit {
         this.status = status;
         this.expectedDate = expectedDate;
         this.purchaseItems = purchaseItems;
+    }
+
+    public PurchaseOrder(String poId, Date expectedDate, Supplier supplierObj) {
+        this.poId = poId;
+        this.expectedDate = expectedDate;
+        this.supplierObj = supplierObj;
     }
 
     public PurchaseOrder() {
@@ -88,5 +98,21 @@ public class PurchaseOrder extends Audit {
 
     public void setPurchaseItems(List<PurchaseItem> purchaseItems) {
         this.purchaseItems = purchaseItems;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Supplier getSupplierObj() {
+        return supplierObj;
+    }
+
+    public void setSupplierObj(Supplier supplierObj) {
+        this.supplierObj = supplierObj;
     }
 }

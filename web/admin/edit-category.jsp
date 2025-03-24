@@ -1,6 +1,6 @@
 <%-- 
-    Document   : storage-bin-list
-    Created on : Mar 2, 2025, 11:05:28 PM
+    Document   : create-bin
+    Created on : Mar 2, 2025, 11:52:04 PM
     Author     : Admin
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -12,7 +12,7 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        <title>Dashboard - NiceAdmin Bootstrap Template</title>
+        <title>Forms / Validation - NiceAdmin Bootstrap Template</title>
         <meta content="" name="description">
         <meta content="" name="keywords">
         <base href="${pageContext.request.contextPath}/">
@@ -56,59 +56,59 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Purchase Orders</h1>
+                    <h1>Edit Category</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item active">Purchase Orders</li>
+                            <li class="breadcrumb-item">Categories</li>
+                            <li class="breadcrumb-item active">Edit Category</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
 
                 <section class="section">
                     <div class="row">
+
+
                         <div class="col-lg-12">
 
                             <div class="card">
                                 <div class="card-body">
+                                    <h5 class="card-title">Edit Category</h5>
 
-                                    <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
-                                        <h5 class="card-title">Purchase Order List</h5>
-                                        <a href="create-purchase-order" class="btn btn-primary" style="height: 40px">Create Purchase Order</a>
+                                    <form class="row g-3 needs-validation" novalidate action="edit-category" method="post">
+
+                                        <div class="col-md-">
+                                            <label for="name" class="form-label">Category Name</label>
+                                            <input type="text" class="form-control" id="name" name="name" required value="${c.categoryName}">
+                                        <input type="hidden" class="form-control" id="storageBinID" name="categoryId" value="${c.categoryId}">
+                                        <div class="invalid-feedback">Please enter a Category Name.</div>
                                     </div>
-                                    <!-- Table with stripped rows -->
-                                    <table class="table datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>PO ID</th>
-                                                <th>Supplier</th>
-                                                <th>Total Amount</th>
-                                                <th>Expected Date</th>
-                                                <th>Status</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach items="${purchaseOrders}" var="po">
-                                            <tr>
-                                                <td>${po.poId}</td>
-                                                <td>${po.supplierObj.supplierName}</td>
-                                                <td>${po.totalAmount}</td>
-                                                <td>${po.expectedDate}</td>
-                                                <td>${po.status}</td>
-                                                <td style="text-align: right"><a href="edit-purchase-order?id=${po.poId}" class="edit-btn">
-                                                        <i class="bx bx-edit"></i>
-                                                    </a></td>
-                                            </tr>
-                                        </c:forEach>
 
-                                    </tbody>
-                                </table>
-                                <!-- End Table with stripped rows -->
+                                    <div class="col-md-12">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" name="description" required>${c.description}</textarea>
+                                        <div class="invalid-feedback">Please enter a valid Description.</div>
+                                    </div>
+                                    <!-- Status -->
+                                    <div class="col-md-12">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" id="status" name="status" required>
+                                            <option value="Active" ${c.status eq 'Active' ? 'selected' : '' }>Active</option>
+                                            <option value="Inactive" ${c.status eq 'Inactive' ? 'selected' : '' }>Inactive</option>
+                                        </select>
+                                    </div>
+                                    <!-- Submit Button -->
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" type="submit">Save Category</button>
+                                        <a class="btn btn-danger" href="categories">Cancel</a>
+                                    </div>
+                                </form>
+
+
 
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>

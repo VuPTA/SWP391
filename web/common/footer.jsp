@@ -42,6 +42,6 @@
 </c:if>
 <c:if test="${errorMessage != null}">
     <script type="text/javascript">
-                toastr.error(`${errorMessage}`, 'Error', {timeOut: 1000});
+                toastr.error(`${errorMessage}`, 'Error', {timeOut: 2000});
     </script>
 </c:if>

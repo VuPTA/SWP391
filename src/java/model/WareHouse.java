@@ -35,6 +35,31 @@ public class WareHouse {
         this.updatedDate = updatedDate;
     }
 
+    public WareHouse(String warehouseID, String warehouseName, String location, String note, int createdBy, Timestamp createdDate) {
+        this.warehouseID = warehouseID;
+        this.warehouseName = warehouseName;
+        this.location = location;
+        this.note = note;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+    }
+
+    public WareHouse(String warehouseID, String warehouseName, String location, String note, Integer updatedBy, Timestamp updatedDate) {
+        this.warehouseID = warehouseID;
+        this.warehouseName = warehouseName;
+        this.location = location;
+        this.note = note;
+        this.updatedBy = updatedBy;
+        this.updatedDate = updatedDate;
+    }
+
+    public WareHouse(String warehouseID, String warehouseName, String location, String note) {
+        this.warehouseID = warehouseID;
+        this.warehouseName = warehouseName;
+        this.location = location;
+        this.note = note;
+    }
+
     public WareHouse(String warehouseID, String warehouseName) {
         this.warehouseID = warehouseID;
         this.warehouseName = warehouseName;
