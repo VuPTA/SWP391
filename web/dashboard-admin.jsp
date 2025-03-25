@@ -5,6 +5,15 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="model.Account" %>
+<%@page import="jakarta.servlet.http.HttpSession" %>
+<%
+    Account account = (Account) session.getAttribute("account");
+    if (account == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html>
     <head>

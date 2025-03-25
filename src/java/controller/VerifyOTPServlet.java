@@ -23,13 +23,16 @@ public class VerifyOTPServlet extends HttpServlet {
         String email = (String) session.getAttribute("email");
 
         if (sessionOTP != null && sessionOTP.equals(enteredOTP)) {
-            String newPassword = "Pass" + new Random().nextInt(9999);
-            accountDAO.updatePassword(email, newPassword);
-
-            EmailService.sendEmail(email, "Mật khẩu mới của bạn", "Mật khẩu mới: " + newPassword);
-            session.invalidate(); // Xóa session
-            accountDAO.updatePassword(email, newPassword);
-            response.sendRedirect("success.jsp");
+            request.getRequestDispatcher("changepass.jsp").forward(request, response);
+            
+//            
+//            String newPassword = "Pass" + new Random().nextInt(9999);
+//            accountDAO.updatePassword(email, newPassword);
+//
+//            EmailService.sendEmail(email, "Mật khẩu mới của bạn", "Mật khẩu mới: " + newPassword);
+//            session.invalidate(); // Xóa session
+//            accountDAO.updatePassword(email, newPassword);
+//            response.sendRedirect("success.jsp");
         } else {
             request.setAttribute("msg", "otp không chính xác!");
             request.getRequestDispatcher("enter_otp.jsp").forward(request, response);

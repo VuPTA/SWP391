@@ -93,7 +93,7 @@
 
                                 <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
                                     <h5 class="card-title">Account List</h5>
-                                    <a href="create-purchase-order" class="btn btn-primary" style="height: 40px">Create Purchase Order</a>
+                                    <a href="addAccounts.jsp" class="btn btn-primary" style="height: 40px">Add new account</a>
                                 </div>
                                 <!-- Table with stripped rows -->
                                 <table class="table datatable">
