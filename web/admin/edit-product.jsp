@@ -125,52 +125,37 @@
                                                     <th>Color</th>
                                                     <th>Size</th>
                                                     <th>Price</th>
-                                                    <th>Quantity</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <c:forEach items="${p.productVariants}" var="o">
-                                                <tr>
+                                                    <tr>
 
-                                                    <td><input type="text" class="form-control name" name="name[]" required value="${o.pvName}"></td>
-                                                    <td><input type="file" class="form-control image" name="image[]" required onchange="previewImage(this)">
-                                                        <img src="${o.image}" alt="Preview" class="img-preview mt-2" style="width: 50px; height: 50px;"><!-- comment -->
-                                                    <td>
-                                                        <select class="form-select" id="color" name="color[]" required>
-                                                            <option selected disabled value="">Choose a Color...</option>
-
-                                                            <option value="White" ${o.color eq 'White' ? 'selected' : '' }>White</option>
-                                                            <option value="Black" ${o.color eq 'Black' ? 'selected' : '' }>Black</option>
-                                                            <option value="Red" ${o.color eq 'Red' ? 'selected' : '' }>Red</option>
-                                                            <option value="Yellow" ${o.color eq 'Yellow' ? 'selected' : '' }>Yellow</option>
-                                                            <option value="Blue" ${o.color eq 'Blue' ? 'selected' : '' }>Blue</option>
-
-                                                        </select>
-                                                        <div class="invalid-feedback">Please select a Color.
-                                                        </div>
-                                                    </td>
-                                                    <td> <select class="form-select" id="size" name="size[]" required>
-                                                            <option selected disabled value="">Choose a Size...</option>
-
-                                                            <option value="36" ${o.size eq '36' ? 'selected' : '' }>36</option>
-                                                            <option value="37" ${o.size eq '37' ? 'selected' : '' }>37</option>
-                                                            <option value="38" ${o.size eq '38' ? 'selected' : '' }>38</option>
-                                                            <option value="39" ${o.size eq '39' ? 'selected' : '' }>39</option>
-                                                            <option value="40" ${o.size eq '40' ? 'selected' : '' }>40</option>
-                                                            <option value="41" ${o.size eq '41' ? 'selected' : '' }>41</option>
-                                                            <option value="42" ${o.size eq '42' ? 'selected' : '' }>42</option>
-                                                            <option value="43" ${o.size eq '43' ? 'selected' : '' }>43</option>
-                                                            <option value="44" ${o.size eq '44' ? 'selected' : '' }>44</option>
-                                                        </select>
-                                                        <div class="invalid-feedback">Please select a Size.
-                                                        </div></td>
-                                                    <td><input type="number" class="form-control price" name="price[]" min="0.01" step="0.01" required value="${o.price}"></td>
-
-                                                    <td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="${o.quantity}" required></td>
-                                                    </td>
-                                                    <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
-                                                </tr>
+                                                        <td><input type="text" class="form-control name" name="name[]" required value="${o.pvName}"></td>
+                                                        <td><input type="file" class="form-control image" name="image[]" required onchange="previewImage(this)">
+                                                            <img src="${o.image}" alt="Preview" class="img-preview mt-2" style="width: 50px; height: 50px;"><!-- comment -->
+                                                        <td>
+                                                            <select class="form-select" id="color" name="color[]" required>
+                                                                <option selected disabled value="">Choose a Color...</option>
+                                                                <c:forEach items="${colors}" var="c">
+                                                                    <option value="${c.id}" ${c.id == o.color.id ? 'selected' : '' }>${c.name}</option>
+                                                                </c:forEach>
+                                                            </select>
+                                                            <div class="invalid-feedback">Please select a Color.
+                                                            </div>
+                                                        </td>
+                                                        <td> <select class="form-select" id="size" name="size[]" required>
+                                                                <option selected disabled value="">Choose a Size...</option>
+                                                                <c:forEach items="${sizes}" var="c">
+                                                                    <option value="${c.id}" ${o.size.id == c.id ? 'selected' : '' }>${c.name}</option>
+                                                                </c:forEach>
+                                                            </select>
+                                                            <div class="invalid-feedback">Please select a Size.
+                                                            </div></td>
+                                                        <td><input type="number" class="form-control price" name="price[]" min="0.01" step="0.01" required value="${o.price}"></td>
+                                                        <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
+                                                    </tr>
                                                 </c:forEach>
                                             </tbody>
                                         </table>
@@ -196,84 +181,75 @@
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
 
-        <script>
-            $(document).ready(function () {
-                const form = document.querySelector("form");
-                const tableBody = document.querySelector("#productvariantsTable tbody");
-                form.addEventListener("submit", function (event) {
-                    if (tableBody.children.length === 0) {
-                        alert("You must add at least one product variant.");
-                        event.preventDefault(); // Ngăn không cho gửi form
-                    }
-                });
-                // Xử lý nút xóa, đảm bảo luôn còn ít nhất một dòng
-                // Xử lý xóa dòng
-                tableBody.addEventListener("click", function (event) {
-                    if (event.target.classList.contains("removeRow")) {
-                        const row = event.target.closest("tr");
-                        if (tableBody.children.length > 1) {
-                            row.remove();
-                        } else {
-                            alert("At least one product variant is required.");
+            <script>
+                $(document).ready(function () {
+                    const form = document.querySelector("form");
+                    const tableBody = document.querySelector("#productvariantsTable tbody");
+                    form.addEventListener("submit", function (event) {
+                        if (tableBody.children.length === 0) {
+                            alert("You must add at least one product variant.");
+                            event.preventDefault(); // Ngăn không cho gửi form
                         }
-                    }
+                    });
+                    // Xử lý nút xóa, đảm bảo luôn còn ít nhất một dòng
+                    // Xử lý xóa dòng
+                    tableBody.addEventListener("click", function (event) {
+                        if (event.target.classList.contains("removeRow")) {
+                            const row = event.target.closest("tr");
+                            if (tableBody.children.length > 1) {
+                                row.remove();
+                            } else {
+                                alert("At least one product variant is required.");
+                            }
+                        }
+                    });
+
+
+                    // Xử lý thêm dòng mới
+                    $("#addVariant").click(function () {
+                        let newRow = `
+                    <tr>
+                        <td><input type="text" class="form-control name" name="name[]" required></td>
+                        <td>
+                            <input type="file" class="form-control image" name="image[]" required onchange="previewImage(this)">
+                            <img src="" alt="Preview" class="img-preview mt-2" style="width: 50px; height: 50px; display: none;">
+                        </td>
+                        <td>
+                            <select class="form-select" name="color[]" required>
+                                <option selected disabled value="">Choose a Color...</option>
+            <c:forEach items="${colors}" var="c">
+                                                                        <option value="${c.id}" ${c.id == o.color.id ? 'selected' : '' }>${c.name}</option>
+            </c:forEach>
+                            </select>
+                            <div class="invalid-feedback">Please select a Color.</div>
+                        </td>
+                        <td> 
+                            <select class="form-select" name="size[]" required>
+                                <option selected disabled value="">Choose a Size...</option>
+            <c:forEach items="${sizes}" var="c">
+                                                                        <option value="${c.id}" ${o.size.id == c.id ? 'selected' : '' }>${c.name}</option>
+            </c:forEach>
+                            </select>
+                            <div class="invalid-feedback">Please select a Size.</div>
+                        </td>
+                        <td><input type="number" class="form-control price" name="price[]" min="0.01" step="0.01" value="1" required></td>
+                        <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
+                    </tr>`;
+                        $("#productvariantsTable tbody").append(newRow);
+                    });
+                    // Preview hình ảnh
+                    window.previewImage = function (input) {
+                        let file = input.files[0];
+                        if (file) {
+                            let reader = new FileReader();
+                            reader.onload = function (e) {
+                                $(input).siblings(".img-preview").attr("src", e.target.result).show();
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+
                 });
-
-
-                // Xử lý thêm dòng mới
-                $("#addVariant").click(function () {
-                    let newRow = `
-                <tr>
-                    <td><input type="text" class="form-control name" name="name[]" required></td>
-                    <td>
-                        <input type="file" class="form-control image" name="image[]" required onchange="previewImage(this)">
-                        <img src="" alt="Preview" class="img-preview mt-2" style="width: 50px; height: 50px; display: none;">
-                    </td>
-                    <td>
-                        <select class="form-select" name="color[]" required>
-                            <option selected disabled value="">Choose a Color...</option>
-                            <option value="White">White</option>
-                            <option value="Black">Black</option>
-                            <option value="Red">Red</option>
-                            <option value="Yellow">Yellow</option>
-                            <option value="Blue">Blue</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a Color.</div>
-                    </td>
-                    <td> 
-                        <select class="form-select" name="size[]" required>
-                            <option selected disabled value="">Choose a Size...</option>
-                            <option value="36">36</option>
-                            <option value="37">37</option>
-                            <option value="38">38</option>
-                            <option value="39">39</option>
-                            <option value="40">40</option>
-                            <option value="41">41</option>
-                            <option value="42">42</option>
-                            <option value="43">43</option>
-                            <option value="44">44</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a Size.</div>
-                    </td>
-                    <td><input type="number" class="form-control price" name="price[]" min="0.01" step="0.01" value="1" required></td>
-                    <td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="1" required></td>
-                    <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
-                </tr>`;
-                    $("#productvariantsTable tbody").append(newRow);
-                });
-                // Preview hình ảnh
-                window.previewImage = function (input) {
-                    let file = input.files[0];
-                    if (file) {
-                        let reader = new FileReader();
-                        reader.onload = function (e) {
-                            $(input).siblings(".img-preview").attr("src", e.target.result).show();
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                };
-
-            });
         </script>
 
     </body>

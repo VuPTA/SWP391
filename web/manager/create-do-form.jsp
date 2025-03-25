@@ -51,7 +51,7 @@
             <tbody>
                 <c:forEach items="${po.purchaseItems}" var="pi">
                     <tr>
-                        <td>${pi.product.pvName} - ${pi.product.color} - ${pi.product.size}
+                        <td>${pi.product.pvName} - ${pi.product.color.name} - ${pi.product.size.name}
                             <input type="hidden" name="productID[]" value="${pi.productVariantId}">
                             <input type="hidden" name="price[]" value="${pi.unitPrice}">
                         </td>

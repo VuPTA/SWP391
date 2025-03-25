@@ -16,8 +16,8 @@ public class ProductVariant extends Audit {
     private String productID;
     private String pvName;
     private String image;
-    private String color;
-    private String size;
+    private Color color;
+    private Size size;
     private double price;
     private int quantity;
 
@@ -27,7 +27,7 @@ public class ProductVariant extends Audit {
     public ProductVariant() {
     }
 
-    public ProductVariant(String productVariantID, String productID, String pvName, String image, String color, String size, int quantity, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public ProductVariant(String productVariantID, String productID, String pvName, String image, Color color, Size size, int quantity, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
         this.productVariantID = productVariantID;
         this.productID = productID;
@@ -38,7 +38,7 @@ public class ProductVariant extends Audit {
         this.quantity = quantity;
     }
 
-    public ProductVariant(String productVariantID, String productID, String pvName, String image, String color, String size, int quantity,double price, int createdBy, Timestamp createdDate) {
+    public ProductVariant(String productVariantID, String productID, String pvName, String image, Color color, Size size, int quantity,double price, int createdBy, Timestamp createdDate) {
         super(createdBy, createdDate);
         this.productVariantID = productVariantID;
         this.productID = productID;
@@ -50,7 +50,18 @@ public class ProductVariant extends Audit {
         this.price = price;
     }
     
-    public ProductVariant(String productVariantID, String productID, String pvName, String image, String color, String size, int quantity,double price, Integer updatedBy, Timestamp updatedDate) {
+    public ProductVariant(String productVariantID, String productID, String pvName, String image, Color color, Size size,double price, int createdBy, Timestamp createdDate) {
+        super(createdBy, createdDate);
+        this.productVariantID = productVariantID;
+        this.productID = productID;
+        this.pvName = pvName;
+        this.image = image;
+        this.color = color;
+        this.size = size;
+        this.price = price;
+    }
+    
+    public ProductVariant(String productVariantID, String productID, String pvName, String image, Color color, Size size,double price, Integer updatedBy, Timestamp updatedDate) {
         super(updatedBy, updatedDate);
         this.productVariantID = productVariantID;
         this.productID = productID;
@@ -58,11 +69,10 @@ public class ProductVariant extends Audit {
         this.image = image;
         this.color = color;
         this.size = size;
-        this.quantity = quantity;
         this.price = price;
     }
 
-    public ProductVariant(String productVariantID, String pvName, String image, String color, String size, double price, int quantity, Product product, Category category) {
+    public ProductVariant(String productVariantID, String pvName, String image, Color color, Size size, double price, int quantity, Product product, Category category) {
         this.productVariantID = productVariantID;
         this.pvName = pvName;
         this.image = image;
@@ -74,7 +84,7 @@ public class ProductVariant extends Audit {
         this.category = category;
     }
     
-    public ProductVariant(String productVariantID, String pvName, String image, String color, String size, double price, int quantity) {
+    public ProductVariant(String productVariantID, String pvName, String image, Color color, Size size, double price, int quantity) {
         this.productVariantID = productVariantID;
         this.pvName = pvName;
         this.image = image;
@@ -84,7 +94,7 @@ public class ProductVariant extends Audit {
         this.quantity = quantity;
     }
 
-    public ProductVariant(String pvName, String color, String size) {
+    public ProductVariant(String pvName, Color color, Size size) {
         this.pvName = pvName;
         this.color = color;
         this.size = size;
@@ -122,19 +132,19 @@ public class ProductVariant extends Audit {
         this.image = image;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
-    public String getSize() {
+    public Size getSize() {
         return size;
     }
 
-    public void setSize(String size) {
+    public void setSize(Size size) {
         this.size = size;
     }
 
