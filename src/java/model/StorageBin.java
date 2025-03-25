@@ -10,6 +10,8 @@ public class StorageBin extends Audit {
     private String binType;
     private int capacity;
     private String status;
+    
+    private BinType binTypeObj;
 
     // Constructor
     public StorageBin() {
@@ -96,6 +98,14 @@ public class StorageBin extends Audit {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public BinType getBinTypeObj() {
+        return binTypeObj;
+    }
+
+    public void setBinTypeObj(BinType binTypeObj) {
+        this.binTypeObj = binTypeObj;
     }
 
 }

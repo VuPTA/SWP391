@@ -100,6 +100,14 @@ public class ProductVariant extends Audit {
         this.size = size;
     }
 
+    public ProductVariant(String pvName, String image, Color color, Size size, int quantity) {
+        this.pvName = pvName;
+        this.image = image;
+        this.color = color;
+        this.size = size;
+        this.quantity = quantity;
+    }
+
     public String getProductVariantID() {
         return productVariantID;
     }

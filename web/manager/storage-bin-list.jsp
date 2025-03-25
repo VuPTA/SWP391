@@ -95,12 +95,15 @@
                                                 <td>${bin.storageBinID}</td>
                                                 <td>${bin.warehouseID}</td>
                                                 <td>${bin.binName}</td>
-                                                <td>${bin.binType}</td>
+                                                <td>${bin.binTypeObj.name}</td>
                                                 <td>${bin.capacity}</td>
                                                 <td>${bin.status}</td>
                                                 <td style="text-align: right">
                                                     <a href="edit-bin?id=${bin.storageBinID}" class="edit-btn">
                                                         <i class="bx bx-edit"></i>
+                                                    </a>
+                                                    <a href="view-bin?id=${bin.storageBinID}" class="edit-btn">
+                                                        <i class="bx bx-show"></i>
                                                     </a>
                                                 </td>
                                             </tr>

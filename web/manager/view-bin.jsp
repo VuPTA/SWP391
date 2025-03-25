@@ -62,12 +62,12 @@
             <main id="main" class="main">
 
                 <div class="pagetitle">
-                    <h1>Edit Bin</h1>
+                    <h1>Bin Detail</h1>
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                             <li class="breadcrumb-item">Storage Bin</li>
-                            <li class="breadcrumb-item active">Edit Bin</li>
+                            <li class="breadcrumb-item active">Bin Detail</li>
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
@@ -80,15 +80,14 @@
 
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Edit Bin</h5>
+                                    <h5 class="card-title">Bin Detail</h5>
 
-                                    <form class="row g-3 needs-validation" novalidate action="edit-bin" method="post">
-                                        <input type="hidden" class="form-control" id="storageBinID" name="storageBinID" value="${sb.storageBinID}">
-                                    <!-- Warehouse ID -->
-                                    <div class="col-md-6">
-                                        <label for="warehouseID" class="form-label">Warehouse</label>
-                                        <select class="form-select ${sb.status eq 'Lock' ? 'readonly-select' : ''}" id="warehouseID" name="warehouseID" required>
-                                            <option selected disabled value="">Choose a Warehouse...</option>
+                                    <form class="row g-3 needs-validation" novalidate>
+                                        <!-- Warehouse ID -->
+                                        <div class="col-md-6">
+                                            <label for="warehouseID" class="form-label">Warehouse</label>
+                                            <select class="form-select readonly-select" id="warehouseID" name="warehouseID" readonly>
+                                                <option selected disabled value="">Choose a Warehouse...</option>
                                             <c:forEach items="${warehouses}" var="warehouse">
                                                 <option value="${warehouse.warehouseID}" ${sb.warehouseID eq warehouse.warehouseID ? 'selected' : '' }>${warehouse.warehouseName}</option>
                                             </c:forEach>
@@ -99,15 +98,14 @@
                                     <!-- Bin Name -->
                                     <div class="col-md-6">
                                         <label for="binName" class="form-label">Bin Name</label>
-                                        <input type="text" class="form-control" id="binName" name="binName" required value="${sb.binName}" ${sb.status eq 'Lock' ? 'readonly' : ''}>
+                                        <input type="text" class="form-control" id="binName" name="binName" value="${sb.binName}" readonly>
                                         <div class="invalid-feedback">Please enter a Bin Name.</div>
                                     </div>
 
                                     <!-- Bin Type -->
                                     <div class="col-md-6">
                                         <label for="binType" class="form-label">Bin Type</label>
-                                        <select class="form-select ${sb.status eq 'Lock' ? 'readonly-select' : ''}" id="binType" name="binType" required>
-                                            <option selected disabled value="">Choose Bin Type...</option>
+                                        <select class="form-select readonly-select" id="binType" name="binType" readonly>
                                             <c:forEach items="${binTypes}" var="b">
                                                 <option value="${b.id}" ${b.id == sb.binType ? 'selected' : ''}>${b.name}</option>
                                             </c:forEach>
@@ -125,7 +123,7 @@
                                     <!-- Status -->
                                     <div class="col-md-12">
                                         <label for="status" class="form-label">Status</label>
-                                        <select class="form-select" id="status" name="status" required>
+                                        <select class="form-select readonly-select" id="status" name="status" required>
                                             <option value="Active" ${sb.status eq 'Active' ? 'selected' : '' }>Active</option>
                                             <option value="Lock" ${sb.status eq 'Lock' ? 'selected' : '' }>Lock</option>
                                             <option value="Inactive" ${sb.status eq 'Inactive' ? 'selected' : '' }>Inactive</option>
@@ -133,17 +131,61 @@
                                     </div>
 
                                     <!-- Submit Button -->
-                                    <div class="col-12">
-                                        <button class="btn btn-primary" type="submit">Save Bin</button>
-                                        <a class="btn btn-danger" href="storage-bin">Cancel</a>
-                                    </div>
+<!--                                    <div class="col-12">
+                                        <a class="btn btn-success" href="storage-bin">Back</a>
+                                    </div>-->
                                 </form>
 
 
 
+<!--                            </div>
+                        </div>
+                    </div>-->
+
+
+<!--                    <div class="col-lg-12">
+
+                        <div class="card">
+                            <div class="card-body">-->
+
+                                <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
+                                    <h5 class="card-title">Products</h5>
+                                </div>
+                                <!-- Table with stripped rows -->
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Variant Name</th>
+                                            <th>Image</th>
+                                            <th>Color</th>
+                                            <th>Size</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${productVariants}" var="p">
+                                            <tr>
+                                                <td>${p.pvName}</td>
+                                                <td><img src="${p.image}" style="width: 50px; height: 50px;"></td>
+                                                <td>${p.color.name}</td>
+                                                <td>${p.size.name}</td>
+                                                <td>${p.quantity}</td>
+                                            </tr>
+                                        </c:forEach>
+
+                                    </tbody>
+                                </table>
+                                <!-- End Table with stripped rows -->
+                                 <div class="col-12">
+                                        <a class="btn btn-success" href="storage-bin">Back</a>
+                                    </div>
+
                             </div>
                         </div>
+
                     </div>
+
+
                 </div>
             </section>
 
@@ -151,28 +193,6 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
-            <script>
-                const binTypes = [];
-
-            <c:forEach items="${binTypes}" var="b">
-                binTypes.push({id: "${b.id}", quantity: ${b.quantity}});
-            </c:forEach>;
-                document.addEventListener("DOMContentLoaded", function () {
-                    const binTypeSelect = document.getElementById("binType");
-                    const capacityInput = document.getElementById("capacity");
-
-                    binTypeSelect.addEventListener("change", function () {
-                        const selectedId = binTypeSelect.value;
-                        const selectedBin = binTypes.find(bin => bin.id === selectedId);
-
-                        if (selectedBin) {
-                            capacityInput.value = selectedBin.quantity;
-                        } else {
-                            capacityInput.value = "";
-                        }
-                    });
-                });
-        </script>
     </body>
 
 </html>

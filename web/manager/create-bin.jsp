@@ -106,9 +106,9 @@
                                         <label for="binType" class="form-label">Bin Type</label>
                                         <select class="form-select" id="binType" name="binType" required>
                                             <option selected disabled value="">Choose Bin Type...</option>
-                                            <option value="Small">Small</option>
-                                            <option value="Standard">Standard</option>
-                                            <option value="Large">Large</option>
+                                            <c:forEach items="${binTypes}" var="b">
+                                                <option value="${b.id}">${b.name}</option>
+                                            </c:forEach>
                                         </select>
                                         <div class="invalid-feedback">Please select a Bin Type.</div>
                                     </div>
@@ -139,24 +139,27 @@
 
         <!-- ======= Footer ======= -->
         <jsp:include page="../common/footer.jsp"></jsp:include>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const binTypeSelect = document.getElementById("binType");
-                const capacityInput = document.getElementById("capacity");
+            <script>
+                const binTypes = [];
 
-                binTypeSelect.addEventListener("change", function () {
-                    const binType = binTypeSelect.value;
-                    if (binType === "Small") {
-                        capacityInput.value = 100;
-                    } else if (binType === "Standard") {
-                        capacityInput.value = 200;
-                    } else if (binType === "Large") {
-                        capacityInput.value = 300;
-                    } else {
-                        capacityInput.value = "";
-                    }
+            <c:forEach items="${binTypes}" var="b">
+                binTypes.push({id: "${b.id}", quantity: ${b.quantity}});
+            </c:forEach>;
+                document.addEventListener("DOMContentLoaded", function () {
+                    const binTypeSelect = document.getElementById("binType");
+                    const capacityInput = document.getElementById("capacity");
+
+                    binTypeSelect.addEventListener("change", function () {
+                        const selectedId = binTypeSelect.value;
+                        const selectedBin = binTypes.find(bin => bin.id === selectedId);
+
+                        if (selectedBin) {
+                            capacityInput.value = selectedBin.quantity;
+                        } else {
+                            capacityInput.value = "";
+                        }
+                    });
                 });
-            });
         </script>
 
     </body>
