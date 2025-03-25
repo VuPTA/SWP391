@@ -102,6 +102,9 @@
                                                     <a href="edit-bin?id=${bin.storageBinID}" class="edit-btn">
                                                         <i class="bx bx-edit"></i>
                                                     </a>
+                                                    <a href="view-bin?id=${bin.storageBinID}" class="edit-btn">
+                                                        <i class="bx bx-show"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
