@@ -4,6 +4,7 @@
  */
 package controller.manager;
 
+import dal.BinTypeDAO;
 import dal.StorageBinDAO;
 import dal.WareHouseDAO;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.List;
 import model.Account;
+import model.BinType;
 import model.StorageBin;
 import model.WareHouse;
 
@@ -43,6 +45,11 @@ public class CreateBinServlet extends HttpServlet {
             WareHouseDAO dao = new WareHouseDAO();
             List<WareHouse> warehouses = dao.getWareHouses();
             request.setAttribute("warehouses", warehouses);
+            
+            BinTypeDAO btdao = new BinTypeDAO();
+            List<BinType> binTypes = btdao.getBinTypes();
+            request.setAttribute("binTypes", binTypes);
+            
             request.getRequestDispatcher("manager/create-bin.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

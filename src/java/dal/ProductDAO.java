@@ -284,33 +284,32 @@ public class ProductDAO {
         }
     }
 
-//    public List<ProductVariant> getProductVariantsInBin(String binId) {
-//        List<ProductVariant> list = new ArrayList<>();
-//        String query = "select pv.ProductVariantID, pv.PVName, pv.Image, cp.ColorName, sp.SizeName, bp.Quantity from StorageBin sb\n"
-//                + "left join BinProduct bp on sb.StorageBinID = bp.StorageBinID\n"
-//                + "left join ProductVariant pv on pv.ProductVariantID = bp.ProductVariantID\n"
-//                + "left join ColorProduct cp on cp.Color_ID = pv.Color_ID\n"
-//                + "left join SizeProduct sp on sp.Size_ID = pv.Size_ID\n"
-//                + "where sb.StorageBinID = ? and bp.Quantity > 0";
-//        try {
-//            conn = DBContext.getConnection(); //mo ket noi toi sql
-//            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
-//            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
-//            while (rs.next()) {
-//                ProductVariant o = new ProductVariant(rs.getString(1),
-//                        rs.getString(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getString(5),
-//                        rs.getDouble(6),
-//                        rs.getInt(7),
-//                        new Product(rs.getString(8)),
-//                        new Category(rs.getString(9)));
-//                list.add(o);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
+    public List<ProductVariant> getProductVariantsInBin(String binId) {
+        List<ProductVariant> list = new ArrayList<>();
+        String query = "select pv.ProductVariantID, pv.PVName, pv.Image, cp.ColorName, sp.SizeName, bp.Quantity from StorageBin sb\n"
+                + "left join BinProduct bp on sb.StorageBinID = bp.StorageBinID\n"
+                + "left join ProductVariant pv on pv.ProductVariantID = bp.ProductVariantID\n"
+                + "left join ColorProduct cp on cp.Color_ID = pv.Color_ID\n"
+                + "left join SizeProduct sp on sp.Size_ID = pv.Size_ID\n"
+                + "where sb.StorageBinID = ? and bp.Quantity > 0";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            ps.setString(1, binId);
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                ProductVariant o = new ProductVariant(
+                        rs.getString(2),
+                        rs.getString(3),
+                        new Color(rs.getString(4)),
+                        new Size(rs.getString(5)),
+                        rs.getInt(6)
+                );
+                list.add(o);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

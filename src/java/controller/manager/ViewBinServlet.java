@@ -4,6 +4,8 @@
  */
 package controller.manager;
 
+import dal.BinTypeDAO;
+import dal.ProductDAO;
 import dal.StorageBinDAO;
 import dal.WareHouseDAO;
 import java.io.IOException;
@@ -14,6 +16,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.BinType;
+import model.ProductVariant;
 import model.StorageBin;
 import model.WareHouse;
 
@@ -43,9 +47,18 @@ public class ViewBinServlet extends HttpServlet {
             List<WareHouse> warehouses = whdao.getWareHouses();
             request.setAttribute("warehouses", warehouses);
 
+            BinTypeDAO btdao = new BinTypeDAO();
+            List<BinType> binTypes = btdao.getBinTypes();
+            request.setAttribute("binTypes", binTypes);
+
             StorageBinDAO dao = new StorageBinDAO();
             StorageBin sb = dao.getStorageBinById(id);
             request.setAttribute("sb", sb);
+
+            ProductDAO pdao = new ProductDAO();
+            List<ProductVariant> productVariants = pdao.getProductVariantsInBin(id);
+            request.setAttribute("productVariants", productVariants);
+
             request.getRequestDispatcher("manager/view-bin.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

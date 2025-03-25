@@ -12,26 +12,12 @@ import java.util.logging.Logger;
  *
  */
 public class DBContext {
-
-//    public Connection connection;
-//
-//    public DBContext() throws ClassNotFoundException {
-//        try {
-//            String user = "sa";
-//            String pass = "namnp";
-//            String url = "jdbc:sqlserver://localhost:1433;databaseName=SWP391_Project;encrypt=true;trustServerCertificate=true";
-//            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//            connection = DriverManager.getConnection(url, user, pass);
-//        } catch (SQLException e) {
-//            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, e);
-//        }
-//    }
     public static Connection getConnection() {
         Connection connection = null;
         try {
             String user = "sa";
-            String pass = "123";
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=SWP391;encrypt=true;trustServerCertificate=true";
+            String pass = "Kimanh3082@";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=SWP391_Re1;encrypt=true;trustServerCertificate=true";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
 
