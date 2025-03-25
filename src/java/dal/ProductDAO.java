@@ -11,10 +11,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import model.Category;
+import model.Color;
 import model.Product;
 import model.ProductVariant;
 import model.PurchaseItem;
 import model.PurchaseOrder;
+import model.Size;
 import utils.Helpers;
 
 /**
@@ -29,29 +31,29 @@ public class ProductDAO {
 
     public List<ProductVariant> getProductVariants() {
         List<ProductVariant> list = new ArrayList<>();
-        String query = "select pv.ProductVariantID, pv.PVName, pv.Image, pv.Color, pv.Size,pv.Price,\n"
-                + "pv.Quantity, p.ProductName, c.CategoryName from ProductVariant pv\n"
-                + "left join Product p on pv.ProductID = p.ProductID\n"
-                + "left join Category c on p.CategoryID = c.CategoryID";
-        try {
-            conn = DBContext.getConnection(); //mo ket noi toi sql
-            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
-            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
-            while (rs.next()) {
-                ProductVariant o = new ProductVariant(rs.getString(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getDouble(6),
-                        rs.getInt(7),
-                        new Product(rs.getString(8)),
-                        new Category(rs.getString(9)));
-                list.add(o);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String query = "select pv.ProductVariantID, pv.PVName, pv.Image, pv.Color, pv.Size,pv.Price,\n"
+//                + "pv.Quantity, p.ProductName, c.CategoryName from ProductVariant pv\n"
+//                + "left join Product p on pv.ProductID = p.ProductID\n"
+//                + "left join Category c on p.CategoryID = c.CategoryID";
+//        try {
+//            conn = DBContext.getConnection(); //mo ket noi toi sql
+//            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+//            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+//            while (rs.next()) {
+//                ProductVariant o = new ProductVariant(rs.getString(1),
+//                        rs.getString(2),
+//                        rs.getString(3),
+//                        rs.getString(4),
+//                        rs.getString(5),
+//                        rs.getDouble(6),
+//                        rs.getInt(7),
+//                        new Product(rs.getString(8)),
+//                        new Category(rs.getString(9)));
+//                list.add(o);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return list;
     }
 
@@ -144,24 +146,22 @@ public class ProductDAO {
                     + "      ,[ProductID]\n"
                     + "      ,[PVName]\n"
                     + "      ,[Image]\n"
-                    + "      ,[Color]\n"
-                    + "      ,[Size]\n"
+                    + "      ,[Color_ID]\n"
+                    + "      ,[Size_ID]\n"
                     + "      ,[Price]\n"
-                    + "      ,[Quantity]\n"
                     + "      ,[CreatedBy]\n"
-                    + "      ,[CreatedDate]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "      ,[CreatedDate]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement itemStmt = conn.prepareStatement(itemSQL);
             for (ProductVariant pi : po.getProductVariants()) {
                 itemStmt.setString(1, pi.getProductVariantID());
                 itemStmt.setString(2, pi.getProductID());
                 itemStmt.setString(3, pi.getPvName());
                 itemStmt.setString(4, pi.getImage());
-                itemStmt.setString(5, pi.getColor());
-                itemStmt.setString(6, pi.getSize());
+                itemStmt.setInt(5, pi.getColor().getId());
+                itemStmt.setInt(6, pi.getSize().getId());
                 itemStmt.setDouble(7, pi.getPrice());
-                itemStmt.setInt(8, pi.getQuantity());
-                itemStmt.setInt(9, pi.getCreatedBy());
-                itemStmt.setTimestamp(10, pi.getCreatedDate());
+                itemStmt.setInt(8, pi.getCreatedBy());
+                itemStmt.setTimestamp(9, pi.getCreatedDate());
                 itemStmt.addBatch();
             }
 
@@ -198,7 +198,7 @@ public class ProductDAO {
 
     public List<ProductVariant> getProductVariantsByProductId(String productId) {
         List<ProductVariant> list = new ArrayList<>();
-        String query = "select pv.ProductVariantID, pv.PVName, pv.Image, pv.Color, pv.Size,pv.Price,\n"
+        String query = "select pv.ProductVariantID, pv.PVName, pv.Image, pv.Color_ID, pv.Size_ID,pv.Price,\n"
                 + "pv.Quantity from ProductVariant pv\n"
                 + "where pv.ProductID = ?\n";
         try {
@@ -210,8 +210,8 @@ public class ProductDAO {
                 ProductVariant o = new ProductVariant(rs.getString(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
+                        new Color(rs.getInt(4)),
+                        new Size( rs.getInt(5)),
                         rs.getDouble(6),
                         rs.getInt(7));
                 list.add(o);
@@ -254,26 +254,24 @@ public class ProductDAO {
                     + "      ,[ProductID]\n"
                     + "      ,[PVName]\n"
                     + "      ,[Image]\n"
-                    + "      ,[Color]\n"
-                    + "      ,[Size]\n"
+                    + "      ,[Color_ID]\n"
+                    + "      ,[Size_ID]\n"
                     + "      ,[Price]\n"
-                    + "      ,[Quantity]\n"
                     + "      ,[CreatedBy]\n"
-                    + "      ,[CreatedDate],[UpdatedBy],[UpdatedDate]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "      ,[CreatedDate],[UpdatedBy],[UpdatedDate]) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement itemStmt = conn.prepareStatement(itemSQL);
             for (ProductVariant pi : po.getProductVariants()) {
                 itemStmt.setString(1, pi.getProductVariantID());
                 itemStmt.setString(2, pi.getProductID());
                 itemStmt.setString(3, pi.getPvName());
                 itemStmt.setString(4, pi.getImage());
-                itemStmt.setString(5, pi.getColor());
-                itemStmt.setString(6, pi.getSize());
+                itemStmt.setInt(5, pi.getColor().getId());
+                itemStmt.setInt(6, pi.getSize().getId());
                 itemStmt.setDouble(7, pi.getPrice());
-                itemStmt.setInt(8, pi.getQuantity());
-                itemStmt.setInt(9, pi.getCreatedBy());
-                itemStmt.setTimestamp(10, pi.getCreatedDate());
-                itemStmt.setInt(11, pi.getUpdatedBy());
-                itemStmt.setTimestamp(12, pi.getUpdatedDate());
+                itemStmt.setInt(8, pi.getCreatedBy());
+                itemStmt.setTimestamp(9, pi.getCreatedDate());
+                itemStmt.setInt(10, pi.getUpdatedBy());
+                itemStmt.setTimestamp(11, pi.getUpdatedDate());
 
                 itemStmt.addBatch();
             }
