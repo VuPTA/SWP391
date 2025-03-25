@@ -19,6 +19,10 @@ public class Color {
         this.id = id;
     }
 
+    public Color(String name) {
+        this.name = name;
+    }
+
     public Color(int id, String name) {
         this.id = id;
         this.name = name;

@@ -27,8 +27,10 @@ public class DeliveryItemDAO {
 
     public List<DeliveryItem> getDeliveryItemByDO(String doId) {
         List<DeliveryItem> list = new ArrayList<>();
-        String query = "select di.*, pv.PVName, pv.Color, pv.Size from delivery_item di\n"
+        String query = "select di.*, pv.PVName, cp.ColorName, sp.SizeName from delivery_item di\n"
                 + "left join ProductVariant pv on di.ProductVariantID = pv.ProductVariantID\n"
+                + "left join ColorProduct cp on cp.Color_ID = pv.Color_ID\n"
+                + "left join SizeProduct sp on sp.Size_ID = pv.Size_ID\n"
                 + "where di.DO_ID = ?";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
@@ -41,7 +43,7 @@ public class DeliveryItemDAO {
                         rs.getString(3),
                         rs.getInt(4),
                         rs.getDouble(5),
-                        new ProductVariant(rs.getString(10),new Color(rs.getInt(11)), new Size(rs.getInt(12))),
+                        new ProductVariant(rs.getString(10), new Color(rs.getString(11)), new Size(rs.getString(12))),
                         rs.getInt(6),
                         rs.getTimestamp(7),
                         rs.getInt(8),
