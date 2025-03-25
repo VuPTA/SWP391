@@ -5,7 +5,9 @@
 package controller.admin;
 
 import dal.CategoryDAO;
+import dal.ColorDAO;
 import dal.ProductDAO;
+import dal.SizeDAO;
 import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,8 +26,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import model.Account;
 import model.Category;
+import model.Color;
 import model.Product;
 import model.ProductVariant;
+import model.Size;
 import model.Supplier;
 import utils.Helpers;
 
@@ -53,6 +57,14 @@ public class CreateProductServlet extends HttpServlet {
             CategoryDAO cdao = new CategoryDAO();
             List<Category> categories = cdao.getAllCategories();
             request.setAttribute("categories", categories);
+            
+            SizeDAO sdao = new SizeDAO();
+            List<Size> sizes = sdao.getSizes();
+            request.setAttribute("sizes", sizes);
+            
+            ColorDAO colorDAO = new ColorDAO();
+            List<Color> colors = colorDAO.getColors();
+            request.setAttribute("colors", colors);
 
             request.getRequestDispatcher("admin/create-product.jsp").forward(request, response);
         } catch (Exception e) {
@@ -105,7 +117,7 @@ public class CreateProductServlet extends HttpServlet {
             String[] colors = request.getParameterValues("color[]");
             String[] sizes = request.getParameterValues("size[]");
             String[] prices = request.getParameterValues("price[]");
-            String[] quantities = request.getParameterValues("quantity[]");
+//            String[] quantities = request.getParameterValues("quantity[]");
             List<String> productVariantIds = pdao.generateProductVariantNewID(names.length);
 
             List<ProductVariant> variants = new ArrayList<>();
@@ -125,9 +137,8 @@ public class CreateProductServlet extends HttpServlet {
                         productId,
                         names[i],
                         imageName,
-                        colors[i],
-                        sizes[i],
-                        Integer.parseInt(quantities[i]),
+                        new Color(Integer.parseInt(colors[i])),
+                        new Size(Integer.parseInt(sizes[i])),
                         Double.parseDouble(prices[i]),
                         createdBy,
                         createDate);

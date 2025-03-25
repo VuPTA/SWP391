@@ -9,9 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import model.Color;
 import model.ProductVariant;
 import model.PurchaseItem;
 import model.PurchaseOrder;
+import model.Size;
 
 /**
  *
@@ -38,7 +40,7 @@ public class PurchaseItemDAO {
                         rs.getString(3),
                         rs.getInt(4),
                         rs.getDouble(5),
-                        new ProductVariant(rs.getString(10), rs.getString(11), rs.getString(12)),
+                        new ProductVariant(rs.getString(10),new Color(rs.getInt(11)), new Size(rs.getInt(12))),
                         rs.getInt(6),
                         rs.getTimestamp(7),
                         rs.getInt(8),
@@ -84,7 +86,7 @@ public class PurchaseItemDAO {
                         rs.getString(3),
                         rs.getInt(4),
                         rs.getDouble(5),
-                        new ProductVariant(rs.getString(6), rs.getString(8), rs.getString(7)));
+                        new ProductVariant(rs.getString(6), new Color(rs.getInt(8)),  new Size(rs.getInt(7))));
                 list.add(o);
             }
         } catch (Exception e) {
