@@ -132,7 +132,7 @@
                                                 <!-- Rows will be added dynamically -->
                                                 <c:forEach items="${po.purchaseItems}" var="pi">
                                                     <tr>
-                                                        <td>${pi.product.pvName} - ${pi.product.color} - ${pi.product.size}
+                                                        <td>${pi.product.pvName} - ${pi.product.color.name} - ${pi.product.size.name}
                                                             <input type="hidden" name="productID[]" value="${pi.productVariantId}">
                                                             <input type="hidden" name="price[]" value="${pi.unitPrice}">
                                                         </td>
@@ -226,8 +226,8 @@
                         id: "${o.productVariantID}",
                         name: "${o.pvName}",
                         image: "${o.image}",
-                        color: "${o.color}",
-                        size: "${o.size}",
+                        color: "${o.color.name}",
+                        size: "${o.size.name}",
                         price: ${o.price},
                         quantity: ${o.quantity},
                         category: "${o.category.categoryName}",

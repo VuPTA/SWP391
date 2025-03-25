@@ -111,14 +111,6 @@
                                         <div class="invalid-feedback">Please select a Supplier.</div>
                                     </div>
 
-
-                                    <!-- Search Products -->
-                                    <!--                                    <div class="col-md-6">
-                                                                            <label class="form-label">Search Product</label>
-                                                                            <input type="text" class="form-control" id="searchProduct" placeholder="Type to search...">
-                                                                            <ul class="list-group mt-2" id="productList" style="display: none; position: absolute; z-index: 1000;"></ul>
-                                                                        </div>-->
-
                                     <!-- Purchase Items Table -->
                                     <div class="col-12">
                                         <label class="form-label">Delivery Items</label>
