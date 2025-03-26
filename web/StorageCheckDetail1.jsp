@@ -1,9 +1,10 @@
 <%-- 
-    Document   : StorageCheckDetailHistory
-    Created on : 23 Mar 2025, 04:58:31
+    Document   : StorageCheckDetailDone
+    Created on : 24 Mar 2025, 03:00:25
     Author     : ANNT1
 --%>
-
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ page import="java.util.List, model.StorageCheckInfor" %>
 <%@ page import="java.util.List, model.StorageCheckDetail" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -43,41 +44,56 @@
             <!-- ======= Sidebar ======= -->
         <jsp:include page="/common/sidebar.jsp"></jsp:include><!-- End Sidebar-->
             <main id="main" class="main">
-                <div class="container">
-                    <h2 class="mt-4">History</h2>
-                    <div class="d-flex mt-3 mb-2">
-                        <a href="SCheckInforServlet" class="btn btn-secondary ms-auto">Return</a> 
-                </div>
 
+                <div class="container">
+                <%-- Hiển thị messageBinID nếu có --%>
+                <c:if test="${not empty message}">
+                    <div class="alert alert-success">
+                        ${message}
+                    </div>
+                </c:if>
+                <form action="SCheckDetailServlet" method="post" class="p-3 bg-light rounded shadow-sm">
+                    <h3 class="mb-3">Storage Check Count</h3>
+                    <div class="input-group">
+                        <label for="storageCheckID" class="input-group-text">Enter ID</label>
+                        <input type="text" id="storageCheckID" name="selectedSCid" list="SCidlist" 
+                               class="form-control" placeholder="Enter ID...">
+                        <button type="submit" class="btn btn-success px-4">Enter</button>
+
+                        <!-- Search -->
+                        <select id="searchType" name="searchType" class="form-select ms-2" ">
+                            <option value="">Search by...</option>
+                            <option value="sc.StorageCheckID">ID</option>
+                            <option value="BinID">Bin Code</option>
+                            <option value="sb.BinName">Bin Name</option>
+                            <option value="sc.Note">Notes</option>
+                        </select>
+                        <input type="text" id="searchQuery" name="searchQuery" class="form-control" placeholder="Search...">
+                        <button type="submit" class="btn btn-primary px-4">Search</button>
+                    </div>
+                </form>
+                <!-- Form bao quanh bảng -->
                 <table class="table table-bordered table-hover">
                     <thead class="table-primary">
                         <tr>
-                            <th>Item</th>
-                            <th>Size</th>
-                            <th>Color</th>
-                            <th>System Quantity</th>
-                            <th>Checked Quantity</th>
-                            <th>Inspector</th>
-                            <th>Inspection Order</th>
-                            <th>Inspection Date</th>
-                            <th>Notes</th>    
+                            <th>ID</th>
+                            <th>Bin Code</th>
+                            <th>Bin Name</th>                            
+                            <th>Status</th>
+                            <th>Notes</th>                 
                         </tr>
                     </thead>
                     <tbody>
                         <%
-                            List<StorageCheckDetail> scheckdetail = (List<StorageCheckDetail>) request.getAttribute("scheckdetail");
-                            for (StorageCheckDetail check : scheckdetail) {
+                            List<StorageCheckInfor> scheckinfor = (List<StorageCheckInfor>) request.getAttribute("scheckinfor");
+                            for (StorageCheckInfor check : scheckinfor) {
                         %>
                         <tr>
-                            <td><%= check.getPvName() %></td>
-                            <td><%= check.getSize() %></td>
-                            <td><%= check.getColor() %></td>
-                            <td><%= check.getExpectedQuantity() %></td>
-                            <td><%= check.getActualQuantity() %></td>                        
-                            <td><%= check.getCreatedBy() != null ? check.getCreatedBy() : "Chưa cập nhật" %></td>
-                            <td><%= check.getCheckPeriod() >= 1 ? check.getCheckPeriod() : "Chưa cập nhật" %></td>
-                            <td><%= check.getCreatedDate() != null ? check.getCreatedDate() : "Chưa cập nhật" %></td>
-                            <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>
+                            <td><%= check.getStorageCheckID() %></td>
+                            <td><%= check.getStorageBinID() %></td>
+                            <td><%= check.getBinName() %></td>                            
+                            <td><%= check.getStatus() %></td>
+                            <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>                            
                         </tr>
                         <% } %>
                     </tbody>
@@ -88,4 +104,3 @@
         <jsp:include page="../common/footer.jsp"></jsp:include>
     </body>
 </html>
-

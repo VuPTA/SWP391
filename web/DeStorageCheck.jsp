@@ -15,10 +15,13 @@
     </head>
     <body>
         <div class="container">
-            <h2 class="mt-4">Deactivate storage check list</h2>
-            <div class="d-flex mt-3 mb-2">
-                <a href="SCheckInforServlet" class="btn btn-secondary ms-auto">Return</a>
-            </div>            
+            <div class="p-2 bg-light rounded shadow-sm">
+                <h2 class="mt-4">Deactivate storage check list</h2>
+                <div class="d-flex mt-3 mb-2">
+                    <a href="SCheckCancelServlet1" class="btn btn-secondary ms-auto">Return</a>
+                </div>
+            </div>
+
             <table class="table table-bordered table-hover">
                 <thead class="table-primary">
                     <tr>

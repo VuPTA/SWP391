@@ -14,16 +14,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.*;
 import dal.StorageCheckDAO;
-import java.util.ArrayList;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  *
  * @author ANNT1
  */
-@WebServlet(name = "UpdateSCheckServlet", urlPatterns = {"/UpdateSCheckServlet"})
-public class UpdateSCheckServlet extends HttpServlet {
+@WebServlet(name = "SCheckClearServlet2", urlPatterns = {"/SCheckClearServlet2"})
+public class SCheckClearServlet2 extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +42,10 @@ public class UpdateSCheckServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateSCheckServlet</title>");
+            out.println("<title>Servlet SCheckClearServlet2</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateSCheckServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SCheckClearServlet2 at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,7 +63,10 @@ public class UpdateSCheckServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        StorageCheckDAO dao = new StorageCheckDAO();
+        List<StorageCheckInfor> scheckinfor = dao.getCountedStorageCheckInfor();
+        request.setAttribute("scheckinfor", scheckinfor);
+        request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);
     }
 
     /**
@@ -75,11 +78,12 @@ public class UpdateSCheckServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        StorageCheckDAO dao = new StorageCheckDAO();
 
+        StorageCheckDAO dao = new StorageCheckDAO();
         // Lấy danh sách ID (có thể trùng StorageCheckID nhưng khác StorageCheckDetailID)
         String[] storageCheckIDs = request.getParameterValues("storageCheckID");
         String[] expectedQuantities = request.getParameterValues("expectedQuantity");
@@ -91,6 +95,7 @@ public class UpdateSCheckServlet extends HttpServlet {
         if (storageCheckIDs != null) {
             List<StorageCheckDetail> checkList = new ArrayList<>();
             int storageCheckId = Integer.parseInt(storageCheckIDs[0]);
+            String binID = dao.getStorageBinIDByStorageCheckID(storageCheckId);
             for (int i = 0; i < storageCheckIDs.length; i++) {
 
                 int periodCount = dao.periodCheck(storageCheckId); // Lấy CheckPeriod trước
@@ -121,21 +126,23 @@ public class UpdateSCheckServlet extends HttpServlet {
 
             // Gọi DAO để lưu danh sách mới
             for (StorageCheckDetail detail : checkList) {
-                if ("save".equals(action)) {
-                    dao.createStorageCheckDetailN(detail);
-                    dao.updateStorageCheck(storageCheckId, detail);
-                    dao.updateStorageCheckStatus(storageCheckId, "Counted");
+                if ("clear".equals(action)) {
+                    dao.updateBinProductQuantity(detail);
+                    dao.updateStorageCheckStatus(storageCheckId, "Cleared");
+                    dao.updateBinStatus(binID, "Active");
+                    request.setAttribute("message", "Save successful");
+                } else if ("recount".equals(action)) {
+                    dao.updateStorageCheckStatus(storageCheckId, "Recount");
+                    request.setAttribute("message", "Order to Recount successful");                    
                 }
+                List<StorageCheckInfor> scheckinfor = dao.getCountedStorageCheckInfor();
+                request.setAttribute("scheckinfor", scheckinfor);
+                request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);
+                return;
             }
-
-            List<StorageCheckInfor> scheckinfor = dao.getPendingStorageCheckInfor();
-            request.setAttribute("scheckinfor", scheckinfor);
-            request.setAttribute("message", "Save successful");
-            request.getRequestDispatcher("StorageCheckDetail1.jsp").forward(request, response);
-            return;
         }
-        request.setAttribute("message", "Save failed");
-        response.sendRedirect("StorageCheckDetail1.jsp");
+        request.setAttribute("message", "Clear failed");
+        request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);
     }
 
     /**

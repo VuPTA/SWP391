@@ -63,7 +63,7 @@ public class AddSCheckServlet extends HttpServlet {
         StorageCheckDAO storageCheckDAO = new StorageCheckDAO();
         List<StorageCheckInfor> bininfor = storageCheckDAO.getStorageBinInfo();
         request.setAttribute("bininfor", bininfor);
-        request.getRequestDispatcher("addStorageCheck.jsp").forward(request, response);
+        request.getRequestDispatcher("StorageCheckCreate.jsp").forward(request, response);
     }
 
     /**
@@ -82,11 +82,13 @@ public class AddSCheckServlet extends HttpServlet {
 
         StorageCheckDAO dao = new StorageCheckDAO();
         dao.createStorageCheck(binID, 2, note); // CreateBy = 2 (tạm thời cố định)
-        dao.updateBinStatus(binID, "Lock"); 
+        dao.updateBinStatus(binID, "Lock for check"); 
+        int messageBinID = dao.getLatestStorageCheckID(binID);
 
         List<StorageCheckInfor> bininfor = dao.getStorageBinInfo();
         request.setAttribute("bininfor", bininfor);
-        request.getRequestDispatcher("addStorageCheck.jsp").forward(request, response);
+        request.setAttribute("messageBinID", messageBinID);
+        request.getRequestDispatcher("StorageCheckCreate.jsp").forward(request, response);
     }
 
     /**

@@ -72,7 +72,38 @@
 
 
         </c:if>
-
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-grid"></i><span>Storage Check</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="AddSCheckServlet">
+                        <i class="bi bi-circle"></i><span>Create</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="SCheckDetailServlet">
+                        <i class="bi bi-circle"></i><span>Count</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="SCheckClearServlet1">
+                        <i class="bi bi-circle"></i><span>Clear</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="SCheckCancelServlet1">
+                        <i class="bi bi-circle"></i><span>Cancel</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="SCheckInforServlet">
+                        <i class="bi bi-circle"></i><span>Search</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Icons Nav -->
 
 
         <!--        <li class="nav-item">
