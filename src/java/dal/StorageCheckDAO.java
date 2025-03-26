@@ -136,7 +136,7 @@ public class StorageCheckDAO {
         }
         return storageChecks;
     }
-    
+
     //SC list có status != Cancel, Cleared
     public List<StorageCheckInfor> getCancelStorageCheckInfor() {
         List<StorageCheckInfor> storageChecks = new ArrayList<>();
@@ -326,15 +326,20 @@ public class StorageCheckDAO {
     //for history
     public List<StorageCheckDetail> getStorageCheckDetailsByStorageCheckID(int storageCheckID) {
         List<StorageCheckDetail> details = new ArrayList<>();
-        String sql = "SELECT scd.StorageCheckDetailID, scd.StorageCheckID, scd.BinProductID, "
-                + "scd.ProductVariantID, pv.PVName, pv.Size, pv.Color, "
-                + "scd.ActualQuantity, scd.ExpectedQuantity, scd.CheckPeriod, scd.Note, "
-                + "a.Name AS CreatedByName, scd.CreatedDate, ua.Name AS UpdatedByName, scd.UpdatedDate "
-                + "FROM StorageCheckDetail scd "
-                + "JOIN ProductVariant pv ON scd.ProductVariantID = pv.ProductVariantID "
-                + "LEFT JOIN Account a ON scd.CreatedBy = a.AccountID "
-                + "LEFT JOIN Account ua ON scd.UpdatedBy = ua.AccountID "
-                + "WHERE scd.StorageCheckID = ?";
+        String sql = "SELECT scd.StorageCheckDetailID, scd.StorageCheckID, scd.BinProductID, \n"
+                + "       scd.ProductVariantID, pv.PVName, \n"
+                + "       s.SizeName AS Size,  \n"
+                + "       c.ColorName AS Color,  \n"
+                + "       scd.ActualQuantity, scd.ExpectedQuantity, scd.CheckPeriod, scd.Note, \n"
+                + "       a.Name AS CreatedByName, scd.CreatedDate, \n"
+                + "       ua.Name AS UpdatedByName, scd.UpdatedDate\n"
+                + "FROM StorageCheckDetail scd\n"
+                + "JOIN ProductVariant pv ON scd.ProductVariantID = pv.ProductVariantID\n"
+                + "JOIN SizeProduct s ON pv.Size_ID = s.Size_ID       \n"
+                + "JOIN ColorProduct c ON pv.Color_ID = c.Color_ID    \n"
+                + "LEFT JOIN Account a ON scd.CreatedBy = a.AccountID\n"
+                + "LEFT JOIN Account ua ON scd.UpdatedBy = ua.AccountID\n"
+                + "WHERE scd.StorageCheckID = ?;";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, storageCheckID);
@@ -369,19 +374,22 @@ public class StorageCheckDAO {
         return details;
     }
 
-    //for detail-ko dung
+    //for detail, chỉ lấy max period count
     public List<StorageCheckDetail> getStorageCheckDetailsByStorageCheckIDMaxPeriod(int storageCheckID) {
         List<StorageCheckDetail> details = new ArrayList<>();
-        String sql = "SELECT scd.StorageCheckDetailID, scd.StorageCheckID, scd.BinProductID, "
-                + "scd.ProductVariantID, pv.PVName, pv.Size, pv.Color, "
-                + "scd.ActualQuantity, scd.ExpectedQuantity, scd.CheckPeriod, scd.Note, "
-                + "a.Name AS CreatedByName, scd.CreatedDate, ua.Name AS UpdatedByName, scd.UpdatedDate "
-                + "FROM StorageCheckDetail scd "
-                + "JOIN ProductVariant pv ON scd.ProductVariantID = pv.ProductVariantID "
-                + "LEFT JOIN Account a ON scd.CreatedBy = a.AccountID "
-                + "LEFT JOIN Account ua ON scd.UpdatedBy = ua.AccountID "
-                + "WHERE scd.StorageCheckID = ? "
-                + "AND scd.CheckPeriod = (SELECT MAX(CheckPeriod) FROM StorageCheckDetail WHERE StorageCheckID = ?)";
+        String sql = "SELECT scd.StorageCheckDetailID, scd.StorageCheckID, scd.BinProductID, \n"
+                + "       scd.ProductVariantID, pv.PVName, c.ColorName AS Color, s.SizeName AS Size, \n"
+                + "       scd.ActualQuantity, scd.ExpectedQuantity, scd.CheckPeriod, scd.Note, \n"
+                + "       a.Name AS CreatedByName, scd.CreatedDate, \n"
+                + "       ua.Name AS UpdatedByName, scd.UpdatedDate\n"
+                + "FROM StorageCheckDetail scd\n"
+                + "JOIN ProductVariant pv ON scd.ProductVariantID = pv.ProductVariantID\n"
+                + "JOIN ColorProduct c ON pv.Color_ID = c.Color_ID\n"
+                + "JOIN SizeProduct s ON pv.Size_ID = s.Size_ID\n"
+                + "LEFT JOIN Account a ON scd.CreatedBy = a.AccountID\n"
+                + "LEFT JOIN Account ua ON scd.UpdatedBy = ua.AccountID\n"
+                + "WHERE scd.StorageCheckID = ? \n"
+                + "  AND scd.CheckPeriod = (SELECT MAX(CheckPeriod) FROM StorageCheckDetail WHERE StorageCheckID = ?);";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, storageCheckID);
@@ -420,12 +428,14 @@ public class StorageCheckDAO {
     //Dùng khi 1 SC chưa đc tạo SCDetail
     public List<StorageCheckDetail> getStorageCheckDetailsPending(int storageCheckID) {
         List<StorageCheckDetail> details = new ArrayList<>();
-        String sql = "SELECT sc.StorageCheckID, bp.BinProductID, pv.ProductVariantID, "
-                + "pv.PVName, pv.Size, pv.Color, bp.Quantity "
-                + "FROM StorageCheck sc "
-                + "JOIN BinProduct bp ON sc.StorageBinID = bp.StorageBinID "
-                + "JOIN ProductVariant pv ON bp.ProductVariantID = pv.ProductVariantID "
-                + "WHERE sc.StorageCheckID = ?";
+        String sql = "SELECT sc.StorageCheckID, bp.BinProductID, pv.ProductVariantID, \n"
+                + "       pv.PVName, s.SizeName as Size, c.ColorName as Color, bp.Quantity\n"
+                + "FROM StorageCheck sc\n"
+                + "JOIN BinProduct bp ON sc.StorageBinID = bp.StorageBinID\n"
+                + "JOIN ProductVariant pv ON bp.ProductVariantID = pv.ProductVariantID\n"
+                + "JOIN ColorProduct c ON pv.Color_ID = c.Color_ID\n"
+                + "JOIN SizeProduct s ON pv.Size_ID = s.Size_ID\n"
+                + "WHERE sc.StorageCheckID = ?;";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, storageCheckID);
@@ -470,13 +480,15 @@ public class StorageCheckDAO {
     //Danh sach để pick bin tạo Scheck mới
     public List<StorageCheckInfor> getStorageBinInfo() {
         List<StorageCheckInfor> storageBins = new ArrayList<>();
-        String sql = "SELECT w.WarehouseID, sb.StorageBinID AS BinID, w.WarehouseName, "
-                + "sb.BinName, sb.BinType, sb.Capacity, COALESCE(SUM(bp.Quantity), 0) AS TotalQuantity, sb.Status "
-                + "FROM StorageBin sb "
-                + "JOIN WareHouse w ON sb.WarehouseID = w.WarehouseID "
-                + "LEFT JOIN BinProduct bp ON sb.StorageBinID = bp.StorageBinID "
-                + "WHERE sb.Status <> 'Lock for check' "
-                + "GROUP BY w.WarehouseID, sb.StorageBinID, w.WarehouseName, sb.BinName, sb.BinType, sb.Capacity, sb.Status;";
+        String sql = "SELECT w.WarehouseID, sb.StorageBinID AS BinID, w.WarehouseName,\n"
+                + "       sb.BinName, bt.Name_Type AS BinType, sb.Capacity, \n"
+                + "       COALESCE(SUM(bp.Quantity), 0) AS TotalQuantity, sb.Status\n"
+                + "FROM StorageBin sb\n"
+                + "JOIN WareHouse w ON sb.WarehouseID = w.WarehouseID\n"
+                + "JOIN BinType bt ON sb.BinType_ID = bt.BinType_ID  -- Thêm JOIN với BinType\n"
+                + "LEFT JOIN BinProduct bp ON sb.StorageBinID = bp.StorageBinID\n"
+                + "WHERE sb.Status <> 'Lock for check'\n"
+                + "GROUP BY w.WarehouseID, sb.StorageBinID, w.WarehouseName, sb.BinName, bt.Name_Type, sb.Capacity, sb.Status;";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -491,6 +503,51 @@ public class StorageCheckDAO {
                         rs.getInt("TotalQuantity"), // Tổng số lượng sản phẩm trong bin
                         rs.getString("Status")
                 ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return storageBins;
+    }
+
+    public List<StorageCheckInfor> searchStorageBinInfo(String searchType, String searchQuery) {
+        List<StorageCheckInfor> storageBins = new ArrayList<>();
+        String sql = "SELECT w.WarehouseID, sb.StorageBinID AS BinID, w.WarehouseName, "
+                + "       sb.BinName, bt.Name_Type AS BinType, sb.Capacity, "
+                + "       COALESCE(SUM(bp.Quantity), 0) AS TotalQuantity, sb.Status "
+                + "FROM StorageBin sb "
+                + "JOIN WareHouse w ON sb.WarehouseID = w.WarehouseID "
+                + "JOIN BinType bt ON sb.BinType_ID = bt.BinType_ID "
+                + "LEFT JOIN BinProduct bp ON sb.StorageBinID = bp.StorageBinID "
+                + "WHERE sb.Status <> 'Lock for check' ";
+
+        // Thêm điều kiện tìm kiếm nếu searchQuery không rỗng
+        if (searchType != null && searchQuery != null && !searchQuery.isEmpty()) {
+            sql += " AND " + searchType + " LIKE ?";
+        }
+
+        sql += " GROUP BY w.WarehouseID, sb.StorageBinID, w.WarehouseName, "
+                + "sb.BinName, bt.Name_Type, sb.Capacity, sb.Status";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (searchType != null && searchQuery != null && !searchQuery.isEmpty()) {
+                ps.setString(1, "%" + searchQuery + "%");
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    storageBins.add(new StorageCheckInfor(
+                            rs.getString("WarehouseID"),
+                            rs.getString("BinID"),
+                            rs.getString("WarehouseName"),
+                            rs.getString("BinName"),
+                            rs.getString("BinType"),
+                            rs.getInt("Capacity"),
+                            rs.getInt("TotalQuantity"),
+                            rs.getString("Status")
+                    ));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -536,7 +593,6 @@ public class StorageCheckDAO {
 
     public boolean updateBinStatus(String binID, String status) {
         String sql = "UPDATE StorageBin SET Status = ? WHERE StorageBinID = ?";
-
         try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, status);
@@ -662,12 +718,12 @@ public class StorageCheckDAO {
         StorageCheckDAO dao = new StorageCheckDAO();
         int testStorageCheckID = 10; // Thay số này bằng ID thực tế trong database
 
-        List<StorageCheckDetail> details = dao.getStorageCheckDetailsPending(testStorageCheckID);
+        List<StorageCheckInfor> details = dao.getCancelStorageCheckInfor();
 
         if (details.isEmpty()) {
             System.out.println("No storage check details found for StorageCheckID: " + testStorageCheckID);
         } else {
-            for (StorageCheckDetail detail : details) {
+            for (StorageCheckInfor detail : details) {
                 System.out.println(detail);
             }
         }

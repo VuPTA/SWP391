@@ -87,10 +87,13 @@ public class SCheckInforServlet extends HttpServlet {
             List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckID(ScheckId);
             if (!scheckdetail.isEmpty()) {
                 request.setAttribute("scheckdetail", scheckdetail);
+                status = "NotEmpty";
             }else{
                 List<StorageCheckDetail> scheckdetailpending = storageCheckDAO.getStorageCheckDetailsPending(ScheckId);
                 request.setAttribute("scheckdetail", scheckdetailpending);
+                status= "Empty";
             } 
+            request.setAttribute("status", status);
             request.setAttribute("scheckid", hisscheckid);
             request.getRequestDispatcher("StorageCheckDetailHistory.jsp").forward(request, response);
             return;

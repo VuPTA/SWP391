@@ -42,7 +42,7 @@ public class SCheckCancelServlet2 extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SCheckCancelServlet2</title>");            
+            out.println("<title>Servlet SCheckCancelServlet2</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet SCheckCancelServlet2 at " + request.getContextPath() + "</h1>");
@@ -63,10 +63,14 @@ public class SCheckCancelServlet2 extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        StorageCheckDAO dao = new StorageCheckDAO();
-        List<StorageCheckInfor> scheckinfor = dao.getCancelStorageCheckInfor();
-        request.setAttribute("scheckinfor", scheckinfor);
-        request.getRequestDispatcher("StorageCheckCancel1.jsp").forward(request, response);
+        try {
+            StorageCheckDAO dao = new StorageCheckDAO();
+            List<StorageCheckInfor> scheckinfor = dao.getCancelStorageCheckInfor();
+            request.setAttribute("scheckinfor", scheckinfor);
+            request.getRequestDispatcher("StorageCheckCancel1.jsp").forward(request, response);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**

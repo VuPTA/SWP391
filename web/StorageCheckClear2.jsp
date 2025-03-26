@@ -82,17 +82,13 @@
                                 <td><%= check.getSize() %></td>
                                 <td><%= check.getColor() %></td>
                                 <td><%= check.getExpectedQuantity() %></td>
-                                <td>
-                                    <input type="number" name="checkedQuantity" 
-                                           value="<%= check.getActualQuantity() %>" class="form-control">
-                                </td>                   
+                                <td><%= check.getActualQuantity() %></td>                   
                                 <td><%= check.getCreatedBy() != null ? check.getCreatedBy() : "Chưa cập nhật" %></td>
                                 <td><%= check.getCheckPeriod() >= 1 ? check.getCheckPeriod() : "Chưa cập nhật" %></td>
                                 <td><%= check.getCreatedDate() != null ? check.getCreatedDate() : "Chưa cập nhật" %></td>
-                                <td>
-                                    <input type="text" name="notes" 
-                                           value="<%= check.getNote() != null ? check.getNote() : "" %>" class="form-control">
-                                </td>
+                                <td><%= check.getNote() != null ? check.getNote() : "" %></td>
+                        <input type="hidden" name="notes" value="<%= check.getNote() != null ? check.getNote() : "" %>">
+                        <input type="hidden" name="checkedQuantity" value="<%= check.getActualQuantity() %>">
                         <input type="hidden" name="expectedQuantity" value="<%= check.getExpectedQuantity() %>">
                         <input type="hidden" name="storageCheckID" value="<%= check.getStorageCheckID() %>">
                         <input type="hidden" name="binProductID" value="<%= check.getBinProductID() %>">
@@ -105,6 +101,6 @@
             </div>
         </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-        <jsp:include page="../common/footer.jsp"></jsp:include>
+        <jsp:include page="/common/footer.jsp"></jsp:include>
     </body>
 </html>
