@@ -15,6 +15,7 @@ import model.DeliveryOrder;
 import model.PurchaseItem;
 import model.PurchaseOrder;
 import model.Supplier;
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import utils.Helpers;
 
 /**
@@ -27,6 +28,11 @@ public class DeliveryOrderDAO {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
+    public static void main(String[] args) {
+        DeliveryOrderDAO d = new DeliveryOrderDAO();
+        DeliveryOrder de = d.getDeliveryOrderToCreateRO("DO001");
+        System.out.println(de.getDoId());
+    }
     public List<DeliveryOrder> getDeliveryOrders() {
         List<DeliveryOrder> list = new ArrayList<>();
         String query = "select po.*, s.SupplierName from delivery_orders po left join Suppliers s on s.SupplierID = po.Supplier order by po.CreatedDate desc";
@@ -159,7 +165,7 @@ public class DeliveryOrderDAO {
                         rs.getTimestamp(8),
                         rs.getInt(9),
                         rs.getTimestamp(10));
-                o.setSupplier(new Supplier(rs.getString(2), rs.getString("SupplierName")));
+                o.setSupplier(new Supplier(rs.getString(3), rs.getString("SupplierName")));
                 list.add(o);
             }
         } catch (Exception e) {
@@ -167,4 +173,47 @@ public class DeliveryOrderDAO {
         }
         return list;
     }
+
+    public DeliveryOrder getDeliveryOrderToCreateRO(String id) {
+        String query = "select po.*, s.SupplierName from delivery_orders po left join Suppliers s on s.SupplierID = po.Supplier where po.DO_ID =?";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            ps.setString(1, id);
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                DeliveryOrder o = new DeliveryOrder(rs.getString(1),
+                        rs.getDate(5),
+                        new Supplier(rs.getString(3),
+                                rs.getString("SupplierName")));
+                
+                o.setStatus(rs.getString("Status"));
+                DeliveryItemDAO pidao = new DeliveryItemDAO();
+                List<DeliveryItem> pis = pidao.getDeliveryItemByDO(rs.getString(1));
+                double totalAmount = 0;
+                for (DeliveryItem pi : pis) {
+                    totalAmount += pi.getUnitPrice() * pi.getQuantity();
+                }
+                o.setDeliveryItems(pis);
+                o.setTotalAmount(totalAmount);
+                return o;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updateStatusPurchaseOrder(DeliveryOrder po) {
+  String sql = "update [delivery_orders] set Status = ? where [DO_ID] = ?";
+
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, po.getStatus());
+            ps.setString(2, po.getDoId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }    }
 }

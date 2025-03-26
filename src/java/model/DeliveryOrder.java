@@ -58,6 +58,12 @@ public class DeliveryOrder extends Audit {
     public DeliveryOrder() {
     }
 
+    public DeliveryOrder(String doId, Date expectedDate, Supplier supplier) {
+        this.doId = doId;
+        this.expectedDate = expectedDate;
+        this.supplier = supplier;
+    }
+
     public String getPoId() {
         return poId;
     }

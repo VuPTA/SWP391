@@ -73,7 +73,7 @@
                                 <div class="card-body">
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
-                                        <h5 class="card-title">Delivery Order List</h5>
+                                        <h5 class="card-title">Receive Order List</h5>
                                         <a href="create-receive-order" class="btn btn-primary" style="height: 40px">Create Receive Order</a>
                                     </div>
                                     <!-- Table with stripped rows -->

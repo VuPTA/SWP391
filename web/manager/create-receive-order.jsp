@@ -81,10 +81,10 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Create Receive Order</h5>
 
-                                    <form class="row g-3 needs-validation formpo" novalidate action="create-receive-order" method="post" id="form-create-do">
+                                    <form class="row g-3 needs-validation formpo" novalidate action="create-receive-order" method="post" id="form-create-ro">
                                         <div class="col-md-6">
                                             <label for="poId" class="form-label">Delivery Order</label>
-                                            <select class="form-select" id="poId" name="poId" required>
+                                            <select class="form-select" id="do1Id" name="do1Id" required>
                                                 <option selected disabled value="">Choose a Delivery Order...</option>
                                             <c:forEach items="${purchaseOrders}" var="s">
                                                 <option value="${s.doId}">${s.doId}</option>
@@ -147,8 +147,8 @@
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit">Create Receive Order</button>
-                                        <a class="btn btn-danger" href="receive-orders">Cancel</a>
+                                        <button class="btn btn-primary" type="submit">Create Delivery Order</button>
+                                        <a class="btn btn-danger" href="delivery-orders">Cancel</a>
                                     </div>
                                 </form>
                             </div>
@@ -208,17 +208,17 @@
         </script>
         <script>
             $(document).ready(function () {
-                $(document).on("change", "#poId", function () {
-                    var poId = $(this).val(); // Lấy giá trị PO được chọn
+                $(document).on("change", "#do1Id", function () {
+                    var do1Id = $(this).val(); // Lấy giá trị PO được chọn
 
-                    if (poId) {
+                    if (do1Id) {
                         $.ajax({
-                            url: "po-to-create-do", // Gửi đến Servlet xử lý
+                            url: "do-to-create-ro", // Gửi đến Servlet xử lý
                             method: "GET",
-                            data: {poId: poId},
+                            data: {do1Id: do1Id},
                             success: function (response) {
                                 if (response) {
-                                    $("#form-create-do").html(response);
+                                    $("#form-create-ro").html(response);
                                 }
                             },
                             error: function () {

@@ -50,17 +50,7 @@ public class CreateReceiveOrderServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try {
-            DeliveryOrderDAO dodao = new DeliveryOrderDAO();
-            List<DeliveryOrder> POsToCreateDO = dodao.getDOsDropdownToCreateRO();
-            request.setAttribute("purchaseOrders", POsToCreateDO);
-            SupplierDAO dao = new SupplierDAO();
-            List<Supplier> suppliers = dao.getSuppliers();
-            request.setAttribute("suppliers", suppliers);
-            request.getRequestDispatcher("manager/create-receive-order.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -75,6 +65,17 @@ public class CreateReceiveOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         try {
+            DeliveryOrderDAO dodao = new DeliveryOrderDAO();
+            List<DeliveryOrder> POsToCreateDO = dodao.getDOsDropdownToCreateRO();
+            request.setAttribute("purchaseOrders", POsToCreateDO);
+            SupplierDAO dao = new SupplierDAO();
+            List<Supplier> suppliers = dao.getSuppliers();
+            request.setAttribute("suppliers", suppliers);
+            request.getRequestDispatcher("manager/create-receive-order.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         processRequest(request, response);
     }
 
@@ -117,6 +118,7 @@ public class CreateReceiveOrderServlet extends HttpServlet {
                 totalAmount += quantity * price;
                 deliveryItems.add(new ReceiveItem(productIds[i], quantity, price, createdBy, createDate));
             }
+            dodao.addTempBin(deliveryItems);
             // Làm tròn tổng tiền đến 2 chữ số thập phân
             totalAmount = Math.round(totalAmount * 100.0) / 100.0;
 
@@ -125,17 +127,17 @@ public class CreateReceiveOrderServlet extends HttpServlet {
             dodao.createDeliveryOrder(deliveryOrder);
 
             //check status and set status for PO
-//            PurchaseOrderDAO podao = new PurchaseOrderDAO();
-//            PurchaseOrder purchaseOrder = podao.getPurchaseOrderToCreateDO(poId);
-//            PurchaseOrder poUpdate = new PurchaseOrder();
-//            poUpdate.setPoId(poId);
-//            if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getPurchaseItems().size() > 0) {
-//                poUpdate.setStatus("Delivering");
-//                podao.updateStatusPurchaseOrder(poUpdate);
-//            } else if (purchaseOrder.getPurchaseItems().size() == 0) {
-//                poUpdate.setStatus("Received");
-//                podao.updateStatusPurchaseOrder(poUpdate);
-//            }
+            DeliveryOrderDAO podao = new DeliveryOrderDAO();
+            DeliveryOrder purchaseOrder = podao.getDeliveryOrderToCreateRO(poId);
+            DeliveryOrder poUpdate = new DeliveryOrder();
+            poUpdate.setPoId(poId);
+            if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getDeliveryItems().size() > 0) {
+                poUpdate.setStatus("Delivering");
+                podao.updateStatusPurchaseOrder(poUpdate);
+            } else if (purchaseOrder.getDeliveryItems().size() == 0) {
+                poUpdate.setStatus("Received");
+                podao.updateStatusPurchaseOrder(poUpdate);
+            }
 
             request.setAttribute("message", "Create Receive Order Success!");
             request.getRequestDispatcher("receive-orders").forward(request, response);
@@ -145,6 +147,8 @@ public class CreateReceiveOrderServlet extends HttpServlet {
         }
     }
 
+    
+    
     /**
      * Returns a short description of the servlet.
      *

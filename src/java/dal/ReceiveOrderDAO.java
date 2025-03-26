@@ -63,7 +63,7 @@ public class ReceiveOrderDAO {
     }
 
     public void createDeliveryOrder(ReceiveOrder po) {
-        String sql = "INSERT INTO [delivery_orders] ([RO_ID]\n"
+        String sql = "INSERT INTO [receive_orders] ([RO_ID]\n"
                 + "      ,[DO_ID]\n"
                 + "      ,[Supplier]\n"
                 + "      ,[Status]\n"
@@ -86,7 +86,7 @@ public class ReceiveOrderDAO {
             ps.executeUpdate();
 
             // Chèn các sản phẩm vào purchase_order_items
-            String itemSQL = "INSERT INTO [delivery_Item] ([RO_ID],[ProductVariantID]\n"
+            String itemSQL = "INSERT INTO [receive_items] ([RO_ID],[ProductVariantID]\n"
                     + "      ,[Quantity]\n"
                     + "      ,[UnitPrice]\n"
                     + "      ,[CreatedBy]\n"
@@ -141,5 +141,23 @@ public class ReceiveOrderDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void addTempBin(List<ReceiveItem> list) {
+        String query = "UPDATE [SWP391_Re].[dbo].[BinProduct]\n"
+                + "SET Quantity = Quantity + ? \n"
+                + "WHERE StorageBinID = 'BIN000' and ProductVariantID = ?;";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            for (ReceiveItem r : list) {
+                ps.setInt(1, r.getQuantity());
+                ps.setString(2, r.getProductVariantId());
+                int executeUpdate = ps.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }
