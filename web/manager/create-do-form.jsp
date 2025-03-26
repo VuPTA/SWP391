@@ -38,6 +38,7 @@
     <!-- Purchase Items Table -->
     <div class="col-12">
         <label class="form-label">Delivery Items</label>
+        <button class="btn btn-warning btn-sm btnReset" style="float: right" type="button">Reset</button>
         <table class="table table-bordered" id="purchaseItemsTable">
             <thead>
                 <tr>
@@ -56,7 +57,7 @@
                             <input type="hidden" name="price[]" value="${pi.unitPrice}">
                         </td>
                         <td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="${pi.quantity}" required max="${pi.quantity}">
-                         <div class="invalid-feedback">Max is ${pi.quantity}.</div></td>
+                            <div class="invalid-feedback">Max is ${pi.quantity}.</div></td>
                         <td class="unitPrice">${pi.unitPrice}</td>
                         <td class="totalPrice">${pi.unitPrice * pi.quantity}</td>
                         <td><button type="button" class="btn btn-danger btn-sm removeRow">Remove</button></td>
