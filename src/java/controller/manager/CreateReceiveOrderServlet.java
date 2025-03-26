@@ -152,9 +152,15 @@ public class CreateReceiveOrderServlet extends HttpServlet {
                 request.setAttribute("errorMessage", "Số lượng sản phẩm vượt quá mức quy định của kho! ");
                 request.getRequestDispatcher("receive-orders").forward(request, response);
             }
-
-            //check status and set status for PO
             DeliveryOrderDAO podao = new DeliveryOrderDAO();
+
+            DeliveryOrder dtt = podao.getDeliveryOrderById(poId);
+            if (quantities.length < dtt.getDeliveryItems().size()) {
+                note = "Giao thiếu. " + nott;
+            } else {
+                note = note + ".  " + nott;
+            }
+            //check status and set status for PO
             DeliveryOrder purchaseOrder = podao.getDeliveryOrderToCreateRO(poId);
             DeliveryOrder poUpdate = new DeliveryOrder();
             poUpdate.setDoId(poId);
@@ -165,12 +171,7 @@ public class CreateReceiveOrderServlet extends HttpServlet {
                 poUpdate.setStatus(note);
                 podao.updateStatusPurchaseOrder(poUpdate);
             }
-            DeliveryOrder dtt = podao.getDeliveryOrderById(poId);
-            if (quantities.length < dtt.getDeliveryItems().size()) {
-                note = "Giao thiếu. " + nott;
-            } else {
-                note = note + ".  " + nott;
-            }
+
             ReceiveOrder deliveryOrder = new ReceiveOrder(doId, poId, supplierID, note, expectedDate, deliveryItems, createdBy, createDate);
             deliveryOrder.setTotalAmount(totalAmount);
             dodao.createDeliveryOrder(deliveryOrder);
