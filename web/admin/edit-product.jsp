@@ -185,12 +185,35 @@
                 $(document).ready(function () {
                     const form = document.querySelector("form");
                     const tableBody = document.querySelector("#productvariantsTable tbody");
-                    form.addEventListener("submit", function (event) {
+                    $("form").on("submit", function (event) {
                         if (tableBody.children.length === 0) {
                             alert("You must add at least one product variant.");
                             event.preventDefault(); // Ngăn không cho gửi form
                         }
+                         if (hasDuplicateVariants()) {
+                            alert("Duplicate product variants are not allowed. Please check name, color, and size.");
+                            event.preventDefault();
+                        }
                     });
+                    function hasDuplicateVariants() {
+                        let variants = new Set();
+                        let isDuplicate = false;
+
+                        $("#productvariantsTable tbody tr").each(function () {
+                            let name = $(this).find(".name").val().trim();
+                            let color = $(this).find("select[name='color[]']").val();
+                            let size = $(this).find("select[name='size[]']").val();
+
+                            let key = name + "-" + color + "-" + size;
+                            if (variants.has(key)) {
+                                isDuplicate = true;
+                                return false; // Thoát khỏi vòng lặp
+                            }
+                            variants.add(key);
+                        });
+
+                        return isDuplicate;
+                    }
                     // Xử lý nút xóa, đảm bảo luôn còn ít nhất một dòng
                     // Xử lý xóa dòng
                     tableBody.addEventListener("click", function (event) {
