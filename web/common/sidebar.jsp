@@ -36,6 +36,12 @@
                     <span>Delivery Orders</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="receive-orders">
+                    <i class="bi bi-grid"></i>
+                    <span>Receive Orders</span>
+                </a>
+            </li>
         </c:if>
         <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Admin'}">
             <li class="nav-item">

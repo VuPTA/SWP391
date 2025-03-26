@@ -177,7 +177,7 @@ public class PurchaseOrderDAO {
 
     public List<PurchaseOrder> getPOsDropdownToCreateDO() {
         List<PurchaseOrder> list = new ArrayList<>();
-        String query = "select po.*, s.SupplierName from purchase_orders po left join Suppliers s on s.SupplierID = po.Supplier where po.Status != 'Received' order by po.CreatedDate desc";
+        String query = "select po.*, s.SupplierName from purchase_orders po left join Suppliers s on s.SupplierID = po.Supplier order by po.CreatedDate desc";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql

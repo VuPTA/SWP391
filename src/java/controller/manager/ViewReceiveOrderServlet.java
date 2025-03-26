@@ -2,9 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.manager;
 
-import dal.AccountDAO;
+import dal.DeliveryOrderDAO;
+import dal.PurchaseOrderDAO;
+import dal.ReceiveOrderDAO;
+import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,15 +15,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Account;
+import java.util.List;
+import model.DeliveryOrder;
+import model.PurchaseOrder;
+import model.ReceiveOrder;
+import model.Supplier;
 
 /**
  *
- * @author ADMIN
+ * @author Admin
  */
-@WebServlet(name = "ResetPasswordServlet", urlPatterns = {"/changepass"})
-public class ResetPasswordServlet extends HttpServlet {
+@WebServlet(name = "ViewReceiveOrderServlet", urlPatterns = {"/view-receive-order"})
+public class ViewReceiveOrderServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,17 +40,14 @@ public class ResetPasswordServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ResetPasswordServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ResetPasswordServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        try {
+            String doId = request.getParameter("id");
+            ReceiveOrderDAO podao = new ReceiveOrderDAO();
+            ReceiveOrder deliveryOrder = podao.getDeliveryOrderById(doId);
+            request.setAttribute("delivery", deliveryOrder);
+            request.getRequestDispatcher("manager/view-receive-order.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -74,21 +77,6 @@ public class ResetPasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            String email = (String) session.getAttribute("email");
-            String newpass = request.getParameter("newpass");
-            String renewpass = request.getParameter("renewpass");
-            if (!renewpass.equals(newpass)) {
-                request.setAttribute("msg", "Mật khẩu xác nhận không khớp!");
-                request.getRequestDispatcher("changepass.jsp").forward(request, response);
-            } else {
-                AccountDAO a = new AccountDAO();
-                a.ChangePass(email, newpass);
-                response.sendRedirect("login.jsp");
-            }
-        } catch (Exception e) {
-        }
         processRequest(request, response);
     }
 

@@ -9,7 +9,7 @@ public class AccountDAO {
 
     public static void main(String[] args) throws ClassNotFoundException {
         AccountDAO d = new AccountDAO();
-        System.out.println(d.isEmailExists("nvdda1@xample.com"));
+        System.out.println(d.isEmailExists("uchihad.saitama@gmail.com"));
         //d.addAccount(new Account(55, "aaa", "ddd", "Manager", "aaa", "Nam", "0987878787", "aaa", "Active"));
     }
 
@@ -62,12 +62,11 @@ public class AccountDAO {
                 return 0;
         }
     }
-    
+
     public boolean updateAccount(int accountId, String password, String role, String name, String gender, String phone, String email, String status) {
         String sql = "UPDATE accounts SET password = ?, role = ?, name = ?, gender = ?, phone = ?, email = ?, status = ? WHERE account_id = ?";
 
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, password);
             stmt.setString(2, role);
@@ -208,7 +207,7 @@ public class AccountDAO {
     }
 
     public boolean addAccount(Account account) {
-        try (Connection connection = DBContext.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Account (UserName, Password, RoleID, Status, Name, Gender, Phone, Email, [AccountID]) VALUES (?, ?, ?, ?,?,?,?,?,?)")) {
+        try (Connection connection = DBContext.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Account (UserName, Password, RoleID, Status, Name, Gender, Phone, Email) VALUES (?, ?, ?, ?,?,?,?,?)")) {
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword()); // Cần mã hóa password
             preparedStatement.setInt(3, mapRole2(account.getRole()));
@@ -217,7 +216,7 @@ public class AccountDAO {
             preparedStatement.setString(6, account.getGender());
             preparedStatement.setString(7, account.getPhone());
             preparedStatement.setString(8, account.getEmail());
-            preparedStatement.setInt(9, account.getAccountId());
+//            preparedStatement.setInt(9, account.getAccountId());
 
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -240,7 +239,7 @@ public class AccountDAO {
     }
 
     public boolean updatePassword(String email, String newPassword) {
-        try (Connection conn =  DBContext.getConnection()) {
+        try (Connection conn = DBContext.getConnection()) {
             String sql = "UPDATE Account SET Password = ? WHERE Email = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, newPassword);
@@ -249,6 +248,83 @@ public class AccountDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public Account getAccountByEmail(String username) {
+        Account account = null;
+        String sql = "SELECT * FROM Account WHERE Email = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                account = new Account();
+                account.setAccountId(rs.getInt("AccountID"));
+                account.setName(rs.getString("Name"));
+                account.setGender(rs.getString("Gender"));
+                account.setPhone(rs.getString("Phone"));
+                account.setEmail(rs.getString("Email"));
+                account.setUsername(rs.getString("UserName"));
+                account.setPassword(rs.getString("Password")); // Cần hash password khi lưu
+                account.setRole(mapRole(rs.getInt("RoleID")));
+                account.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return account;
+    }
+
+    public Account getAccountByPhone(String username) {
+        Account account = null;
+        String sql = "SELECT * FROM Account WHERE Phone = ?";
+
+        try (Connection connection = DBContext.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                account = new Account();
+                account.setAccountId(rs.getInt("AccountID"));
+                account.setName(rs.getString("Name"));
+                account.setGender(rs.getString("Gender"));
+                account.setPhone(rs.getString("Phone"));
+                account.setEmail(rs.getString("Email"));
+                account.setUsername(rs.getString("UserName"));
+                account.setPassword(rs.getString("Password")); // Cần hash password khi lưu
+                account.setRole(mapRole(rs.getInt("RoleID")));
+                account.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return account;
+    }
+
+    public void ChangePass(String email, String newpass) {
+          String sql = "UPDATE Account SET Password = ? WHERE Email = ?";
+        
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, newpass);
+            stmt.setString(2, email);
+            
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Mật khẩu đã được cập nhật thành công.");
+            } else {
+                System.out.println("Không tìm thấy email này trong hệ thống.");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-public class DeliveryOrder extends Audit {
+public class ReceiveOrder extends Audit {
 
     private String doId;
     private String poId;
@@ -12,10 +12,10 @@ public class DeliveryOrder extends Audit {
     private String status;
     private Date expectedDate;
     private double totalAmount;
-    private List<DeliveryItem> deliveryItems; // Danh sách các deliveryItems thuộc đơn hàng này
+    private List<ReceiveItem> deliveryItems; // Danh sách các deliveryItems thuộc đơn hàng này
     private Supplier supplier;
 
-    public DeliveryOrder(String doId, String poId, String supplierId, String status, Date expectedDate, double totalAmount, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public ReceiveOrder(String doId, String poId, String supplierId, String status, Date expectedDate, double totalAmount, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
         this.poId = poId;
         this.doId = doId;
@@ -25,7 +25,7 @@ public class DeliveryOrder extends Audit {
         this.totalAmount = totalAmount;
     }
 
-    public DeliveryOrder(String doId, String poId, String supplierId, String status, Date expectedDate, List<DeliveryItem> deliveryItems, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
+    public ReceiveOrder(String doId, String poId, String supplierId, String status, Date expectedDate, List<ReceiveItem> deliveryItems, int createdBy, Timestamp createdDate, Integer updatedBy, Timestamp updatedDate) {
         super(createdBy, createdDate, updatedBy, updatedDate);
         this.poId = poId;
         this.doId = doId;
@@ -35,7 +35,7 @@ public class DeliveryOrder extends Audit {
         this.deliveryItems = deliveryItems;
     }
 
-    public DeliveryOrder(String doId, String poId, String supplierId, String status, Date expectedDate, List<DeliveryItem> deliveryItems, int createdBy, Timestamp createdDate) {
+    public ReceiveOrder(String doId, String poId, String supplierId, String status, Date expectedDate, List<ReceiveItem> deliveryItems, int createdBy, Timestamp createdDate) {
         super(createdBy, createdDate);
         this.poId = poId;
         this.doId = doId;
@@ -45,7 +45,7 @@ public class DeliveryOrder extends Audit {
         this.deliveryItems = deliveryItems;
     }
 
-    public DeliveryOrder(String doId, String poId, String supplierId, String status, Date expectedDate, List<DeliveryItem> deliveryItems, Integer updatedBy, Timestamp updatedDate) {
+    public ReceiveOrder(String doId, String poId, String supplierId, String status, Date expectedDate, List<ReceiveItem> deliveryItems, Integer updatedBy, Timestamp updatedDate) {
         super(updatedBy, updatedDate);
         this.poId = poId;
         this.doId = doId;
@@ -55,13 +55,7 @@ public class DeliveryOrder extends Audit {
         this.deliveryItems = deliveryItems;
     }
 
-    public DeliveryOrder() {
-    }
-
-    public DeliveryOrder(String doId, Date expectedDate, Supplier supplier) {
-        this.doId = doId;
-        this.expectedDate = expectedDate;
-        this.supplier = supplier;
+    public ReceiveOrder() {
     }
 
     public String getPoId() {
@@ -88,11 +82,11 @@ public class DeliveryOrder extends Audit {
         this.expectedDate = expectedDate;
     }
 
-    public List<DeliveryItem> getDeliveryItems() {
+    public List<ReceiveItem> getDeliveryItems() {
         return deliveryItems;
     }
 
-    public void setDeliveryItems(List<DeliveryItem> deliveryItems) {
+    public void setDeliveryItems(List<ReceiveItem> deliveryItems) {
         this.deliveryItems = deliveryItems;
     }
 

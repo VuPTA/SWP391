@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package controller.manager;
 
-import dal.AccountDAO;
+import dal.DeliveryOrderDAO;
+import dal.PurchaseOrderDAO;
+import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,15 +14,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Account;
+import java.util.List;
+import model.DeliveryOrder;
+import model.PurchaseOrder;
+import model.Supplier;
 
 /**
  *
- * @author ADMIN
+ * @author Admin
  */
-@WebServlet(name = "ResetPasswordServlet", urlPatterns = {"/changepass"})
-public class ResetPasswordServlet extends HttpServlet {
+@WebServlet(name = "GetDOToCreateROServlet", urlPatterns = {"/do-to-create-ro"})
+public class GetDOToCreateROServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,18 +38,7 @@ public class ResetPasswordServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ResetPasswordServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ResetPasswordServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -60,6 +53,23 @@ public class ResetPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         try {
+            String do1Id = request.getParameter("do1Id");
+            DeliveryOrderDAO podao = new DeliveryOrderDAO();
+            
+            DeliveryOrder purchaseOrder = podao.getDeliveryOrderToCreateRO(do1Id);
+            request.setAttribute("po", purchaseOrder);
+           
+            List<DeliveryOrder> POsToCreateDO = podao.getDOsDropdownToCreateRO();
+            request.setAttribute("purchaseOrders", POsToCreateDO);
+            SupplierDAO dao = new SupplierDAO();
+            List<Supplier> suppliers = dao.getSuppliers();
+            request.setAttribute("suppliers", suppliers);
+            
+            request.getRequestDispatcher("manager/create-ro-form.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         processRequest(request, response);
     }
 
@@ -74,21 +84,6 @@ public class ResetPasswordServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            String email = (String) session.getAttribute("email");
-            String newpass = request.getParameter("newpass");
-            String renewpass = request.getParameter("renewpass");
-            if (!renewpass.equals(newpass)) {
-                request.setAttribute("msg", "Mật khẩu xác nhận không khớp!");
-                request.getRequestDispatcher("changepass.jsp").forward(request, response);
-            } else {
-                AccountDAO a = new AccountDAO();
-                a.ChangePass(email, newpass);
-                response.sendRedirect("login.jsp");
-            }
-        } catch (Exception e) {
-        }
         processRequest(request, response);
     }
 

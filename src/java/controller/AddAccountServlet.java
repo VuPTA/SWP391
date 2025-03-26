@@ -74,7 +74,7 @@ public class AddAccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String idStr = request.getParameter("id");
+//            String idStr = request.getParameter("id");
             String name = request.getParameter("name");
             String gender = request.getParameter("gender");
             String phone = request.getParameter("phone");
@@ -85,21 +85,21 @@ public class AddAccountServlet extends HttpServlet {
             String status = request.getParameter("status");
 
             // Validate ID là số nguyên
-            int id;
-            
-        
-            try {
-                id = Integer.parseInt(idStr);
-                if (id <= 0) {
-                    request.setAttribute("msg", "ID phải là số nguyên dương!");
-                    request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                request.setAttribute("msg", "ID phải là số nguyên hợp lệ!");
-                request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
-                return;
-            }
+//            int id;
+//            
+//        
+//            try {
+//                id = Integer.parseInt(idStr);
+//                if (id <= 0) {
+//                    request.setAttribute("msg", "ID phải là số nguyên dương!");
+//                    request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
+//                    return;
+//                }
+//            } catch (NumberFormatException e) {
+//                request.setAttribute("msg", "ID phải là số nguyên hợp lệ!");
+//                request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
+//                return;
+//            }
 
             // Kiểm tra số điện thoại có từ 9 đến 10 chữ số
             if (!phone.matches("\\d{9,10}")) {
@@ -131,11 +131,11 @@ public class AddAccountServlet extends HttpServlet {
             AccountDAO accountDAO = new AccountDAO();
 
             // Kiểm tra ID đã tồn tại chưa
-            if (accountDAO.getAccountById(id) != null) {
-                request.setAttribute("msg", "ID đã tồn tại!");
-                request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
-                return;
-            }
+//            if (accountDAO.getAccountById(id) != null) {
+//                request.setAttribute("msg", "ID đã tồn tại!");
+//                request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
+//                return;
+//            }
 
             // Kiểm tra username đã tồn tại chưa
             if (accountDAO.getAccountByUsername(username) != null) {
@@ -143,9 +143,19 @@ public class AddAccountServlet extends HttpServlet {
                 request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
                 return;
             }
+            if (accountDAO.getAccountByEmail(email) != null) {
+                request.setAttribute("msg", "Email đã tồn tại!");
+                request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
+                return;
+            }
+            if (accountDAO.getAccountByPhone(phone) != null) {
+                request.setAttribute("msg", "Số điện thoại đã tồn tại!");
+                request.getRequestDispatcher("addAccounts.jsp").forward(request, response);
+                return;
+            }
 
             // Tạo đối tượng Account
-            Account newAccount = new Account(id, username, password, role, name, gender, phone, email, status);
+            Account newAccount = new Account(username, password, role, name, gender, phone, email, status);
 
             // Thêm tài khoản vào database
             boolean isAdded = accountDAO.addAccount(newAccount);
