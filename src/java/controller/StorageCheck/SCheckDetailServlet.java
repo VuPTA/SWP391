@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.*;
 import dal.StorageCheckDAO;
+import java.util.ArrayList;
 
 /**
  *
@@ -60,43 +61,10 @@ public class SCheckDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String scheckid = request.getParameter("ScheckId");
-        String hisscheckid = request.getParameter("hisscheckid");
-        String status = request.getParameter("status");
-        StorageCheckDAO storageCheckDAO = new StorageCheckDAO();
-        //detail
-        if (scheckid != null)  {
-            int ScheckId = Integer.parseInt(scheckid);            
-            List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckIDMaxPeriod(ScheckId);
-            if (!scheckdetail.isEmpty()) {
-                request.setAttribute("scheckdetail", scheckdetail);
-            }else{
-                List<StorageCheckDetail> scheckdetailpending = storageCheckDAO.getStorageCheckDetailsPending(ScheckId);
-                request.setAttribute("scheckdetail", scheckdetailpending);
-            }            
-            request.setAttribute("scheckid", scheckid);
-            if(status == null || status.equals("Completed")){
-                request.getRequestDispatcher("StorageCheckDetailDone.jsp").forward(request, response);
-            }else{
-                request.setAttribute("status", status);
-                request.getRequestDispatcher("StorageCheckDetail.jsp").forward(request, response);
-            }            
-            return;
-        }
-        //hisotry detail
-        if (hisscheckid != null) {
-            int ScheckId = Integer.parseInt(hisscheckid);            
-            List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckID(ScheckId);
-            if (!scheckdetail.isEmpty()) {
-                request.setAttribute("scheckdetail", scheckdetail);
-            }else{
-                List<StorageCheckDetail> scheckdetailpending = storageCheckDAO.getStorageCheckDetailsPending(ScheckId);
-                request.setAttribute("scheckdetail", scheckdetailpending);
-            } 
-            request.setAttribute("scheckid", hisscheckid);
-            request.getRequestDispatcher("StorageCheckDetailHistory.jsp").forward(request, response);
-            return;
-        }        
+        StorageCheckDAO dao = new StorageCheckDAO();
+        List<StorageCheckInfor> scheckinfor = dao.getPendingStorageCheckInfor();
+        request.setAttribute("scheckinfor", scheckinfor);
+        request.getRequestDispatcher("StorageCheckDetail1.jsp").forward(request, response);
     }
 
     /**
@@ -110,7 +78,36 @@ public class SCheckDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String scheckId = request.getParameter("selectedSCid");
+        String searchQuery = request.getParameter("searchQuery");
+        String searchType = request.getParameter("searchType");
+        StorageCheckDAO dao = new StorageCheckDAO();
+
+        if (scheckId != null) {
+            int ScheckId = Integer.parseInt(scheckId);
+            if (dao.isPendingOrRecount(ScheckId)) {//check có phải status pending-recount
+                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckID(ScheckId);
+                if (!scheckdetail.isEmpty()) {
+                    request.setAttribute("scheckdetail", scheckdetail);
+                } else {
+                    List<StorageCheckDetail> scheckdetailpending = dao.getStorageCheckDetailsPending(ScheckId);
+                    request.setAttribute("scheckdetail", scheckdetailpending);
+                }
+                request.getRequestDispatcher("StorageCheckDetail2.jsp").forward(request, response);
+            } else {
+                List<StorageCheckInfor> scheckinfor = dao.getPendingStorageCheckInfor();
+                request.setAttribute("scheckinfor", scheckinfor);
+                request.setAttribute("message", "This ID is not available");
+                request.getRequestDispatcher("StorageCheckDetail1.jsp").forward(request, response);
+            }
+        }
+
+        if (searchQuery != null) {
+            List<StorageCheckInfor> scheckinfor = dao.getCountedStorageCheckInfor(searchType, searchQuery);
+            request.setAttribute("scheckinfor", scheckinfor);
+            request.setAttribute("message", "Searched");
+            request.getRequestDispatcher("StorageCheckDetail1.jsp").forward(request, response);
+        }
     }
 
     /**

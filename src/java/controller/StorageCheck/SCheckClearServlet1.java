@@ -19,8 +19,8 @@ import dal.StorageCheckDAO;
  *
  * @author ANNT1
  */
-@WebServlet(name = "SCheckInforServlet", urlPatterns = {"/SCheckInforServlet"})
-public class SCheckInforServlet extends HttpServlet {
+@WebServlet(name = "SCheckClearServlet1", urlPatterns = {"/SCheckClearServlet1"})
+public class SCheckClearServlet1 extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +39,10 @@ public class SCheckInforServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SCheckInforServlet</title>");
+            out.println("<title>Servlet SCheckClearServlet1</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SCheckInforServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SCheckClearServlet1 at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,11 +60,10 @@ public class SCheckInforServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        StorageCheckDAO storageCheckDAO = new StorageCheckDAO();
-        List<StorageCheckInfor> scheckinfor = storageCheckDAO.getStorageCheckInfor();
+        StorageCheckDAO dao = new StorageCheckDAO();
+        List<StorageCheckInfor> scheckinfor = dao.getCountedStorageCheckInfor();
         request.setAttribute("scheckinfor", scheckinfor);
-        
-        request.getRequestDispatcher("StorageCheck.jsp").forward(request, response);
+        request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);
     }
 
     /**
@@ -78,23 +77,25 @@ public class SCheckInforServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String hisscheckid = request.getParameter("hisscheckid");
-        String status = request.getParameter("status");
-        StorageCheckDAO storageCheckDAO = new StorageCheckDAO();
-        //hisotry detail
-        if (hisscheckid != null) {
-            int ScheckId = Integer.parseInt(hisscheckid);            
-            List<StorageCheckDetail> scheckdetail = storageCheckDAO.getStorageCheckDetailsByStorageCheckID(ScheckId);
-            if (!scheckdetail.isEmpty()) {
-                request.setAttribute("scheckdetail", scheckdetail);
-            }else{
-                List<StorageCheckDetail> scheckdetailpending = storageCheckDAO.getStorageCheckDetailsPending(ScheckId);
-                request.setAttribute("scheckdetail", scheckdetailpending);
-            } 
-            request.setAttribute("scheckid", hisscheckid);
-            request.getRequestDispatcher("StorageCheckDetailHistory.jsp").forward(request, response);
-            return;
-        }        
+        String scheckId = request.getParameter("selectedSCid");
+        StorageCheckDAO dao = new StorageCheckDAO();
+
+        if (scheckId != null) {
+            int ScheckId = Integer.parseInt(scheckId);
+            if (dao.isCounted(ScheckId)) {//check có phải status counted
+                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckID(ScheckId);
+                if (!scheckdetail.isEmpty()) {
+                    request.setAttribute("scheckdetail", scheckdetail);
+                    request.getRequestDispatcher("StorageCheckClear2.jsp").forward(request, response);
+                    return;
+                }
+            } else {//sai status hoặc no data
+                List<StorageCheckInfor> scheckinfor = dao.getCountedStorageCheckInfor();
+                request.setAttribute("scheckinfor", scheckinfor);
+                request.setAttribute("message", "This ID is not available");
+                request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);
+            }
+        }
     }
 
     /**
