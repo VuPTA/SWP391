@@ -8,6 +8,7 @@ import dal.DeliveryOrderDAO;
 import dal.ProductDAO;
 import dal.PurchaseOrderDAO;
 import dal.ReceiveOrderDAO;
+import dal.StorageBinDAO;
 import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import model.Account;
@@ -29,6 +31,7 @@ import model.PurchaseItem;
 import model.PurchaseOrder;
 import model.ReceiveItem;
 import model.ReceiveOrder;
+import model.StorageBin;
 import model.Supplier;
 
 /**
@@ -50,7 +53,7 @@ public class CreateReceiveOrderServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,13 +68,16 @@ public class CreateReceiveOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         try {
+        try {
             DeliveryOrderDAO dodao = new DeliveryOrderDAO();
             List<DeliveryOrder> POsToCreateDO = dodao.getDOsDropdownToCreateRO();
             request.setAttribute("purchaseOrders", POsToCreateDO);
             SupplierDAO dao = new SupplierDAO();
             List<Supplier> suppliers = dao.getSuppliers();
             request.setAttribute("suppliers", suppliers);
+            StorageBinDAO bidao = new StorageBinDAO();
+            List<StorageBin> listDropDownBin = bidao.getStorageBinsActive();
+            request.setAttribute("bi", listDropDownBin);
             request.getRequestDispatcher("manager/create-receive-order.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,11 +102,15 @@ public class CreateReceiveOrderServlet extends HttpServlet {
             String poId = request.getParameter("poId");
             String supplierID = request.getParameter("supplierID");
             String expectedDateStr = request.getParameter("expectedDate");
+            String nott = request.getParameter("note");
+            String binr = request.getParameter("binr");
 
             Date expectedDate = (expectedDateStr == null || expectedDateStr.isEmpty()) ? null : Date.valueOf(expectedDateStr);  // Chuyển đổi từ chuỗi YYYY-MM-DD
+            expectedDate = Date.valueOf(LocalDate.now());
 
             String[] productIds = request.getParameterValues("productID[]");
             String[] quantities = request.getParameterValues("quantity[]");
+            String[] quantities1 = request.getParameterValues("quantity1[]");
             String[] prices = request.getParameterValues("price[]");
 
             HttpSession session = request.getSession();
@@ -110,34 +120,61 @@ public class CreateReceiveOrderServlet extends HttpServlet {
             ReceiveOrderDAO dodao = new ReceiveOrderDAO();
             String doId = dodao.getMaxDeliveryOrderID();
 
+            int totalQuantity = 0;
             double totalAmount = 0;
             List<ReceiveItem> deliveryItems = new ArrayList<>();
             for (int i = 0; i < productIds.length; i++) {
                 int quantity = Integer.parseInt(quantities[i]);
                 double price = Double.parseDouble(prices[i]);
                 totalAmount += quantity * price;
+                totalQuantity += quantity;
                 deliveryItems.add(new ReceiveItem(productIds[i], quantity, price, createdBy, createDate));
             }
-            dodao.addTempBin(deliveryItems);
+
+            double totalAmount1 = 0;
+            for (int i = 0; i < productIds.length; i++) {
+                int quantity = Integer.parseInt(quantities[i]);
+                double price = Double.parseDouble(prices[i]);
+                totalAmount1 += quantity * price;
+            }
+            String note = "";
+            if (totalAmount == totalAmount) {
+                note = "Đã giao đủ";
+            } else {
+                note = "Giao thiếu";
+            }
             // Làm tròn tổng tiền đến 2 chữ số thập phân
             totalAmount = Math.round(totalAmount * 100.0) / 100.0;
 
-            ReceiveOrder deliveryOrder = new ReceiveOrder(doId, poId, supplierID, "Pending", expectedDate, deliveryItems, createdBy, createDate);
-            deliveryOrder.setTotalAmount(totalAmount);
-            dodao.createDeliveryOrder(deliveryOrder);
+            StorageBinDAO bidao = new StorageBinDAO();
+            int binCapacity = bidao.getStorageBinById(binr).getCapacity();
+            if (binCapacity < totalQuantity) {
+                request.setAttribute("errorMessage", "Số lượng sản phẩm vượt quá mức quy định của kho! ");
+                request.getRequestDispatcher("receive-orders").forward(request, response);
+            }
 
             //check status and set status for PO
             DeliveryOrderDAO podao = new DeliveryOrderDAO();
             DeliveryOrder purchaseOrder = podao.getDeliveryOrderToCreateRO(poId);
             DeliveryOrder poUpdate = new DeliveryOrder();
-            poUpdate.setPoId(poId);
+            poUpdate.setDoId(poId);
             if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getDeliveryItems().size() > 0) {
-                poUpdate.setStatus("Delivering");
+                poUpdate.setStatus(note);
                 podao.updateStatusPurchaseOrder(poUpdate);
             } else if (purchaseOrder.getDeliveryItems().size() == 0) {
-                poUpdate.setStatus("Received");
+                poUpdate.setStatus(note);
                 podao.updateStatusPurchaseOrder(poUpdate);
             }
+            DeliveryOrder dtt = podao.getDeliveryOrderById(poId);
+            if (quantities.length < dtt.getDeliveryItems().size()) {
+                note = "Giao thiếu. " + nott;
+            } else {
+                note = note + ".  " + nott;
+            }
+            ReceiveOrder deliveryOrder = new ReceiveOrder(doId, poId, supplierID, note, expectedDate, deliveryItems, createdBy, createDate);
+            deliveryOrder.setTotalAmount(totalAmount);
+            dodao.createDeliveryOrder(deliveryOrder);
+            dodao.addTempBin(deliveryItems, binr);
 
             request.setAttribute("message", "Create Receive Order Success!");
             request.getRequestDispatcher("receive-orders").forward(request, response);
@@ -147,8 +184,6 @@ public class CreateReceiveOrderServlet extends HttpServlet {
         }
     }
 
-    
-    
     /**
      * Returns a short description of the servlet.
      *

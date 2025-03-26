@@ -163,4 +163,38 @@ public class StorageBinDAO {
         }
         return false;
     }
+    
+    
+    public List<StorageBin> getStorageBinsActive() {
+        List<StorageBin> list = new ArrayList<>();
+        String query = "select sb.*, bt.Name_Type, wh.WarehouseName from StorageBin sb \n" +
+"left join BinType bt on sb.BinType_ID = bt.BinType_ID \n" +
+"left join Warehouse wh on wh.WarehouseID = sb.WarehouseID where sb.Status = 'Active'\n" +
+"order by sb.CreatedDate desc";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                StorageBin o = new StorageBin(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getInt(5),
+                        rs.getString(6),
+                        rs.getInt(7),
+                        rs.getTimestamp(8),
+                        rs.getInt(9),
+                        rs.getTimestamp(10));
+                BinType binType = new BinType();
+                binType.setName(rs.getString(11));
+                o.setBinTypeObj(binType);
+                o.setWareHouse(new WareHouse(rs.getString(2), rs.getString(12)));
+                list.add(o);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

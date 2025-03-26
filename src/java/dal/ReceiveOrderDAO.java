@@ -143,16 +143,22 @@ public class ReceiveOrderDAO {
         return null;
     }
 
-    public void addTempBin(List<ReceiveItem> list) {
-        String query = "UPDATE [SWP391_Re].[dbo].[BinProduct]\n"
-                + "SET Quantity = Quantity + ? \n"
-                + "WHERE StorageBinID = 'BIN000' and ProductVariantID = ?;";
+    public void addTempBin(List<ReceiveItem> list, String binr) {
+        String query = "MERGE INTO BinProduct AS target\n"
+                + "USING (VALUES (?, ?, ?)) AS source (ProductVariantID, StorageBinID, Quantity)\n"
+                + "ON target.ProductVariantID = source.ProductVariantID AND target.StorageBinID = source.StorageBinID\n"
+                + "WHEN MATCHED THEN\n"
+                + "    UPDATE SET target.Quantity = target.Quantity + source.Quantity\n"
+                + "WHEN NOT MATCHED THEN\n"
+                + "    INSERT (ProductVariantID, StorageBinID, Quantity)\n"
+                + "    VALUES (source.ProductVariantID, source.StorageBinID, source.Quantity);";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
             for (ReceiveItem r : list) {
-                ps.setInt(1, r.getQuantity());
-                ps.setString(2, r.getProductVariantId());
+                ps.setInt(3, r.getQuantity());
+                ps.setString(1, r.getProductVariantId());
+                ps.setString(2, binr);
                 int executeUpdate = ps.executeUpdate();
             }
 
