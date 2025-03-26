@@ -44,9 +44,14 @@
         <jsp:include page="/common/sidebar.jsp"></jsp:include><!-- End Sidebar-->
             <main id="main" class="main">
                 <div class="container">
-                    <h2 class="mt-4">History</h2>
-                    <div class="d-flex mt-3 mb-2">
-                        <a href="SCheckInforServlet" class="btn btn-secondary ms-auto">Return</a> 
+                    <c:if test="${not empty status}">
+                    <div class="alert alert-success">
+                        ${status}
+                    </div>
+                </c:if>
+                <h2 class="mt-4">History</h2>
+                <div class="d-flex mt-3 mb-2">
+                    <a href="SCheckInforServlet" class="btn btn-secondary ms-auto">Return</a> 
                 </div>
 
                 <table class="table table-bordered table-hover">
@@ -85,7 +90,7 @@
             </div>
         </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-        <jsp:include page="../common/footer.jsp"></jsp:include>
+        <jsp:include page="/common/footer.jsp"></jsp:include>
     </body>
 </html>
 

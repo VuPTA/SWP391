@@ -69,6 +69,8 @@ public class DeSCheckInforServlet extends HttpServlet {
         if (ACscheckid != null) {
             int ACscheckId = Integer.parseInt(ACscheckid);
             storageCheckDAO.updateStorageCheckStatus(ACscheckId, "Pending");
+            String binID = storageCheckDAO.getStorageBinIDByStorageCheckID(ACscheckId);
+            storageCheckDAO.updateBinStatus(binID, "Lock for check");
             response.sendRedirect(request.getContextPath() + "/DeSCheckInforServlet");
             return;
         }

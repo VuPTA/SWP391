@@ -51,7 +51,7 @@
                         ${message}
                     </div>
                 </c:if>
-                <form action="SCheckCancelServlet1" method="post" class="p-3 bg-light rounded shadow-sm">
+                <form action="SCheckClearServlet1" method="post" class="p-3 bg-light rounded shadow-sm">
                     <h3 class="mb-3">Storage Check Clear</h3>
                     <div class="input-group">
                         <label for="storageCheckID" class="input-group-text">Enter ID</label>
@@ -99,6 +99,6 @@
             </div>
         </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-        <jsp:include page="../common/footer.jsp"></jsp:include>
+        <jsp:include page="/common/footer.jsp"></jsp:include>
     </body>
 </html>

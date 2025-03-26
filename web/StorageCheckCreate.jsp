@@ -43,71 +43,96 @@
             <!-- ======= Sidebar ======= -->
         <jsp:include page="/common/sidebar.jsp"></jsp:include><!-- End Sidebar-->
             <main id="main" class="main">
-                <div class="container">
-                <%-- Hiển thị messageBinID nếu có --%>
-                <c:if test="${not empty messageBinID}">
-                    <div class="alert alert-success">
-                        StorageCheck ID mới tạo: ${messageBinID}
-                    </div>
-                </c:if>      
-                <div class="p-2 bg-light rounded shadow-sm">
-                    <h3 class="mb-3">Storage Check Create</h3>
-                    <div class="d-flex mt-3 mb-2">
-                        <div>
-                            <button type="submit" class="btn btn-success" form="storageCheckForm">Create</button>
+                <section class="section">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="container">
+                                    <%-- Hiển thị messageBinID nếu có --%>
+                                    <c:if test="${not empty messageBinID}">
+                                        <div class="alert alert-success">
+                                            StorageCheck ID mới tạo: ${messageBinID}
+                                        </div>
+                                    </c:if>   
+                                    <form action="AddSCheckServlet" method="post" ">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h3 class="mb-3">Storage Check Create</h3>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="storageCheckID" class="input-group-text">Enter ID</label>
+                                            <input type="text" id="storageCheckID" name="selectedSCid" list="SCidlist" 
+                                                   class="form-control" placeholder="Enter ID...">
+                                            <button type="submit" class="btn btn-success px-4">Enter</button>
+
+                                            
+                                        </div>
+                                    </form>
+                                    <div class="p-2 bg-light rounded shadow-sm">
+                                        <div class="d-flex mt-3 mb-2">
+                                            <div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <table class="table datatable table-bordered table-hover">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>Warehouse ID</th>
+                                                <th>Bin ID</th>
+                                                <th>Warehouse Name</th>
+                                                <th>Bin Name</th>
+                                                <th>Bin Type</th>
+                                                <th>Capacity</th>
+                                                <th>Total Quantity</th>
+                                                <th>Status</th>
+                                                <th>Notes</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                                List<StorageCheckInfor> bininfor = (List<StorageCheckInfor>) request.getAttribute("bininfor");
+                        
+                                                    for (StorageCheckInfor bin : bininfor) {
+                                            %>
+                                            <tr>
+                                                <td><%= bin.getWarehouseID() %></td>
+                                                <td><%= bin.getStorageBinID() %></td>
+                                                <td><%= bin.getWarehouseName() %></td>
+                                                <td><%= bin.getBinName() %></td>
+                                                <td><%= bin.getBinType() %></td>
+                                                <td><%= bin.getCapacity() %></td>
+                                                <td><%= bin.getTotalQuantity() %></td>
+                                                <td><%= bin.getStatus() %></td>
+                                                <td>
+                                                    <form action="AddSCheckServlet" method="post"  id="storageCheckForm">
+                                                        <input type="hidden" name="selectedBins" value="<%= bin.getStorageBinID() %>">
+                                                        <input type="text" name="notes_<%= bin.getStorageBinID() %>" class="form-control" placeholder="Nhập ghi chú...">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-success" form="storageCheckForm">Create</button>
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <a href="<%= request.getContextPath() %>/SCheckInforServlet" class="btn btn-secondary ms-auto">Quay lại</a>
+
                     </div>
                 </div>
-
-                <form action="AddSCheckServlet" method="post"  id="storageCheckForm">
-
-
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>Warehouse ID</th>
-                                <th>Bin ID</th>
-                                <th>Warehouse Name</th>
-                                <th>Bin Name</th>
-                                <th>Bin Type</th>
-                                <th>Capacity</th>
-                                <th>Total Quantity</th>
-                                <th>Status</th>
-                                <th>Notes</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%
-                                List<StorageCheckInfor> bininfor = (List<StorageCheckInfor>) request.getAttribute("bininfor");
-                        
-                                    for (StorageCheckInfor bin : bininfor) {
-                            %>
-                            <tr>
-                                <td><%= bin.getWarehouseID() %></td>
-                                <td><%= bin.getStorageBinID() %></td>
-                                <td><%= bin.getWarehouseName() %></td>
-                                <td><%= bin.getBinName() %></td>
-                                <td><%= bin.getBinType() %></td>
-                                <td><%= bin.getCapacity() %></td>
-                                <td><%= bin.getTotalQuantity() %></td>
-                                <td><%= bin.getStatus() %></td>
-                                <td>
-                                    <input type="text" name="notes_<%= bin.getStorageBinID() %>" class="form-control" placeholder="Nhập ghi chú...">
-                                </td>
-                                <td class="text-center">
-                                    <input type="radio" name="selectedBins" value="<%= bin.getStorageBinID() %>" required="">
-                                </td>
-                            </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
+            </section>
         </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-        <jsp:include page="../common/footer.jsp"></jsp:include>
+        <jsp:include page="/common/footer.jsp"></jsp:include>
     </body>
 </html>
 
