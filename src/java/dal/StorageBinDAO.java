@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.BinType;
 import model.StorageBin;
+import model.WareHouse;
 import utils.Helpers;
 
 /**
@@ -25,7 +26,10 @@ public class StorageBinDAO {
 
     public List<StorageBin> getStorageBins() {
         List<StorageBin> list = new ArrayList<>();
-        String query = "select sb.*, bt.Name_Type from StorageBin sb left join BinType bt on sb.BinType_ID = bt.BinType_ID order by sb.CreatedDate desc";
+        String query = "select sb.*, bt.Name_Type, wh.WarehouseName from StorageBin sb \n" +
+"left join BinType bt on sb.BinType_ID = bt.BinType_ID \n" +
+"left join Warehouse wh on wh.WarehouseID = sb.WarehouseID\n" +
+"order by sb.CreatedDate desc";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
@@ -44,6 +48,7 @@ public class StorageBinDAO {
                 BinType binType = new BinType();
                 binType.setName(rs.getString(11));
                 o.setBinTypeObj(binType);
+                o.setWareHouse(new WareHouse(rs.getString(2), rs.getString(12)));
                 list.add(o);
             }
         } catch (Exception e) {

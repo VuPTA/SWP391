@@ -3,6 +3,7 @@
     Created on : Mar 2, 2025, 11:52:04 PM
     Author     : Admin
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -87,7 +88,7 @@
                                     <!-- Warehouse ID -->
                                     <div class="col-md-6">
                                         <label for="warehouseID" class="form-label">Warehouse</label>
-                                        <select class="form-select ${sb.status eq 'Lock' ? 'readonly-select' : ''}" id="warehouseID" name="warehouseID" required>
+                                        <select class="form-select ${fn:contains(sb.status, 'Lock') ? 'readonly-select' : ''}" id="warehouseID" name="warehouseID" required>
                                             <option selected disabled value="">Choose a Warehouse...</option>
                                             <c:forEach items="${warehouses}" var="warehouse">
                                                 <option value="${warehouse.warehouseID}" ${sb.warehouseID eq warehouse.warehouseID ? 'selected' : '' }>${warehouse.warehouseName}</option>
@@ -99,14 +100,14 @@
                                     <!-- Bin Name -->
                                     <div class="col-md-6">
                                         <label for="binName" class="form-label">Bin Name</label>
-                                        <input type="text" class="form-control" id="binName" name="binName" required value="${sb.binName}" ${sb.status eq 'Lock' ? 'readonly' : ''}>
+                                        <input type="text" class="form-control" id="binName" name="binName" required value="${sb.binName}" ${fn:contains(sb.status, 'Lock') ? 'readonly' : ''}>
                                         <div class="invalid-feedback">Please enter a Bin Name.</div>
                                     </div>
 
                                     <!-- Bin Type -->
                                     <div class="col-md-6">
                                         <label for="binType" class="form-label">Bin Type</label>
-                                        <select class="form-select ${sb.status eq 'Lock' ? 'readonly-select' : ''}" id="binType" name="binType" required>
+                                        <select class="form-select ${fn:contains(sb.status, 'Lock') ? 'readonly-select' : ''}" id="binType" name="binType" required>
                                             <option selected disabled value="">Choose Bin Type...</option>
                                             <c:forEach items="${binTypes}" var="b">
                                                 <option value="${b.id}" ${b.id == sb.binType ? 'selected' : ''}>${b.name}</option>
@@ -125,9 +126,10 @@
                                     <!-- Status -->
                                     <div class="col-md-12">
                                         <label for="status" class="form-label">Status</label>
-                                        <select class="form-select" id="status" name="status" required>
+                                        <select class="form-select ${sb.status eq 'Lock for check' ? 'readonly-select' : ''}" id="status" name="status" required>
                                             <option value="Active" ${sb.status eq 'Active' ? 'selected' : '' }>Active</option>
                                             <option value="Lock" ${sb.status eq 'Lock' ? 'selected' : '' }>Lock</option>
+                                            <option value="Lock for check" ${sb.status eq 'Lock for check' ? 'selected' : '' }>Lock for check</option>
                                             <option value="Inactive" ${sb.status eq 'Inactive' ? 'selected' : '' }>Inactive</option>
                                         </select>
                                     </div>

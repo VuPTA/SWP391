@@ -12,6 +12,7 @@ public class StorageBin extends Audit {
     private String status;
     
     private BinType binTypeObj;
+    private WareHouse wareHouse;
 
     // Constructor
     public StorageBin() {
@@ -106,6 +107,14 @@ public class StorageBin extends Audit {
 
     public void setBinTypeObj(BinType binTypeObj) {
         this.binTypeObj = binTypeObj;
+    }
+
+    public WareHouse getWareHouse() {
+        return wareHouse;
+    }
+
+    public void setWareHouse(WareHouse wareHouse) {
+        this.wareHouse = wareHouse;
     }
 
 }

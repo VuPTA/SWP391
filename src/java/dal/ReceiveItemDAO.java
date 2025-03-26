@@ -26,30 +26,30 @@ public class ReceiveItemDAO {
 
     public List<ReceiveItem> getDeliveryItemByDO(String doId) {
         List<ReceiveItem> list = new ArrayList<>();
-        String query = "select di.*, pv.PVName, pv.Color, pv.Size from receive_items di\n"
-                + "left join ProductVariant pv on di.ProductVariantID = pv.ProductVariantID\n"
-                + "where di.RO_ID = ?";
-        try {
-            conn = DBContext.getConnection(); //mo ket noi toi sql
-            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
-            ps.setString(1, doId);
-            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
-            while (rs.next()) {
-                ReceiveItem o = new ReceiveItem(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getDouble(5),
-                        new ProductVariant(rs.getString(10), rs.getString(11), rs.getString(12)),
-                        rs.getInt(6),
-                        rs.getTimestamp(7),
-                        rs.getInt(8),
-                        rs.getTimestamp(9));
-                list.add(o);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String query = "select di.*, pv.PVName, pv.Color, pv.Size from receive_items di\n"
+//                + "left join ProductVariant pv on di.ProductVariantID = pv.ProductVariantID\n"
+//                + "where di.RO_ID = ?";
+//        try {
+//            conn = DBContext.getConnection(); //mo ket noi toi sql
+//            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+//            ps.setString(1, doId);
+//            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+//            while (rs.next()) {
+//                ReceiveItem o = new ReceiveItem(rs.getInt(1),
+//                        rs.getString(2),
+//                        rs.getString(3),
+//                        rs.getInt(4),
+//                        rs.getDouble(5),
+//                        new ProductVariant(rs.getString(10), rs.getString(11), rs.getString(12)),
+//                        rs.getInt(6),
+//                        rs.getTimestamp(7),
+//                        rs.getInt(8),
+//                        rs.getTimestamp(9));
+//                list.add(o);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return list;
     }
 }
