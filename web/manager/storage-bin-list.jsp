@@ -81,7 +81,7 @@
                                         <thead>
                                             <tr>
                                                 <th>StorageBinID</th>
-                                                <th>WarehouseID</th>
+                                                <th>Warehouse</th>
                                                 <th>Bin Name</th>
                                                 <th>Bin Type</th>
                                                 <th>Capacity</th>
@@ -93,7 +93,7 @@
                                         <c:forEach items="${bins}" var="bin">
                                             <tr>
                                                 <td>${bin.storageBinID}</td>
-                                                <td>${bin.warehouseID}</td>
+                                                <td>${bin.wareHouse.warehouseName}</td>
                                                 <td>${bin.binName}</td>
                                                 <td>${bin.binTypeObj.name}</td>
                                                 <td>${bin.capacity}</td>
