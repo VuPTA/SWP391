@@ -200,12 +200,13 @@
         </script>
         <script>
             $(document).ready(function () {
-                $(document).on("change", "#poId", function () {
-                    var poId = $(this).val(); // Lấy giá trị PO được chọn
+                // Hàm gọi API lấy dữ liệu theo poId
+                function fetchPoDetails() {
+                    var poId = $("#poId").val(); // Lấy giá trị PO
 
                     if (poId) {
                         $.ajax({
-                            url: "po-to-create-do", // Gửi đến Servlet xử lý
+                            url: "po-to-create-do",
                             method: "GET",
                             data: {poId: poId},
                             success: function (response) {
@@ -220,7 +221,12 @@
                     } else {
                         $("#poDetails").html(""); // Xóa nội dung nếu không chọn PO
                     }
-                });
+                }
+                // Gọi API khi thay đổi select poId
+                $(document).on("change", "#poId", fetchPoDetails);
+
+                // Gọi API khi bấm nút Reset
+                $(document).on("click", ".btnReset", fetchPoDetails);
             });
         </script>
     </body>
