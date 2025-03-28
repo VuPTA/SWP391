@@ -116,16 +116,21 @@
                                             <td>${acc.username}</td>
                                             <td>${acc.email}</td>
                                             <td>${acc.role}</td>                                              
-                                            <td>${acc.status}</td>
-                                            <td>
+                                            <td>${acc.status}</td>                                            
+                                            <td>                
+                                                
                                                 <form action="Accounts-list" method="post">
                                                     <input type="hidden" name="accountId" value="${acc.accountId}">
                                                     <input type="hidden" name="newStatus" value="${acc.status eq 'Active' ? 'Inactive' : 'Active'}">
+                                                    
+                                                    <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Admin' && ( acc.role eq 'Manager'|| acc.role eq 'Staff' ) }">
                                                     <button type="submit" class="btn ${acc.status eq 'Active' ? 'btn-warning' : 'btn-success'}">
                                                         ${acc.status eq 'Active' ? 'Deactivate' : 'Activate'}
                                                     </button>
+                                                    </c:if>
                                                 </form>
-                                            </td>
+                                                
+                                            </td>                                          
                                             <td style="text-align: right"><a href="edit-account?accountId=${acc.accountId}" class="edit-btn"> <i class="bx bx-edit"> </i> Xem chi tiết </a></td>
                                         </tr>
                                     </c:forEach>
