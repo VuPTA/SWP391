@@ -101,7 +101,8 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Username</th>
-                                            <th>Vai trò</th>                                          
+                                            <th>Email</th>
+                                            <th>Vai trò</th>                                           
                                             <th>Trạng thái</th>
                                             <th>Hành động</th>
                                             <th></th>
@@ -113,6 +114,7 @@
                                         <tr>
                                             <td>${acc.accountId}</td>
                                             <td>${acc.username}</td>
+                                            <td>${acc.email}</td>
                                             <td>${acc.role}</td>                                              
                                             <td>${acc.status}</td>
                                             <td>
