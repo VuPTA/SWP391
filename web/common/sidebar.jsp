@@ -62,12 +62,6 @@
                     <span>Products</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="purchase-orders">
-                    <i class="bi bi-grid"></i>
-                    <span>Purchase Orders</span>
-                </a>
-            </li>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="Accounts-list">
@@ -77,6 +71,14 @@
             </li>
 
 
+        </c:if>
+        <c:if test="${sessionScope.account != null}">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="purchase-orders">
+                    <i class="bi bi-grid"></i>
+                    <span>Purchase Orders</span>
+                </a>
+            </li>
         </c:if>
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">

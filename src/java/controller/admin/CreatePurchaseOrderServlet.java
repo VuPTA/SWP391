@@ -113,7 +113,7 @@ public class CreatePurchaseOrderServlet extends HttpServlet {
             // Làm tròn tổng tiền đến 2 chữ số thập phân
             totalAmount = Math.round(totalAmount * 100.0) / 100.0;
 
-            PurchaseOrder po = new PurchaseOrder(poId, supplierID, "Pending", expectedDate, purchaseItems, createdBy, createDate);
+            PurchaseOrder po = new PurchaseOrder(poId, supplierID, "Draft", expectedDate, purchaseItems, createdBy, createDate);
             po.setTotalAmount(totalAmount);
             podao.createPurchaseOrder(po);
             request.setAttribute("message", "Create Purchase Order Success!");

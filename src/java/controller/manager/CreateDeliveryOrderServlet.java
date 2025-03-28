@@ -117,7 +117,7 @@ public class CreateDeliveryOrderServlet extends HttpServlet {
             // Làm tròn tổng tiền đến 2 chữ số thập phân
             totalAmount = Math.round(totalAmount * 100.0) / 100.0;
 
-            DeliveryOrder deliveryOrder = new DeliveryOrder(doId, poId, supplierID, "Pending", expectedDate, deliveryItems, createdBy, createDate);
+            DeliveryOrder deliveryOrder = new DeliveryOrder(doId, poId, supplierID, "Pending Receiving", expectedDate, deliveryItems, createdBy, createDate);
             deliveryOrder.setTotalAmount(totalAmount);
             dodao.createDeliveryOrder(deliveryOrder);
 
@@ -127,12 +127,13 @@ public class CreateDeliveryOrderServlet extends HttpServlet {
             PurchaseOrder poUpdate = new PurchaseOrder();
             poUpdate.setPoId(poId);
             if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getPurchaseItems().size() > 0) {
-                poUpdate.setStatus("Delivering");
-                podao.updateStatusPurchaseOrder(poUpdate);
-            } else if (purchaseOrder.getPurchaseItems().size() == 0) {
-                poUpdate.setStatus("Received");
+                poUpdate.setStatus("Processing");
                 podao.updateStatusPurchaseOrder(poUpdate);
             }
+//            else if (purchaseOrder.getPurchaseItems().size() == 0) {
+//                poUpdate.setStatus("Received");
+//                podao.updateStatusPurchaseOrder(poUpdate);
+//            }
 
             request.setAttribute("message", "Create Delivery Order Success!");
             request.getRequestDispatcher("delivery-orders").forward(request, response);
