@@ -74,21 +74,23 @@
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
                                         <h5 class="card-title">Purchase Order List</h5>
+                                    <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Staff'}">
                                         <a href="create-purchase-order" class="btn btn-primary" style="height: 40px">Create Purchase Order</a>
-                                    </div>
-                                    <!-- Table with stripped rows -->
-                                    <table class="table datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>PO ID</th>
-                                                <th>Supplier</th>
-                                                <th>Total Amount</th>
-                                                <th>Expected Date</th>
-                                                <th>Status</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    </c:if>
+                                </div>
+                                <!-- Table with stripped rows -->
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>PO ID</th>
+                                            <th>Supplier</th>
+                                            <th>Total Amount</th>
+                                            <th>Expected Date</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         <c:forEach items="${purchaseOrders}" var="po">
                                             <tr>
                                                 <td>${po.poId}</td>
@@ -96,9 +98,19 @@
                                                 <td>${po.totalAmount}</td>
                                                 <td>${po.expectedDate}</td>
                                                 <td>${po.status}</td>
-                                                <td style="text-align: right"><a href="edit-purchase-order?id=${po.poId}" class="edit-btn">
+                                                <td style="text-align: right">
+                                                    <a href="edit-purchase-order?id=${po.poId}" class="edit-btn" title="Edit">
                                                         <i class="bx bx-edit"></i>
-                                                    </a></td>
+                                                    </a>
+                                                    <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Manager' && po.status eq 'Draft'}">
+                                                        <a href="confirm-purchase-order?id=${po.poId}&status=Pending" class="edit-btn" title="Approve">
+                                                            <i class="bx bx-check-circle"></i>
+                                                        </a>
+                                                        <a href="confirm-purchase-order?id=${po.poId}&status=Cancelled" class="edit-btn" title="Reject">
+                                                            <i class="bx bx-block"></i>
+                                                        </a>
+                                                    </c:if>
+                                                </td>
                                             </tr>
                                         </c:forEach>
 

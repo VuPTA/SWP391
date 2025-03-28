@@ -98,8 +98,8 @@
 
                                         <div class="col-md-6">
                                             <label for="tax" class="form-label">Tax Number</label>
-                                            <input type="number" class="form-control" id="tax" name="tax" min="1" required>
-                                            <div class="invalid-feedback">Please enter a valid Tax Number.</div>
+                                            <input type="text" class="form-control" id="tax" name="tax" pattern="^\d{13}$" required>
+                                            <div class="invalid-feedback">Tax Number must contain 13 digits.</div>
                                         </div>
 
                                         <!-- Submit Button -->

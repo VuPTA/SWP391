@@ -57,6 +57,11 @@ public class PurchaseOrder extends Audit {
         this.supplierObj = supplierObj;
     }
 
+    public PurchaseOrder(String poId, String status) {
+        this.poId = poId;
+        this.status = status;
+    }
+
     public PurchaseOrder() {
     }
 
