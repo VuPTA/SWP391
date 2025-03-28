@@ -102,9 +102,9 @@
                                             <th>ID</th>
                                             <th>Username</th>
                                             <th>Email</th>
-                                            <th>Vai trò</th>                                           
-                                            <th>Trạng thái</th>
-                                            <th>Hành động</th>
+                                            <th>Role</th>                                           
+                                            <th>Status</th>
+                                            <th>Actions</th>
                                             <th></th>
 
                                         </tr>
@@ -131,7 +131,7 @@
                                                 </form>
                                                 
                                             </td>                                          
-                                            <td style="text-align: right"><a href="edit-account?accountId=${acc.accountId}" class="edit-btn"> <i class="bx bx-edit"> </i> Xem chi tiết </a></td>
+                                            <td style="text-align: right"><a href="edit-account?accountId=${acc.accountId}" class="edit-btn"> <i class="bx bx-edit"> </i> </a></td>
                                         </tr>
                                     </c:forEach>
 
