@@ -99,8 +99,7 @@
                                                 <td>${po.expectedDate}</td>
                                                 <td>${po.status}</td>
                                                 <td style="text-align: right">
-                                                    <a href="edit-purchase-order?id=${po.poId}" class="edit-btn" title="Edit">
-                                                        <i class="bx bx-edit"></i>
+                                                    
                                                     </a>
                                                     <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Manager' && po.status eq 'Draft'}">
                                                         <a href="confirm-purchase-order?id=${po.poId}&status=Pending" class="edit-btn" title="Approve">
@@ -110,6 +109,8 @@
                                                             <i class="bx bx-block"></i>
                                                         </a>
                                                     </c:if>
+                                                    <a href="edit-purchase-order?id=${po.poId}" class="edit-btn" title="Edit">
+                                                        <i class="bx bx-edit"></i>
                                                 </td>
                                             </tr>
                                         </c:forEach>

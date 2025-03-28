@@ -83,7 +83,7 @@
                                         <input type="hidden" class="form-control" id="createdBy" name="createdBy" value="${po.createdBy}">
                                         <input type="hidden" class="form-control" id="createdDate" name="createdDate" value="${po.createdDate}">
                                         <label for="supplierID" class="form-label">Supplier</label>
-                                        <select class="form-select" id="supplierID" name="supplierID" required ${po.status ne 'Pending' ? 'disabled' : ''}>
+                                        <select class="form-select" id="supplierID" name="supplierID" required ${po.status ne 'Draft' ? 'disabled' : ''}>
                                             <option selected disabled value="">Choose a Supplier...</option>
                                             <c:forEach items="${suppliers}" var="s">
                                                 <option value="${s.supplierID}" ${po.supplier eq s.supplierID ? 'selected' : ''}>${s.supplierName}</option>
@@ -95,23 +95,25 @@
                                     <!-- Expected Date -->
                                     <div class="col-md-6">
                                         <label for="expectedDate" class="form-label">Expected Date</label>
-                                        <input type="date" class="form-control" id="expectedDate" name="expectedDate" required value="${po.expectedDate}" ${po.status ne 'Pending' ? 'disabled' : ''}>
+                                        <input type="date" class="form-control" id="expectedDate" name="expectedDate" required value="${po.expectedDate}" ${po.status ne 'Draft' ? 'disabled' : ''}>
                                         <div class="invalid-feedback">Please select a valid date.</div>
                                     </div>
                                     <!-- Status -->
                                     <div class="col-md-12">
                                         <label for="status" class="form-label">Status</label>
                                         <select class="form-select" id="status" name="status" required disabled>
-                                            <option value="Pending" ${po.status eq 'Pending' ? 'selected' : '' }>Pending</option>
-                                            <option value="Delivering" ${po.status eq 'Delivering' ? 'selected' : '' }>Delivering</option>
-                                            <option value="Received" ${po.status eq 'Received' ? 'selected' : '' }>Received</option>
+                                            <option value="Pending" ${po.status eq 'Draft' ? 'selected' : '' }>Draft</option>
+                                            <option value="Delivering" ${po.status eq 'Pending' ? 'selected' : '' }>Pending</option>
+                                            <option value="Received" ${po.status eq 'Processing ' ? 'selected' : '' }>Processing</option>
+                                            <option value="Delivering" ${po.status eq 'Received' ? 'selected' : '' }>Received</option>
+                                            <option value="Delivering" ${po.status eq 'Cancelled' ? 'selected' : '' }>Cancelled</option>
                                         </select>
                                     </div>
 
                                     <!-- Search Products -->
                                     <div class="col-md-6">
                                         <label class="form-label">Search Product</label>
-                                        <input type="text" class="form-control" id="searchProduct" placeholder="Type to search..." ${po.status ne 'Pending' ? 'disabled' : ''}>
+                                        <input type="text" class="form-control" id="searchProduct" placeholder="Type to search..." ${po.status ne 'Draft' ? 'disabled' : ''}>
                                         <ul class="list-group mt-2" id="productList" style="display: none; position: absolute; z-index: 1000;"></ul>
                                     </div>
 
@@ -136,10 +138,10 @@
                                                             <input type="hidden" name="productID[]" value="${pi.productVariantId}">
                                                             <input type="hidden" name="price[]" value="${pi.unitPrice}">
                                                         </td>
-                                                        <td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="${pi.quantity}" required ${po.status ne 'Pending' ? 'disabled' : ''}></td>
+                                                        <td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="${pi.quantity}" required ${po.status ne 'Draft' ? 'disabled' : ''}></td>
                                                         <td class="unitPrice">${pi.unitPrice}</td>
                                                         <td class="totalPrice">${pi.unitPrice * pi.quantity}</td>
-                                                        <td><button type="button" class="btn btn-danger btn-sm removeRow" ${po.status ne 'Pending' ? 'disabled' : ''}>Remove</button></td>
+                                                        <td><button type="button" class="btn btn-danger btn-sm removeRow" ${po.status ne 'Draft' ? 'disabled' : ''}>Remove</button></td>
                                                     </tr>
                                                 </c:forEach>
                                             <tfoot>
@@ -155,7 +157,7 @@
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit" ${po.status ne 'Pending' ? 'disabled' : ''}>Save Purchase Order</button>
+                                        <button class="btn btn-primary" type="submit" ${po.status ne 'Draft' ? 'disabled' : ''}>Save Purchase Order</button>
                                         <a class="btn btn-danger" href="purchase-orders">Cancel</a>
                                     </div>
                                 </form>
