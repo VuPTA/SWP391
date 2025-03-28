@@ -83,7 +83,7 @@ public class SCheckClearServlet1 extends HttpServlet {
         if (scheckId != null) {
             int ScheckId = Integer.parseInt(scheckId);
             if (dao.isCounted(ScheckId)) {//check có phải status counted
-                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckID(ScheckId);
+                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckIDMaxPeriod(ScheckId);
                 if (!scheckdetail.isEmpty()) {
                     request.setAttribute("scheckdetail", scheckdetail);
                     request.getRequestDispatcher("StorageCheckClear2.jsp").forward(request, response);

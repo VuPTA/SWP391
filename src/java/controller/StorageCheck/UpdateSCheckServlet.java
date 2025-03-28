@@ -63,7 +63,10 @@ public class UpdateSCheckServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        StorageCheckDAO dao = new StorageCheckDAO();
+        List<StorageCheckInfor> scheckinfor = dao.getPendingStorageCheckInfor();
+        request.setAttribute("scheckinfor", scheckinfor);
+        request.getRequestDispatcher("StorageCheckDetail1.jsp").forward(request, response);
     }
 
     /**

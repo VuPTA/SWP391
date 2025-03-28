@@ -84,7 +84,7 @@
                                                 <th>DO ID</th>
                                                 <th>Supplier</th>
                                                 <th>Total Amount</th>
-                                                <th>Expected Date</th>
+                                                <th>Received Date</th>
                                                 <th>Status</th>
                                                 <th></th>
                                             </tr>

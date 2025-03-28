@@ -86,7 +86,7 @@ public class SCheckDetailServlet extends HttpServlet {
         if (scheckId != null) {
             int ScheckId = Integer.parseInt(scheckId);
             if (dao.isPendingOrRecount(ScheckId)) {//check có phải status pending-recount
-                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckID(ScheckId);
+                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckIDMaxPeriod(ScheckId);
                 if (!scheckdetail.isEmpty()) {
                     request.setAttribute("scheckdetail", scheckdetail);
                 } else {

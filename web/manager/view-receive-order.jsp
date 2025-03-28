@@ -114,7 +114,7 @@
                                                 <!-- Rows will be added dynamically -->
                                                 <c:forEach items="${delivery.deliveryItems}" var="pi">
                                                     <tr>
-                                                        <td>${pi.product.pvName} - ${pi.product.color} - ${pi.product.size}</td>
+                                                        <td>${pi.product.pvName} - ${pi.product.color.name} - ${pi.product.size.name}</td>
                                                         <td>${pi.quantity}</td>
                                                         <td class="unitPrice">${pi.unitPrice}</td>
                                                         <td class="totalPrice">${pi.unitPrice * pi.quantity}</td>

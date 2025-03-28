@@ -111,7 +111,7 @@
             </div>
         </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-        <jsp:include page="../common/footer.jsp"></jsp:include>
+        <jsp:include page="/common/footer.jsp"></jsp:include>
     </body>
 
 </html>

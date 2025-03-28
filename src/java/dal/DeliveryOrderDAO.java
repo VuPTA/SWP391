@@ -33,6 +33,7 @@ public class DeliveryOrderDAO {
         DeliveryOrder de = d.getDeliveryOrderToCreateRO("DO001");
         System.out.println(de.getDoId());
     }
+
     public List<DeliveryOrder> getDeliveryOrders() {
         List<DeliveryOrder> list = new ArrayList<>();
         String query = "select po.*, s.SupplierName from delivery_orders po left join Suppliers s on s.SupplierID = po.Supplier order by po.CreatedDate desc";
@@ -149,7 +150,11 @@ public class DeliveryOrderDAO {
 
     public List<DeliveryOrder> getDOsDropdownToCreateRO() {
         List<DeliveryOrder> list = new ArrayList<>();
-        String query = "select po.*, s.SupplierName from delivery_orders po left join Suppliers s on s.SupplierID = po.Supplier order by po.CreatedDate desc";
+        String query = "SELECT po.*, s.SupplierName \n"
+                + "FROM delivery_orders AS po \n"
+                + "LEFT JOIN Suppliers AS s ON s.SupplierID = po.Supplier \n"
+                + "WHERE po.Status = 'Pending' \n"
+                + "ORDER BY po.CreatedDate DESC;";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
@@ -186,7 +191,7 @@ public class DeliveryOrderDAO {
                         rs.getDate(5),
                         new Supplier(rs.getString(3),
                                 rs.getString("SupplierName")));
-                
+
                 o.setStatus(rs.getString("Status"));
                 DeliveryItemDAO pidao = new DeliveryItemDAO();
                 List<DeliveryItem> pis = pidao.getDeliveryItemByDO(rs.getString(1));
@@ -205,7 +210,7 @@ public class DeliveryOrderDAO {
     }
 
     public void updateStatusPurchaseOrder(DeliveryOrder po) {
-  String sql = "update [delivery_orders] set Status = ? where [DO_ID] = ?";
+        String sql = "update [delivery_orders] set Status = ? where [DO_ID] = ?";
 
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
@@ -215,5 +220,6 @@ public class DeliveryOrderDAO {
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-        }    }
+        }
+    }
 }

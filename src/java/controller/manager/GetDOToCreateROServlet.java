@@ -6,6 +6,7 @@ package controller.manager;
 
 import dal.DeliveryOrderDAO;
 import dal.PurchaseOrderDAO;
+import dal.StorageBinDAO;
 import dal.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.DeliveryOrder;
 import model.PurchaseOrder;
+import model.StorageBin;
 import model.Supplier;
 
 /**
@@ -38,7 +40,7 @@ public class GetDOToCreateROServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -53,19 +55,22 @@ public class GetDOToCreateROServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         try {
+        try {
             String do1Id = request.getParameter("do1Id");
             DeliveryOrderDAO podao = new DeliveryOrderDAO();
-            
+            StorageBinDAO bidao = new StorageBinDAO();
+            List<StorageBin> listDropDownBin = bidao.getStorageBinsActive();
+            request.setAttribute("bi", listDropDownBin);
+
             DeliveryOrder purchaseOrder = podao.getDeliveryOrderToCreateRO(do1Id);
             request.setAttribute("po", purchaseOrder);
-           
+
             List<DeliveryOrder> POsToCreateDO = podao.getDOsDropdownToCreateRO();
             request.setAttribute("purchaseOrders", POsToCreateDO);
             SupplierDAO dao = new SupplierDAO();
             List<Supplier> suppliers = dao.getSuppliers();
             request.setAttribute("suppliers", suppliers);
-            
+
             request.getRequestDispatcher("manager/create-ro-form.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

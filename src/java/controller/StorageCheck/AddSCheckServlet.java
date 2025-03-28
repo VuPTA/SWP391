@@ -39,7 +39,7 @@ public class AddSCheckServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddSCheckServlet</title>");            
+            out.println("<title>Servlet AddSCheckServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet AddSCheckServlet at " + request.getContextPath() + "</h1>");
@@ -78,12 +78,34 @@ public class AddSCheckServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String binID = request.getParameter("selectedBins");
+        String binID2 = request.getParameter("selectedSCid");
         String note = request.getParameter("notes_" + binID);
-
+        String searchType = request.getParameter("searchType");
+        String searchQuery = request.getParameter("searchQuery");
+        int messageBinID = 0;
         StorageCheckDAO dao = new StorageCheckDAO();
-        dao.createStorageCheck(binID, 2, note); // CreateBy = 2 (tạm thời cố định)
-        dao.updateBinStatus(binID, "Lock for check"); 
-        int messageBinID = dao.getLatestStorageCheckID(binID);
+
+        if (binID2 != null) {
+            dao.createStorageCheck(binID2, 2, note); // CreateBy = 2 (tạm thời cố định)
+            dao.updateBinStatus(binID2, "Lock for check");
+            messageBinID = dao.getLatestStorageCheckID(binID2);
+        }
+
+        if (binID != null) {
+            dao.createStorageCheck(binID, 2, note); // CreateBy = 2 (tạm thời cố định)
+            dao.updateBinStatus(binID, "Lock for check");
+            messageBinID = dao.getLatestStorageCheckID(binID);
+        }
+
+        if (searchQuery != null) {            
+            dao.updateBinStatus(binID, "Lock for check");
+            messageBinID = dao.getLatestStorageCheckID(binID);
+            List<StorageCheckInfor> bininfor = dao.searchStorageBinInfo(searchType, searchQuery);
+            request.setAttribute("bininfor", bininfor);
+            request.setAttribute("messageBinID", messageBinID);
+            request.getRequestDispatcher("StorageCheckCreate.jsp").forward(request, response);
+            return;
+        }
 
         List<StorageCheckInfor> bininfor = dao.getStorageBinInfo();
         request.setAttribute("bininfor", bininfor);

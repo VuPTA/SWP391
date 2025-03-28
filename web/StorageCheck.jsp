@@ -42,57 +42,56 @@
             <!-- ======= Sidebar ======= -->
         <jsp:include page="/common/sidebar.jsp"></jsp:include><!-- End Sidebar-->
             <main id="main" class="main">
-                <div class="container">
-                    <form action="SCheckInforServlet" method="post" class="p-3 bg-light rounded shadow-sm">
-                        <h2 class="mt-4">Storage Check All list</h2>
-                        <div class="d-flex mt-3 mb-2">
+                <div class="container p-3 bg-light rounded shadow-sm">
+                    <h2 class="mt-4">Storage Check All list</h2>
+                    <div class="d-flex mt-3 mb-2">
 
-                        </div>
-                        <table class="table table-bordered table-hover">
-                            <thead class="table-primary">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Bin Code</th>
-                                    <th>Bin Name</th>
-                                    <th>Created By</th>
-                                    <th>Created Date</th>
-                                    <th>Inspection Count</th>
-                                    <th>Updated By</th>
-                                    <th>Updated Date</th>
-                                    <th>Status</th>
-                                    <th>Notes</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <%
-                                List<StorageCheckInfor> scheckinfor = (List<StorageCheckInfor>) request.getAttribute("scheckinfor");
-                                for (StorageCheckInfor check : scheckinfor) {
-                            %>
+                    </div>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-primary">
                             <tr>
-                                <td><%= check.getStorageCheckID() %></td>
-                                <td><%= check.getStorageBinID() %></td>
-                                <td><%= check.getBinName() %></td>
-                                <td><%= check.getCreatedByName() %></td>
-                                <td><%= check.getCreatedDate() %></td>
-                                <td><%= check.getCheckCount() %></td>
-                                <td><%= check.getUpdatedByName() != null ? check.getUpdatedByName() : "Chưa cập nhật" %></td>
-                                <td><%= check.getUpdatedDate() != null ? check.getUpdatedDate() : "Chưa cập nhật" %></td>
-                                <td><%= check.getStatus() %></td>
-                                <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>
-                                <td> 
-
+                                <th>ID</th>
+                                <th>Bin Code</th>
+                                <th>Bin Name</th>
+                                <th>Created By</th>
+                                <th>Created Date</th>
+                                <th>Inspection Count</th>
+                                <th>Updated By</th>
+                                <th>Updated Date</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <%
+                            List<StorageCheckInfor> scheckinfor = (List<StorageCheckInfor>) request.getAttribute("scheckinfor");
+                            for (StorageCheckInfor check : scheckinfor) {
+                        %>
+                        <tr>
+                            <td><%= check.getStorageCheckID() %></td>
+                            <td><%= check.getStorageBinID() %></td>
+                            <td><%= check.getBinName() %></td>
+                            <td><%= check.getCreatedByName() %></td>
+                            <td><%= check.getCreatedDate() %></td>
+                            <td><%= check.getCheckCount() %></td>
+                            <td><%= check.getUpdatedByName() != null ? check.getUpdatedByName() : "Chưa cập nhật" %></td>
+                            <td><%= check.getUpdatedDate() != null ? check.getUpdatedDate() : "Chưa cập nhật" %></td>
+                            <td><%= check.getStatus() %></td>
+                            <td><%= check.getNote() != null ? check.getNote() : "Không có" %></td>
+                            <td>
+                                <form action="SCheckInforServlet" method="post">
+                                    <input type="hidden" name="hisscheckid" value="<%= check.getStorageCheckID() %>">
                                     <button type="submit" class="btn btn-info px-4">Detail</button>
-                                </td>
-                        <input type="hidden" name="hisscheckid" value="<%= check.getStorageCheckID() %>">
+                                </form>
+                            </td>
                         </tr>
                         <% } %>
-                        </tbody>
-                    </table>
-                </form>
+                    </tbody>
+                </table>
             </div>
         </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-        <jsp:include page="../common/footer.jsp"></jsp:include>
+        <jsp:include page="/common/footer.jsp"></jsp:include>
     </body>
 </html>

@@ -60,10 +60,15 @@ public class SCheckCancelServlet1 extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        StorageCheckDAO dao = new StorageCheckDAO();
-        List<StorageCheckInfor> scheckinfor = dao.getCancelStorageCheckInfor();
-        request.setAttribute("scheckinfor", scheckinfor);
-        request.getRequestDispatcher("StorageCheckCancel1.jsp").forward(request, response);
+        try {
+            StorageCheckDAO dao = new StorageCheckDAO();
+            List<StorageCheckInfor> scheckinfor = dao.getCancelStorageCheckInfor();
+            request.setAttribute("scheckinfor", scheckinfor);
+            request.getRequestDispatcher("StorageCheckCancel1.jsp").forward(request, response);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
     }
 
     /**
@@ -83,7 +88,7 @@ public class SCheckCancelServlet1 extends HttpServlet {
         if (scheckId != null) {
             int ScheckId = Integer.parseInt(scheckId);
             if (dao.isNotCancelledOrCleared(ScheckId)) {//check ko phải status cancel hay cleared
-                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckID(ScheckId);
+                List<StorageCheckDetail> scheckdetail = dao.getStorageCheckDetailsByStorageCheckIDMaxPeriod(ScheckId);
                 if (!scheckdetail.isEmpty()) {
                     request.setAttribute("scheckdetail", scheckdetail);
                 } else {

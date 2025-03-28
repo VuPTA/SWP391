@@ -94,9 +94,11 @@
                                     </div>
                                     <!-- Expected Date -->
                                     <div class="col-md-6">
-                                        <label for="expectedDate" class="form-label">Expected Date</label>
-                                        <input type="date" class="form-control" id="expectedDate" name="expectedDate" required>
-                                        <div class="invalid-feedback">Please select a valid date.</div>
+                                        <label for="expectedDate" class="form-label">Note</label>
+                                        <input type="date" hidden=""class="form-control" id="expectedDate" name="expectedDate" required>
+                                        <input type="text" class="form-control" name="note">
+
+<!--                                        <div class="invalid-feedback">Please select a valid date.</div>-->
                                     </div>
 
                                     <!-- Supplier -->
@@ -106,6 +108,16 @@
                                             <option selected disabled value="">Choose a Supplier...</option>
                                             <c:forEach items="${suppliers}" var="s">
                                                 <option value="${s.supplierID}">${s.supplierName}</option>
+                                            </c:forEach>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a Supplier.</div>
+                                    </div>
+                                       <div class="col-md-12">
+                                        <label for="BinID" class="form-label">Bin</label>
+                                        <select class="form-select" id="supplierID" name="binr" required>
+                                                <option selected disabled value="">Choose a Bin...</option>
+                                            <c:forEach items="${bi}" var="s">
+                                                <option value="${s.getStorageBinID()}">${s.getBinName()}</option>
                                             </c:forEach>
                                         </select>
                                         <div class="invalid-feedback">Please select a Supplier.</div>
