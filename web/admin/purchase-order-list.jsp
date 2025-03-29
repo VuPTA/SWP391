@@ -74,7 +74,7 @@
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
                                         <h5 class="card-title">Purchase Order List</h5>
-                                    <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Staff'}">
+                                    <c:if test="${sessionScope.account != null && (sessionScope.account.role eq 'Staff' || sessionScope.account.role eq 'Manager')}">
                                         <a href="create-purchase-order" class="btn btn-primary" style="height: 40px">Create Purchase Order</a>
                                     </c:if>
                                 </div>

@@ -126,7 +126,7 @@ public class CreateDeliveryOrderServlet extends HttpServlet {
             PurchaseOrder purchaseOrder = podao.getPurchaseOrderToCreateDO(poId);
             PurchaseOrder poUpdate = new PurchaseOrder();
             poUpdate.setPoId(poId);
-            if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getPurchaseItems().size() > 0) {
+            if (purchaseOrder.getStatus().equals("Pending") ) {
                 poUpdate.setStatus("Processing");
                 podao.updateStatusPurchaseOrder(poUpdate);
             }
