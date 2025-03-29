@@ -217,6 +217,9 @@ public class DeliveryOrderDAO {
             ps = conn.prepareStatement(sql);
             ps.setString(1, po.getStatus());
             ps.setString(2, po.getDoId());
+            
+            
+            
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

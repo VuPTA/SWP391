@@ -12,7 +12,7 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        <title>Forms / Validation - NiceAdmin Bootstrap Template</title>
+        <title>Create Delivery</title>
         <meta content="" name="description">
         <meta content="" name="keywords">
         <base href="${pageContext.request.contextPath}/">
