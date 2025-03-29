@@ -486,7 +486,7 @@ public class StorageCheckDAO {
                 + "FROM StorageBin sb\n"
                 + "JOIN WareHouse w ON sb.WarehouseID = w.WarehouseID\n"
                 + "JOIN BinType bt ON sb.BinType_ID = bt.BinType_ID  -- Thêm JOIN với BinType\n"
-                + "LEFT JOIN BinProduct bp ON sb.StorageBinID = bp.StorageBinID\n"
+                + "JOIN BinProduct bp ON sb.StorageBinID = bp.StorageBinID\n"
                 + "WHERE sb.Status <> 'Lock for check'\n"
                 + "GROUP BY w.WarehouseID, sb.StorageBinID, w.WarehouseName, sb.BinName, bt.Name_Type, sb.Capacity, sb.Status;";
 
