@@ -164,8 +164,8 @@
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit">Create Delivery Order</button>
-                                        <a class="btn btn-danger" href="delivery-orders">Cancel</a>
+                                        <button class="btn btn-primary" type="submit">Create Receive Order</button>
+                                        <a class="btn btn-danger" href="receive-orders">Cancel</a>
                                     </div>
                                 </form>
                             </div>

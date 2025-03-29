@@ -52,9 +52,9 @@
     <table class="table table-bordered" id="purchaseItemsTable">
         <thead>
             <tr>
-                <th>Product</th>
-                <th>Quantity</th>
+                <th>Product</th>                
                 <th>SL thực tế</th>
+                <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Total</th>
                 <th>Action</th>
@@ -89,8 +89,8 @@
 
 <!-- Submit Button -->
 <div class="col-12">
-    <button class="btn btn-primary" type="submit">Create Delivery Order</button>
-    <a class="btn btn-danger" href="delivery-orders">Cancel</a>
+    <button class="btn btn-primary" type="submit">Create Receive Order</button>
+    <a class="btn btn-danger" href="receive-orders">Cancel</a>
 </div>
 </form>
 

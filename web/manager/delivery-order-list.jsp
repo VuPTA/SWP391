@@ -74,22 +74,24 @@
 
                                     <div style="display: flex; justify-content: space-between;align-items: center; padding-right: 10px">
                                         <h5 class="card-title">Delivery Order List</h5>
+                                    <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Manager'}">
                                         <a href="create-delivery-order" class="btn btn-primary" style="height: 40px">Create Delivery Order</a>
-                                    </div>
-                                    <!-- Table with stripped rows -->
-                                    <table class="table datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>DO ID</th>
-                                                <th>PO ID</th>
-                                                <th>Supplier</th>
-                                                <th>Total Amount</th>
-                                                <th>Expected Date</th>
-                                                <th>Status</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    </c:if>
+                                </div>
+                                <!-- Table with stripped rows -->
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>DO ID</th>
+                                            <th>PO ID</th>
+                                            <th>Supplier</th>
+                                            <th>Total Amount</th>
+                                            <th>Expected Date</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         <c:forEach items="${deliveryOrders}" var="po">
                                             <tr>
                                                 <td>${po.doId}</td>
