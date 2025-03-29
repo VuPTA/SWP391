@@ -32,7 +32,7 @@ public class SupplierDAO {
             ps = conn.prepareStatement(query);//nem cau lenh query sang sql
             rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
             while (rs.next()) {
-                Supplier o = new Supplier(rs.getString(1),rs.getString(2));
+                Supplier o = new Supplier(rs.getString(1), rs.getString(2));
                 list.add(o);
             }
         } catch (Exception e) {
@@ -144,6 +144,25 @@ public class SupplierDAO {
             e.printStackTrace();
         }
         return s;
+    }
+
+    public boolean isDupplicatePhoneOrTax(String phone, String tax, String supplierId) {
+        String query = "select * from Suppliers where (Phone = ? or Tax_number = ?) and ( ? is null or SupplierID != ?)";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            ps.setString(1, phone);
+            ps.setString(2, tax);
+            ps.setString(3, supplierId);
+            ps.setString(4, supplierId);
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+               return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public String getMaxSupplierID() {
