@@ -10,14 +10,15 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="Home.jsp">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li><!-- End Dashboard Nav -->
+
 
         <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Manager'}">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="dashboard.jsp">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="suppliers">
                     <i class="bi bi-grid"></i>
@@ -28,6 +29,12 @@
                 <a class="nav-link collapsed" href="storage-bin">
                     <i class="bi bi-grid"></i>
                     <span>Storage Bin</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="purchase-orders">
+                    <i class="bi bi-grid"></i>
+                    <span>Purchase Orders</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -42,8 +49,6 @@
                     <span>Receive Orders</span>
                 </a>
             </li>
-        </c:if>
-        <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Admin'}">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="warehouses">
                     <i class="bi bi-grid"></i>
@@ -62,6 +67,46 @@
                     <span>Products</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-grid"></i><span>Storage Check</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="AddSCheckServlet">
+                            <i class="bi bi-circle"></i><span>Create</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="SCheckDetailServlet">
+                            <i class="bi bi-circle"></i><span>Count</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="SCheckClearServlet1">
+                            <i class="bi bi-circle"></i><span>Clear</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="SCheckCancelServlet1">
+                            <i class="bi bi-circle"></i><span>Cancel</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="SCheckInforServlet">
+                            <i class="bi bi-circle"></i><span>Search</span>
+                        </a>
+                    </li>
+                </ul>
+            </li><!-- End Icons Nav -->
+        </c:if>
+        <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Admin'}">
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="dashboard.jsp">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="Accounts-list">
@@ -72,46 +117,63 @@
 
 
         </c:if>
-        <c:if test="${sessionScope.account != null}">
+        <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Staff'}">
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="dashboard.jsp">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="suppliers">
+                    <i class="bi bi-grid"></i>
+                    <span>Suppliers</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="storage-bin">
+                    <i class="bi bi-grid"></i>
+                    <span>Storage Bin</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="purchase-orders">
                     <i class="bi bi-grid"></i>
                     <span>Purchase Orders</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="delivery-orders">
+                    <i class="bi bi-grid"></i>
+                    <span>Delivery Orders</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="receive-orders">
+                    <i class="bi bi-grid"></i>
+                    <span>Receive Orders</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="warehouses">
+                    <i class="bi bi-grid"></i>
+                    <span>Warehouses</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="categories">
+                    <i class="bi bi-grid"></i>
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="products">
+                    <i class="bi bi-grid"></i>
+                    <span>Products</span>
+                </a>
+            </li>
         </c:if>
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-grid"></i><span>Storage Check</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="AddSCheckServlet">
-                        <i class="bi bi-circle"></i><span>Create</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="SCheckDetailServlet">
-                        <i class="bi bi-circle"></i><span>Count</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="SCheckClearServlet1">
-                        <i class="bi bi-circle"></i><span>Clear</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="SCheckCancelServlet1">
-                        <i class="bi bi-circle"></i><span>Cancel</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="SCheckInforServlet">
-                        <i class="bi bi-circle"></i><span>Search</span>
-                    </a>
-                </li>
-            </ul>
-        </li><!-- End Icons Nav -->
+
 
 
         <!--        <li class="nav-item">

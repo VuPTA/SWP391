@@ -41,20 +41,21 @@ public class LoginServlet extends HttpServlet {
             }
             HttpSession session = request.getSession();
             session.setAttribute("account", account);
-            switch (account.getRole()) {
-                case "Admin":
-                    response.sendRedirect("warehouses");
-                    break;
-                case "Staff":
-                    response.sendRedirect("purchase-orders");
-                    break;
-                case "Manager":
-                    response.sendRedirect("suppliers");
-
-                    break;
-                default:
-                    throw new AssertionError();
-            }
+            request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+//            switch (account.getRole()) {
+//                case "Admin":
+//                    response.sendRedirect("admin/dashboard.jsp");
+//                    break;
+//                case "Staff":
+//                    response.sendRedirect("staff/dashboard.jsp");
+//                    break;
+//                case "Manager":
+//                    response.sendRedirect("manager/dashboard.jsp");
+//
+//                    break;
+//                default:
+//                    throw new AssertionError();
+//            }
         } else {
             request.setAttribute("msg", "Invalid password or number!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
