@@ -117,7 +117,7 @@ public class CreateDeliveryOrderServlet extends HttpServlet {
             // Làm tròn tổng tiền đến 2 chữ số thập phân
             totalAmount = Math.round(totalAmount * 100.0) / 100.0;
 
-            DeliveryOrder deliveryOrder = new DeliveryOrder(doId, poId, supplierID, "Pending Receiving", expectedDate, deliveryItems, createdBy, createDate);
+            DeliveryOrder deliveryOrder = new DeliveryOrder(doId, poId, supplierID, "in transit", expectedDate, deliveryItems, createdBy, createDate);
             deliveryOrder.setTotalAmount(totalAmount);
             dodao.createDeliveryOrder(deliveryOrder);
 
