@@ -150,8 +150,7 @@ public class CreateReceiveOrderServlet extends HttpServlet {
             int binCapacity = bidao.getStorageBinById(binr).getCapacity();
             if (binCapacity < totalQuantity) {
                 request.setAttribute("msg", "Số lượng sản phẩm vượt quá mức quy định của kho! ");
-                request.getRequestDispatcher("create-receive-order").forward(request, response);
-                return;
+                throw new Exception("Số lượng sản phẩm vượt quá mức quy định của kho! ");
             }
             DeliveryOrderDAO podao = new DeliveryOrderDAO();
 
@@ -174,7 +173,7 @@ public class CreateReceiveOrderServlet extends HttpServlet {
 //                poUpdate.setStatus(note);
 //                podao.updateStatusPurchaseOrder(poUpdate);
 //            }
-              //check status and set status for PO
+            //check status and set status for PO
             PurchaseOrderDAO podao1 = new PurchaseOrderDAO();
             PurchaseOrder purchaseOrder1 = podao1.getPurchaseOrderToCreateDO(purchaseOrder.getPoId());
             PurchaseOrder poUpdate1 = new PurchaseOrder();
@@ -182,14 +181,10 @@ public class CreateReceiveOrderServlet extends HttpServlet {
             if (purchaseOrder1.getStatus().equals("Pending") && purchaseOrder1.getPurchaseItems().size() > 0) {
                 poUpdate1.setStatus("Processing");
                 podao1.updateStatusPurchaseOrder(poUpdate1);
-            }
-            else if (purchaseOrder1.getPurchaseItems().size() == 0) {
+            } else if (purchaseOrder1.getPurchaseItems().size() == 0) {
                 poUpdate1.setStatus("Completed");
                 podao1.updateStatusPurchaseOrder(poUpdate1);
             }
-
-            
-            
 
             ReceiveOrder deliveryOrder = new ReceiveOrder(doId, poId, supplierID, note, expectedDate, deliveryItems, createdBy, createDate);
             deliveryOrder.setTotalAmount(totalAmount);

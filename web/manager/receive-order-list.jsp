@@ -7,7 +7,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-
+ <%
+               String msg = (String)request.getAttribute("msg");
+                if(msg == null) msg = "";
+                
+            %>
     <head>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -64,7 +68,7 @@
                         </ol>
                     </nav>
                 </div><!-- End Page Title -->
-
+<%=msg%>
                 <section class="section">
                     <div class="row">
                         <div class="col-lg-12">
