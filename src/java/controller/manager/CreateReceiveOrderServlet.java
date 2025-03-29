@@ -182,7 +182,7 @@ public class CreateReceiveOrderServlet extends HttpServlet {
                 poUpdate1.setStatus("Processing");
                 podao1.updateStatusPurchaseOrder(poUpdate1);
             } else if (purchaseOrder1.getPurchaseItems().size() == 0) {
-                poUpdate1.setStatus("Completed");
+                poUpdate1.setStatus("Received");
                 podao1.updateStatusPurchaseOrder(poUpdate1);
             }
 
