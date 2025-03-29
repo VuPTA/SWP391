@@ -103,15 +103,22 @@ public class EditBinServlet extends HttpServlet {
                 String binType = request.getParameter("binType");
 
                 int capacity = Integer.parseInt(request.getParameter("capacity"));
-                HttpSession session = request.getSession();
-                Account acc = (Account) session.getAttribute("account");
-                Integer updateBy = acc.getAccountId();
 
-                StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, updateBy, new Timestamp(System.currentTimeMillis()));
+                //check valid câpcity
+                if (!binDAO.isValidCapacity(storageBinID, capacity)) {
+                    request.setAttribute("errorMessage", "Cannot edit bin capacity to be less than current number of products in bin");
+                    request.getRequestDispatcher("storage-bin").forward(request, response);
+                } else {
+                    HttpSession session = request.getSession();
+                    Account acc = (Account) session.getAttribute("account");
+                    Integer updateBy = acc.getAccountId();
 
-                binDAO.updateBin(bin);
-                request.setAttribute("message", "Update Storage Bin Success!");
-                request.getRequestDispatcher("storage-bin").forward(request, response);
+                    StorageBin bin = new StorageBin(storageBinID, warehouseID, binName, binType, capacity, status, updateBy, new Timestamp(System.currentTimeMillis()));
+
+                    binDAO.updateBin(bin);
+                    request.setAttribute("message", "Update Storage Bin Success!");
+                    request.getRequestDispatcher("storage-bin").forward(request, response);
+                }
             }
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Update Storage Bin Fail!: " + e.getMessage());

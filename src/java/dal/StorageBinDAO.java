@@ -197,4 +197,22 @@ public class StorageBinDAO {
         }
         return list;
     }
+    
+    public boolean isValidCapacity(String binId, int capacity) {
+        String query = "  select sum(bp.Quantity) from StorageBin sb "
+                + "left join BinProduct bp on sb.StorageBinID = bp.StorageBinID "
+                + "where sb.StorageBinID = ?";
+        try {
+            conn = DBContext.getConnection(); //mo ket noi toi sql
+            ps = conn.prepareStatement(query);//nem cau lenh query sang sql
+            ps.setString(1, binId);
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                return !(rs.getInt(1) > capacity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 }
