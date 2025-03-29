@@ -78,12 +78,19 @@ public class CreateSupplierServlet extends HttpServlet {
             int createdBy = acc.getAccountId();
 
             SupplierDAO dao = new SupplierDAO();
-            String supId = dao.getMaxSupplierID();
-            Supplier supplier = new Supplier(supId, name, address, phone, tax, "Active", createdBy, new Timestamp(System.currentTimeMillis()));
 
-            dao.insertSupplier(supplier);
-            request.setAttribute("message", "Create Supplier Success!");
-            request.getRequestDispatcher("suppliers").forward(request, response);
+            //check dupplicate phone or tax
+            if (dao.isDupplicatePhoneOrTax(phone, tax, null)) {
+                request.setAttribute("errorMessage", "Phone or Tax is exists! Please input valid data");
+                request.getRequestDispatcher("suppliers").forward(request, response);
+            } else {
+                String supId = dao.getMaxSupplierID();
+                Supplier supplier = new Supplier(supId, name, address, phone, tax, "Active", createdBy, new Timestamp(System.currentTimeMillis()));
+
+                dao.insertSupplier(supplier);
+                request.setAttribute("message", "Create Supplier Success!");
+                request.getRequestDispatcher("suppliers").forward(request, response);
+            }
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Create Supplier Fail!: " + e.getMessage());
             request.getRequestDispatcher("suppliers").forward(request, response);

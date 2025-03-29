@@ -91,11 +91,17 @@ public class EditSupplierServlet extends HttpServlet {
             Integer updateBy = acc.getAccountId();
 
             SupplierDAO dao = new SupplierDAO();
-            Supplier supplier = new Supplier(supplierId, name, address, phone, tax, status, updateBy, new Timestamp(System.currentTimeMillis()));
+            //check dupplicate phone or tax
+            if (dao.isDupplicatePhoneOrTax(phone, tax, supplierId)) {
+                request.setAttribute("errorMessage", "Phone or Tax is exists! Please input valid data");
+                request.getRequestDispatcher("suppliers").forward(request, response);
+            } else {
+                Supplier supplier = new Supplier(supplierId, name, address, phone, tax, status, updateBy, new Timestamp(System.currentTimeMillis()));
 
-            dao.updateSupplier(supplier);
-            request.setAttribute("message", "Update Supplier Success!");
-            request.getRequestDispatcher("suppliers").forward(request, response);
+                dao.updateSupplier(supplier);
+                request.setAttribute("message", "Update Supplier Success!");
+                request.getRequestDispatcher("suppliers").forward(request, response);
+            }
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Update Supplier Fail!: " + e.getMessage());
             request.getRequestDispatcher("suppliers").forward(request, response);
