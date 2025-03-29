@@ -49,7 +49,11 @@
         * License: https://bootstrapmade.com/license/
         ======================================================== -->
     </head>
-
+ <%
+               String msg = (String)request.getAttribute("msg");
+                if(msg == null) msg = "";
+                
+            %>
     <body>
 
         <!-- ======= Header ======= -->
@@ -80,10 +84,11 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Create Receive Order</h5>
-
+<%=msg%>
                                     <form class="row g-3 needs-validation formpo" novalidate action="create-receive-order" method="post" id="form-create-ro">
                                         <div class="col-md-6">
                                             <label for="poId" class="form-label">Delivery Order</label>
+                                            
                                             <select class="form-select" id="do1Id" name="do1Id" required>
                                                 <option selected disabled value="">Choose a Delivery Order...</option>
                                             <c:forEach items="${purchaseOrders}" var="s">

@@ -149,8 +149,9 @@ public class CreateReceiveOrderServlet extends HttpServlet {
             StorageBinDAO bidao = new StorageBinDAO();
             int binCapacity = bidao.getStorageBinById(binr).getCapacity();
             if (binCapacity < totalQuantity) {
-                request.setAttribute("errorMessage", "Số lượng sản phẩm vượt quá mức quy định của kho! ");
-                request.getRequestDispatcher("receive-orders").forward(request, response);
+                request.setAttribute("msg", "Số lượng sản phẩm vượt quá mức quy định của kho! ");
+                request.getRequestDispatcher("create-receive-order").forward(request, response);
+                return;
             }
             DeliveryOrderDAO podao = new DeliveryOrderDAO();
 
