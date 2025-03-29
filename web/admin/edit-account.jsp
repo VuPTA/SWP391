@@ -120,7 +120,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    <a href="account-list.jsp" class="btn btn-secondary">Quay lại</a>
+                    <a href="Accounts-list" class="btn btn-secondary"   >Quay lại</a>
                 </form>
             </div>
 

@@ -131,7 +131,7 @@
                                                 </form>
                                                 
                                             </td>                                          
-                                            <td style="text-align: right"><a href="edit-account?accountId=${acc.accountId}" class="edit-btn"> <i class="bx bx-edit"> </i> Xem chi tiết </a></td>
+                                            <td style="text-align: right"><a href="edit-account?accountId=${acc.accountId}" class="edit-btn"> <i class="bx bx-edit"> </i> </a></td>
                                         </tr>
                                     </c:forEach>
 

@@ -157,7 +157,9 @@
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary" type="submit" ${po.status ne 'Draft' ? 'disabled' : ''}>Save Purchase Order</button>
+                                        <c:if test="${sessionScope.account != null && sessionScope.account.role eq 'Manager'}">
+                                            <button class="btn btn-primary" type="submit" ${po.status ne 'Draft' ? 'disabled' : ''}>Save Purchase Order</button>
+                                        </c:if>    
                                         <a class="btn btn-danger" href="purchase-orders">Cancel</a>
                                     </div>
                                 </form>
