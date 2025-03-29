@@ -153,7 +153,7 @@ public class DeliveryOrderDAO {
         String query = "SELECT po.*, s.SupplierName \n"
                 + "FROM delivery_orders AS po \n"
                 + "LEFT JOIN Suppliers AS s ON s.SupplierID = po.Supplier \n"
-                + "WHERE po.Status = 'Pending' \n"
+                + "WHERE po.Status = 'in transit' \n"
                 + "ORDER BY po.CreatedDate DESC;";
         try {
             conn = DBContext.getConnection(); //mo ket noi toi sql
@@ -199,7 +199,7 @@ public class DeliveryOrderDAO {
                 for (DeliveryItem pi : pis) {
                     totalAmount += pi.getUnitPrice() * pi.getQuantity();
                 }
-                o.setDeliveryItems(pis);
+                o.setDeliveryItems(pis);o.setPoId(rs.getString(2));
                 o.setTotalAmount(totalAmount);
                 return o;
             }

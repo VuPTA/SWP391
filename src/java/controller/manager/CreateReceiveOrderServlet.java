@@ -164,13 +164,31 @@ public class CreateReceiveOrderServlet extends HttpServlet {
             DeliveryOrder purchaseOrder = podao.getDeliveryOrderToCreateRO(poId);
             DeliveryOrder poUpdate = new DeliveryOrder();
             poUpdate.setDoId(poId);
-            if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getDeliveryItems().size() > 0) {
-                poUpdate.setStatus(note);
-                podao.updateStatusPurchaseOrder(poUpdate);
-            } else if (purchaseOrder.getDeliveryItems().size() == 0) {
-                poUpdate.setStatus(note);
-                podao.updateStatusPurchaseOrder(poUpdate);
+            poUpdate.setStatus("Received");
+            podao.updateStatusPurchaseOrder(poUpdate);
+//            if (purchaseOrder.getStatus().equals("Pending") && purchaseOrder.getDeliveryItems().size() > 0) {
+//                poUpdate.setStatus(note);
+//                podao.updateStatusPurchaseOrder(poUpdate);
+//            } else if (purchaseOrder.getDeliveryItems().size() == 0) {
+//                poUpdate.setStatus(note);
+//                podao.updateStatusPurchaseOrder(poUpdate);
+//            }
+              //check status and set status for PO
+            PurchaseOrderDAO podao1 = new PurchaseOrderDAO();
+            PurchaseOrder purchaseOrder1 = podao1.getPurchaseOrderToCreateDO(purchaseOrder.getPoId());
+            PurchaseOrder poUpdate1 = new PurchaseOrder();
+            poUpdate1.setPoId(purchaseOrder.getPoId());
+            if (purchaseOrder1.getStatus().equals("Pending") && purchaseOrder1.getPurchaseItems().size() > 0) {
+                poUpdate1.setStatus("Processing");
+                podao1.updateStatusPurchaseOrder(poUpdate1);
             }
+            else if (purchaseOrder1.getPurchaseItems().size() == 0) {
+                poUpdate1.setStatus("Completed");
+                podao1.updateStatusPurchaseOrder(poUpdate1);
+            }
+
+            
+            
 
             ReceiveOrder deliveryOrder = new ReceiveOrder(doId, poId, supplierID, note, expectedDate, deliveryItems, createdBy, createDate);
             deliveryOrder.setTotalAmount(totalAmount);
