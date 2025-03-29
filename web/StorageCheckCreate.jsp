@@ -111,13 +111,13 @@
                                                 <td><%= bin.getTotalQuantity() %></td>
                                                 <td><%= bin.getStatus() %></td>
                                                 <td>
-                                                    <form action="AddSCheckServlet" method="post"  id="storageCheckForm">
+                                                    <form action="AddSCheckServlet" method="post"  id="storageCheckForm_<%= bin.getStorageBinID() %>">
                                                         <input type="hidden" name="selectedBins" value="<%= bin.getStorageBinID() %>">
                                                         <input type="text" name="notes_<%= bin.getStorageBinID() %>" class="form-control" placeholder="Nhập ghi chú...">
                                                     </form>
                                                 </td>
                                                 <td>
-                                                    <button type="submit" class="btn btn-success" form="storageCheckForm">Create</button>
+                                                    <button type="submit" class="btn btn-success" form="storageCheckForm_<%= bin.getStorageBinID() %>">Create</button>
                                                 </td>
                                             </tr>
                                             <% } %>
