@@ -65,12 +65,12 @@
 
                 <div class="container mt-5">
                     <h2>Chỉnh sửa tài khoản</h2>
-
+                    
                 <% if (request.getParameter("error") != null) { %>
                 <div class="alert alert-danger">Cập nhật thất bại!</div>
                 <% } %>
 
-                <form action="EditAccountServlet" method="post">
+                <form action="edit-account" method="post">
                     <input type="hidden" name="accountId" value="<%= acc.getAccountId() %>">
 
                     <div class="mb-3">
@@ -114,8 +114,8 @@
                     <div class="mb-3">
                         <label>Status:</label>
                         <select name="status" class="form-control">
-                            <option value="Active" <%= acc.getStatus().equals("Active") ? "selected" : "" %>>Active</option>
-                            <option value="Inactive" <%= acc.getStatus().equals("Inactive") ? "selected" : "" %>>Inactive</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
                         </select>
                     </div>
 

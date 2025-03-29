@@ -37,7 +37,7 @@ public class AccountDAO {
         return null;
     }
 
-    private String mapRole(int roleId) {
+    public String mapRole(int roleId) {
         switch (roleId) {
             case 1:
                 return "Admin";
@@ -50,7 +50,7 @@ public class AccountDAO {
         }
     }
 
-    private int mapRole2(String role) {
+    public int mapRole2(String role) {
         switch (role) {
             case "Admin":
                 return 1;
@@ -64,12 +64,33 @@ public class AccountDAO {
     }
 
     public boolean updateAccount(int accountId, String password, String role, String name, String gender, String phone, String email, String status) {
-        String sql = "UPDATE accounts SET password = ?, role = ?, name = ?, gender = ?, phone = ?, email = ?, status = ? WHERE account_id = ?";
+        String sql = "UPDATE [Account] SET password = ?, role = ?, name = ?, gender = ?, phone = ?, email = ?, status = ? WHERE [AccountID] = ?";
 
         try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, password);
-            stmt.setString(2, role);
+            stmt.setInt(2, mapRole2(role));
+            stmt.setString(3, name);
+            stmt.setString(4, gender);
+            stmt.setString(5, phone);
+            stmt.setString(6, email);
+            stmt.setString(7, status);
+            stmt.setInt(8, accountId);
+
+            return stmt.executeUpdate() > 0; // Trả về true nếu có dòng bị ảnh hưởng (cập nhật thành công)
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateAccount(int accountId, String password, int roleID, String name, String gender, String phone, String email, String status) {
+        String sql = "UPDATE Account SET Password = ?, RoleID = ?, Name = ?, Gender = ?, Phone = ?, Email = ?, Status = ? WHERE AccountID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, password);
+            stmt.setInt(2, roleID);  // RoleID là kiểu int
             stmt.setString(3, name);
             stmt.setString(4, gender);
             stmt.setString(5, phone);
@@ -308,21 +329,20 @@ public class AccountDAO {
     }
 
     public void ChangePass(String email, String newpass) {
-          String sql = "UPDATE Account SET Password = ? WHERE Email = ?";
-        
-        try (Connection conn = DBContext.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+        String sql = "UPDATE Account SET Password = ? WHERE Email = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, newpass);
             stmt.setString(2, email);
-            
+
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Mật khẩu đã được cập nhật thành công.");
             } else {
                 System.out.println("Không tìm thấy email này trong hệ thống.");
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

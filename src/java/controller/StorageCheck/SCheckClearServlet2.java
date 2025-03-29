@@ -133,13 +133,14 @@ public class SCheckClearServlet2 extends HttpServlet {
                     request.setAttribute("message", "Save successful");
                 } else if ("recount".equals(action)) {
                     dao.updateStorageCheckStatus(storageCheckId, "Recount");
-                    request.setAttribute("message", "Order to Recount successful");                    
+                    request.setAttribute("message", "Order to Recount successful");
                 }
-                List<StorageCheckInfor> scheckinfor = dao.getCountedStorageCheckInfor();
-                request.setAttribute("scheckinfor", scheckinfor);
-                request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);
-                return;
+
             }
+            List<StorageCheckInfor> scheckinfor = dao.getCountedStorageCheckInfor();
+            request.setAttribute("scheckinfor", scheckinfor);
+            request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);
+            return;
         }
         request.setAttribute("message", "Clear failed");
         request.getRequestDispatcher("StorageCheckClear1.jsp").forward(request, response);

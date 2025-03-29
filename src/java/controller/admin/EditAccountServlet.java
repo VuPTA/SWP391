@@ -98,17 +98,25 @@ public class EditAccountServlet extends HttpServlet {
 
             // Gọi DAO để cập nhật thông tin
             AccountDAO dao = new AccountDAO();
-            boolean success = dao.updateAccount(accountId, password, role, name, gender, phone, email, status);
+            int roleid = dao.mapRole2(role);
+            boolean success = dao.updateAccount(accountId, password, roleid, name, gender, phone, email, status);
 
             // Chuyển hướng sau khi cập nhật
             if (success) {
-                response.sendRedirect("accountList.jsp?success=1");
+                 Account acc = dao.getAccountById(accountId);
+
+                if (acc != null) {
+                    request.setAttribute("message", "Update successful");
+                    request.setAttribute("acc", acc); 
+                    request.getRequestDispatcher("admin/edit-account.jsp").forward(request, response);
+                    return;
+                }
             } else {
-                response.sendRedirect("editAccount.jsp?accountId=" + accountId + "&error=1");
+                response.sendRedirect("admin/edit-account.jsp?accountId=" + accountId + "&error=1");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("editAccount.jsp?error=1");
+            response.sendRedirect("admin/edit-account.jsp?error=1");
         }
     }
 
